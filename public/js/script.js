@@ -1,45 +1,43 @@
-if ("serial" in navigator) {
-    console.debug('Browser supports Web Serial API');
-} else {
-    alert('Browser currently unsupported, try updating your browser.');
+'use strict';
+
+const connectButton = document.getElementById('connect');
+
+let port;
+let inputReader;
+let inputStream;
+let inputOverPromise;
+
+document.addEventListener('DOMContentLoaded', () => {
+    connectButton.addEventListener('click', clickConnect);
+});
+
+async function clickConnect() {
+    await connect();
 }
 
-var port = null;
+async function connect() {
+    let streamDecoder = new TextDecoderStream();
 
-async function connect()
-{
     port = await navigator.serial.requestPort();
-    await port.open({ baudrate: 9600 });
-    console.debug('Connected');
+    await port.open({ baudRate: 9600 });
+
+    inputOverPromise = port.readable.pipeTo(streamDecoder.writable);
+    inputStream = streamDecoder.readable;
+
+    inputReader = inputStream.getReader();
+    readLoop();
 }
 
-
-
-document.getElementById('connect').addEventListener('click', () => {
-    connect();
-    console.debug('Connect function called.');
-
-    // navigator.serial.requestPort().then((port) => {
-    //     // Connect to `port` or add it to the list of available ports.
-    // }).catch((e) => {
-    //     // The user didn't select a port.
-    // });
-});
-
-
-
-
-
-navigator.serial.addEventListener('connect', (e) => {
-    // Connect to `e.target` or add it to a list of available ports.
-});
-
-navigator.serial.addEventListener('disconnect', (e) => {
-    // Remove `e.target` from the list of available ports.
-});
-
-navigator.serial.getPorts().then((ports) => {
-    // Initialize the list of available ports with `ports` on page load.
-});
-
-
+async function readLoop() {
+    while (true) {
+        const { serialDataUnit, done } = await inputReader.read();
+        if (serialDataUnit) {
+            console.log(serialDataUnit);
+        }
+        if (done) {
+            console.log('readLoop() ended', done);
+            inputReader.releaseLock();
+            break;
+        }
+    }
+}
