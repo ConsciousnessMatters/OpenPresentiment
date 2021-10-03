@@ -5,6 +5,7 @@ const connectButton = document.getElementById('connect');
 let port;
 let inputReader;
 let inputStream;
+let inputStreamBuffer = '';
 let inputOverPromise;
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -23,21 +24,39 @@ async function connect() {
 
     inputOverPromise = port.readable.pipeTo(streamDecoder.writable);
     inputStream = streamDecoder.readable;
-
     inputReader = inputStream.getReader();
-    readLoop();
+
+    serialReadLoop();
 }
 
-async function readLoop() {
+async function serialReadLoop() {
     while (true) {
-        const { serialDataUnit, done } = await inputReader.read();
-        if (serialDataUnit) {
-            console.log(serialDataUnit);
+        const { value, done } = await inputReader.read();
+
+        if (value) {
+            let logicalUnits;
+            let dataUnit = value.replace(/\r/g, '');
+
+            inputStreamBuffer += dataUnit;
+            logicalUnits = inputStreamBuffer.split("\n");
+
+            if (logicalUnits.length > 1) {
+                let remainder;
+
+                remainder = logicalUnits.pop();
+                inputStreamBuffer = remainder;
+                logicalUnits.forEach(handleIncomingDataPoint);
+            }
         }
         if (done) {
-            console.log('readLoop() ended', done);
+            console.log('serialReadLoop() ended', done);
             inputReader.releaseLock();
             break;
         }
     }
 }
+
+function handleIncomingDataPoint(dataPoint) {
+    console.log(dataPoint);
+}
+
