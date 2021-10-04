@@ -8,14 +8,26 @@
     <meta name="description" content="Software to allow anyone to replicate Dean Radin's presentiment experiments.">
     <meta name="author" content="Matthew Riddle, Consciousness Matters">
 
+    <!-- Copy out to static to enhance privacy - BEGIN -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans&display=swap" rel="stylesheet">
+    <!-- Copy out to static to enhance privacy - END -->
+
     <link rel="stylesheet" href="css/styles.css?v=1.0">
 </head>
-
 <body>
-    <h1>Work In Progress</h1>
+    <div id="setup">
+        <h1>OpenPresentiment α1.0</h1>
 
-    <button id="connect">Connect to Arduino</button>
+        <div>
+            <button id="connect">Connect to Arduino</button>
+        </div>
 
+        <canvas id="graph"></canvas>
+    </div>
+    <script src="js/serialDataHandler.js"></script>
+    <script src="js/graph.js"></script>
     <script src="js/script.js"></script>
 </body>
 </html>
