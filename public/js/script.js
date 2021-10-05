@@ -23,9 +23,17 @@ function clearData() {
 
 function exportData() {
     const a =  document.createElement('a'),
-        saveData = JSON.stringify(gsrData),
-        virtualFile = new Blob([saveData], {type: 'application/json'});
+        startTime = gsrData[0].time ?? 0;
 
+    let virtualFile,
+        saveData = '';
+
+    saveData += "milliseconds, millivolts\r\n";
+    gsrData.forEach((datapoint) => {
+        saveData += datapoint.time - startTime + "," + datapoint.millivolts + "\r\n";
+    });
+
+    virtualFile = new Blob([saveData], {type: 'text/csv'});
     a.href = URL.createObjectURL(virtualFile);
     a.download = 'OpenPresentimentGSR-' + Date.now();
     a.click();
