@@ -1,9 +1,24 @@
 body {
     font-family: 'Open Sans', sans-serif;
-    background: #333;
+    font-weight: 300;
+    background: #333 url('../images/psi_white.svg') no-repeat 50% calc(50% + 20px);
+    background-size: 85vh;
     color: white;
     display: flex;
     justify-content: center;
+}
+
+h1 {
+    font-weight: 300;
+}
+
+h1 em {
+    font-weight: 800;
+    font-style: normal;
+}
+
+h1 span.version {
+    font-size: 20px;
 }
 
 div#setup {
@@ -12,9 +27,12 @@ div#setup {
     text-align: center;
 }
 
+button {
+    padding: 5px 20px;
+}
+
 canvas {
     margin-top: 30px;
-    background-color: #383838;
     width: calc(100vw - 100px);
     height: calc(100vh - 200px);
 }

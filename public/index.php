@@ -11,14 +11,14 @@
     <!-- Copy out to static to enhance privacy - BEGIN -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Open+Sans&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;600;800&display=swap" rel="stylesheet">
     <!-- Copy out to static to enhance privacy - END -->
 
     <link rel="stylesheet" href="css/styles.css?v=1.0">
 </head>
 <body>
     <div id="setup">
-        <h1>OpenPresentiment α1.0</h1>
+        <h1>Open<em>Presentiment</em> <span class="version">0.2 α1</span></h1>
 
         <div>
             <button id="connect">Connect to Arduino</button>
