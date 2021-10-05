@@ -57,6 +57,11 @@ async function serialReadLoop() {
 }
 
 function handleIncomingDataPoint(dataPoint) {
-    const galvanicSkinResponse = new CustomEvent('GSRDataPoint', { detail: { time: Date.now(), millivolts: dataPoint }});
+    const galvanicSkinResponse = new CustomEvent('GSRDataPoint', {
+        detail: {
+            time: Date.now(),
+            millivolts: parseFloat(dataPoint),
+        }
+    });
     document.dispatchEvent(galvanicSkinResponse);
 }
