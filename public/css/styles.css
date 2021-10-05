@@ -29,10 +29,19 @@ div#setup {
 
 button {
     padding: 5px 20px;
+    margin: 0 4px;
+}
+
+button#participate {
+    font-weight: bold;
 }
 
 canvas {
     margin-top: 30px;
     width: calc(100vw - 100px);
     height: calc(100vh - 200px);
+}
+
+.hidden {
+    display: none;
 }

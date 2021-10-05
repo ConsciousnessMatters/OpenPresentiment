@@ -20,8 +20,13 @@
     <div id="setup">
         <h1>Open<em>Presentiment</em> <span class="version">0.2 α1</span></h1>
 
-        <div>
+        <div class="connect">
             <button id="connect">Connect to Arduino</button>
+        </div>
+        <div class="options hidden">
+            <button id="participate">Participate</button>
+            <button id="clearData">Clear Data</button>
+            <button id="exportData">Export Data</button>
         </div>
 
         <canvas id="graph"></canvas>
