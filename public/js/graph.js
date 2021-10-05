@@ -2,7 +2,9 @@
 
 let gsrData = [],
     scaleFactor = window.devicePixelRatio || 1,
-    canvasActivated = false;
+    canvasActivated = false,
+    axisSpaceX = 50,
+    axisSpaceY = 50;
 
 const datapointSpacing = 4,
     graphCC = document.getElementById('graph').getContext('2d');
@@ -10,6 +12,8 @@ const datapointSpacing = 4,
 document.addEventListener('GSRDataPoint', (event) => {
     gsrData.push(event.detail);
     if (!canvasActivated) {
+        const graphOnline = new CustomEvent('GraphOnline');
+        document.dispatchEvent(graphOnline);
         canvasSetup();
     }
     renderGraph();
@@ -27,24 +31,37 @@ function canvasSetup() {
 
 function renderGraph() {
     let origin = false,
-        datapoints,
-        millivoltsMin,
-        millivoltsMax,
-        datapointsToUse = Math.floor(graphCC.canvas.width / datapointSpacing);
+        plotWidth = graphCC.canvas.width - axisSpaceX,
+        datapointsToUse = Math.floor( plotWidth / datapointSpacing),
+        datapoints = gsrData.slice(-1 * datapointsToUse);
 
-    datapoints = gsrData.slice(-1 * datapointsToUse);
-    millivoltsMin = minimumDataPointValue(datapoints, 'millivolts').millivolts;
-    millivoltsMax = maximumDataPointValue(datapoints, 'millivolts').millivolts;
+    renderPlot(origin, datapoints, axisSpaceX);
+    renderAxis();
+}
+
+function renderAxis() {
+    graphCC.beginPath();
+    graphCC.moveTo(axisSpaceX, 0);
+    graphCC.lineTo(axisSpaceX, graphCC.canvas.height - axisSpaceY);
+    graphCC.lineTo(graphCC.canvas.width, graphCC.canvas.height - axisSpaceY);
+    graphCC.strokeStyle = "#dddddd";
+    graphCC.stroke();
+}
+
+function renderPlot(origin, datapoints, offsetX) {
+    let millivoltsMin = minimumDataPointValue(datapoints, 'millivolts').millivolts,
+        millivoltsMax = maximumDataPointValue(datapoints, 'millivolts').millivolts,
+        plotHeight = graphCC.canvas.height - axisSpaceY;
 
     graphCC.beginPath();
     datapoints.forEach((datapoint, index) => {
-        let dataPointYValue = scaleValue(datapoint.millivolts, millivoltsMin, millivoltsMax, graphCC.canvas.height);
+        let dataPointYValue = scaleValue(datapoint.millivolts, millivoltsMin, millivoltsMax, plotHeight);
 
         if (!origin) {
             origin = datapoint;
-            graphCC.moveTo(0, dataPointYValue);
+            graphCC.moveTo(offsetX, dataPointYValue);
         } else {
-            graphCC.lineTo(index * datapointSpacing, dataPointYValue);
+            graphCC.lineTo(index * datapointSpacing + offsetX, dataPointYValue);
         }
     });
     graphCC.strokeStyle = "#00ff00";
