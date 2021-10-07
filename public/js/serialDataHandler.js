@@ -2,11 +2,12 @@
 
 const connectButton = document.getElementById('connect');
 
-let port;
-let inputReader;
-let inputStream;
-let inputStreamBuffer = '';
-let inputOverPromise;
+let port,
+    inputReader,
+    inputStream,
+    inputStreamBuffer = '',
+    inputOverPromise,
+    discardDataPoints = 20;
 
 document.addEventListener('DOMContentLoaded', () => {
     connectButton.addEventListener('click', clickConnect);
@@ -45,7 +46,12 @@ async function serialReadLoop() {
 
                 remainder = logicalUnits.pop();
                 inputStreamBuffer = remainder;
-                logicalUnits.forEach(handleIncomingDataPoint);
+
+                if (discardDataPoints) {
+                    discardDataPoints--;
+                } else {
+                    logicalUnits.forEach(handleIncomingDataPoint);
+                }
             }
         }
         if (done) {
@@ -57,11 +63,13 @@ async function serialReadLoop() {
 }
 
 function handleIncomingDataPoint(dataPoint) {
-    const galvanicSkinResponse = new CustomEvent('GSRDataPoint', {
-        detail: {
-            time: Date.now(),
-            millivolts: parseFloat(dataPoint),
-        }
-    });
+    const dataItems = dataPoint.split(","),
+        galvanicSkinResponse = new CustomEvent('GSRDataPoint', {
+            detail: {
+                time: parseInt(dataItems[0]),
+                millivolts: parseFloat(dataItems[1]),
+            }
+        });
+
     document.dispatchEvent(galvanicSkinResponse);
 }

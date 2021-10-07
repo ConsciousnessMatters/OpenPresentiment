@@ -44,7 +44,7 @@ void loop(void)
     adcSuperSampledAverageVolts = adcSuperSampledAverage * 0.0625;
     adc0Volt = (float) adc0 * 0.0625;
     
-    Serial.println(adcSuperSampledAverageVolts);
+    Serial.print(millis()); Serial.print(","); Serial.println(adcSuperSampledAverageVolts);
 //    Serial.print(adc0); Serial.print(","); Serial.print(adcAverage); Serial.print(","); Serial.println(adcSuperSampledAverage);
     lastSerialOutputTime = runtime;
     lastSamples = samples;

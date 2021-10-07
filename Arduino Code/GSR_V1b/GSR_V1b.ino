@@ -43,7 +43,7 @@ void loop(void)
     // Raw volts vs supersampled
 //    Serial.print(a0Volt); Serial.print(","); Serial.println(aSuperSampledAverageVolts);
     // Standard output
-    Serial.println(aSuperSampledAverageVolts);
+    Serial.print(millis()); Serial.print(","); Serial.println(aSuperSampledAverageVolts);
     lastSerialOutputTime = runtime;
     lastSamples = samples;
 
