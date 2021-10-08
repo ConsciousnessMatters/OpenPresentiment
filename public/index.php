@@ -18,7 +18,7 @@
 </head>
 <body>
     <div id="setup">
-        <h1>Open<em>Presentiment</em> <span class="version">0.2 α1</span></h1>
+        <h1>Open<em>Presentiment</em> <span class="version">0.3 α1</span></h1>
 
         <div class="connect">
             <button id="connect">Connect to Arduino</button>
@@ -30,6 +30,8 @@
         </div>
 
         <canvas id="graph"></canvas>
+        <div class="axis-x-label hidden">Time in seconds (s)</div>
+        <div class="axis-y-label hidden">Voltage in millivolts (mV)</div>
     </div>
     <script src="js/serialDataHandler.js"></script>
     <script src="js/graph.js"></script>

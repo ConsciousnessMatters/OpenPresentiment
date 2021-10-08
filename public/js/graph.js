@@ -1,18 +1,10 @@
 'use strict';
 
-/*
-Debugging notes: The scale as is should be theoretically perfect, however the assumption that each datapoint is
-perfectly spaced is probably the cause of the problems. I want to migrate now to plot using actual times, not theoretic.
-This should make the scale work perfectly again. Treat the scale as a code checksum, when they're in sync we're plotting
-nicely. Out of sync means there's an error somewhere. Also note the transition point from static to moving, it should be
-synchronised.
-*/
-
 let gsrData = [],
     scaleFactor = window.devicePixelRatio || 1,
     canvasActivated = false,
-    axisSpaceX = 30 * scaleFactor,
-    axisSpaceY = 30 * scaleFactor,
+    axisSpaceX = 50 * scaleFactor,
+    axisSpaceY = 50 * scaleFactor,
     plotWidth,
     plotHeight,
     timeMin,
@@ -20,8 +12,7 @@ let gsrData = [],
     millivoltsMin,
     millivoltsMax;
 
-const datapointSpacing = 6,
-    spacingPerSecond = 50 * scaleFactor,
+const spacingPerSecond = 50 * scaleFactor,
     graphCC = document.getElementById('graph').getContext('2d');
 
 document.addEventListener('GSRDataPoint', (event) => {
@@ -50,24 +41,33 @@ function renderGraph() {
     plotWidth = graphCC.canvas.width - axisSpaceX;
     plotHeight = graphCC.canvas.height - axisSpaceY;
     datapoints = getRelevantSubsetOfDataPointsForGraphing();
+
+    if (datapoints.length === 0) {
+        console.debug('No Datapoints');
+        return false;
+    }
+
     timeMin = minimumDataPointValue(datapoints, 'time').time;
     timeMax = (plotWidth / spacingPerSecond) * 1000 + timeMin;
     millivoltsMin = minimumDataPointValue(datapoints, 'millivolts').millivolts;
     millivoltsMax = maximumDataPointValue(datapoints, 'millivolts').millivolts;
 
-    renderScaleX(datapoints);
+    renderScaleX();
+    renderScaleY();
     renderPlot(datapoints, axisSpaceX);
-    renderAxis(datapoints);
+    renderAxis();
 }
 
 function getRelevantSubsetOfDataPointsForGraphing() {
     let timePeriod = (plotWidth / spacingPerSecond) * 1000,
-        timeOfLatestDataPoint = gsrData[gsrData.length - 1].time,
+        gsrDataLength = gsrData.length,
+        gsrLastIndex = gsrDataLength - 1,
+        latestDataPoint = gsrData[gsrLastIndex],
+        timeOfLatestDataPoint = latestDataPoint.time,
         earliestTime = timeOfLatestDataPoint - timePeriod,
-
         relevantSubset = [];
 
-    // ToDo: I don't presently understand why the undefined check is required, but without it bad things happen.
+    // ToDo: I don't presently understand why the undefined check is required, but without it bad things happened.
     for (let index = gsrData.length - 1; index >= 0 && gsrData[index] !== undefined && gsrData[index].time > earliestTime; index--) {
         relevantSubset.push(gsrData[index]);
     }
@@ -77,7 +77,7 @@ function getRelevantSubsetOfDataPointsForGraphing() {
     return relevantSubset;
 }
 
-function renderAxis(datapoints) {
+function renderAxis() {
     graphCC.beginPath();
     graphCC.moveTo(axisSpaceX, 0);
     graphCC.lineTo(axisSpaceX, graphCC.canvas.height - axisSpaceY);
@@ -86,13 +86,15 @@ function renderAxis(datapoints) {
     graphCC.stroke();
 }
 
-function renderScaleX(datapoints) {
-    const plotWidth = graphCC.canvas.width - axisSpaceX,
-        intervalX = 1000,
+function renderScaleX() {
+    const intervalX = 1000,
         firstInterval = Math.ceil(timeMin / intervalX) * intervalX;
     
     for (let calculatedInterval = firstInterval; calculatedInterval < timeMax; calculatedInterval += intervalX) {
-        let scaledTimeValue = scaleValue(calculatedInterval, timeMin, timeMax, plotWidth);
+        let scaledTimeValue = scaleValue(calculatedInterval, timeMin, timeMax, plotWidth),
+            fontsize = 14 * scaleFactor,
+            fontXOffset = 0 * scaleFactor,
+            fontYOffset = 20 * scaleFactor;
 
         graphCC.globalAlpha = 0.1;
         graphCC.beginPath();
@@ -104,9 +106,68 @@ function renderScaleX(datapoints) {
 
         graphCC.beginPath();
         graphCC.moveTo(scaledTimeValue + axisSpaceX, graphCC.canvas.height - axisSpaceY);
-        graphCC.lineTo(scaledTimeValue + axisSpaceX, graphCC.canvas.height - axisSpaceY / 1.5);
+        graphCC.lineTo(scaledTimeValue + axisSpaceX, graphCC.canvas.height - axisSpaceY / 1.2);
         graphCC.strokeStyle = "#dddddd";
         graphCC.stroke();
+
+        graphCC.font = fontsize + 'px Open Sans';
+        graphCC.fillStyle = "#dddddd";
+        graphCC.textAlign = "center";
+        graphCC.fillText(parseInt(calculatedInterval / 1000), scaledTimeValue + axisSpaceX + fontXOffset, (graphCC.canvas.height - axisSpaceY / 1.2) + fontYOffset);
+    }
+}
+
+function renderScaleY() {
+    const scales = [100, 50, 10, 5, 1, 0.5, 0.1, 0.05, 0.01, 0.005, 0.001],
+        requiredDivisions = 4,
+        millivoltRange = millivoltsMax - millivoltsMin,
+        intervalY = scales.find((scale) => {
+            return scale * requiredDivisions <= millivoltRange;
+        });
+
+    let firstInterval;
+
+    if (typeof intervalY === 'undefined') {
+        return;
+    }
+
+    firstInterval = Math.ceil(millivoltsMin / intervalY) * intervalY;
+
+    for (let calculatedInterval = firstInterval; calculatedInterval < millivoltsMax; calculatedInterval += intervalY) {
+
+        let scaledMillivoltsValue = scaleValue(calculatedInterval, millivoltsMin, millivoltsMax, plotHeight, true),
+            fontsize = 14 * scaleFactor,
+            fontXOffset = -8 * scaleFactor,
+            fontYOffset = 5 * scaleFactor;
+
+        graphCC.globalAlpha = 0.1;
+        graphCC.beginPath();
+        graphCC.moveTo(graphCC.canvas.width, scaledMillivoltsValue);
+        graphCC.lineTo(axisSpaceX, scaledMillivoltsValue);
+        graphCC.strokeStyle = "#dddddd";
+        graphCC.stroke();
+        graphCC.globalAlpha = 1;
+
+        graphCC.beginPath();
+        graphCC.moveTo(axisSpaceX, scaledMillivoltsValue);
+        graphCC.lineTo(axisSpaceX / 1.2, scaledMillivoltsValue);
+        graphCC.strokeStyle = "#dddddd";
+        graphCC.stroke();
+
+        graphCC.font = fontsize + 'px Open Sans';
+        graphCC.fillStyle = "#dddddd";
+        graphCC.textAlign = "right";
+        graphCC.fillText(formatNumberForYAxis(calculatedInterval, intervalY), (axisSpaceX / 1.2) + fontXOffset, scaledMillivoltsValue + fontYOffset);
+    }
+}
+
+function formatNumberForYAxis(number, intervalY) {
+    if (intervalY >= 1) {
+        return parseInt(number);
+    } else if (number == 0) {
+        return 0;
+    } else {
+        return number.toFixed(1);
     }
 }
 
