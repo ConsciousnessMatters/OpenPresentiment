@@ -1,7 +1,7 @@
 #include <Adafruit_ADS1X15.h>
 
 Adafruit_ADS1115 ads;
-unsigned long sampleWindowTime = 50000; // 20 FPS
+unsigned long sampleWindowTime = 40000; // 50000 =  20 FPS / 40000 = 25 FPS / 33333 = 30 FPS
 unsigned long samples = 0;
 unsigned long lastSamples = 0;
 unsigned long lastSerialOutputTime = 0;
@@ -45,6 +45,7 @@ void loop(void)
     adc0Volt = (float) adc0 * 0.0625;
     
     Serial.print(millis()); Serial.print(","); Serial.println(adcSuperSampledAverageVolts);
+//    Serial.print(millis()); Serial.print(","); Serial.print(samplesThisWindow); Serial.print(","); Serial.println(adcSuperSampledAverageVolts);
 //    Serial.print(adc0); Serial.print(","); Serial.print(adcAverage); Serial.print(","); Serial.println(adcSuperSampledAverage);
     lastSerialOutputTime = runtime;
     lastSamples = samples;

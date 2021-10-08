@@ -1,4 +1,4 @@
-unsigned long sampleWindowTime = 50000; // 20 FPS
+unsigned long sampleWindowTime = 40000; // 50000 =  20 FPS / 40000 = 25 FPS / 33333 = 30 FPS
 unsigned long samples = 0;
 unsigned long lastSamples = 0;
 unsigned long lastSerialOutputTime = 0;
