@@ -61,7 +61,7 @@ void loop(void)
 float computeVoltageEquivalent(float adcAverage)
 {
   float differentialCompensationFactor = 2;
-  float differentialVoltageOffset = -1649431;
+  float differentialVoltageOffset = -1646361;
   float gainMultiplier = 125;
   float inversionFactor = -1;
 

@@ -1,7 +1,7 @@
 'use strict';
 
 const connectButton = document.getElementById('connect'),
-    microvoltMode = false;
+    microvoltMode = true;
 
 let port,
     inputReader,

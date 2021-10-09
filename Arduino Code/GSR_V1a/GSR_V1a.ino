@@ -35,8 +35,8 @@ void loop(void)
   if (nextSerialOutputTime <= runtime) {
     samplesThisWindow = samples - lastSamples;
     aSuperSampledAverage = (float) sampleAccumulatorValue / (float) sampleAccumulatorSetSize;
-    aSuperSampledAverageVolts = aSuperSampledAverage * 4.888;
-    a0Volt = (float) a0 * 4.888;
+    aSuperSampledAverageVolts = computeVoltageEquivalent(aSuperSampledAverage);
+    a0Volt = computeVoltageEquivalent((float) a0);
 
     // Raw sensor output
 //    Serial.print(a0); Serial.print(","); Serial.print(a1); Serial.print(","); Serial.print(a2); Serial.print(","); Serial.print(a3); Serial.print(","); Serial.print(a4); Serial.print(","); Serial.println(a5);
@@ -52,4 +52,12 @@ void loop(void)
   }
 
   samples++;
+}
+
+float computeVoltageEquivalent(float byteValue)
+{
+  float offset = 0;
+  float gainMultiplier = 4888; // Standardising to microvolts
+
+  return (byteValue * gainMultiplier) + offset;
 }

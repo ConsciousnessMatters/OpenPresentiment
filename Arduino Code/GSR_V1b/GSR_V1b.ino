@@ -59,10 +59,10 @@ void loop(void)
   samples++;
 }
 
-float computeVoltageEquivalent(float adcAverage)
+float computeVoltageEquivalent(float byteValue)
 {
   float offset = -0.078;
-  float gainMultiplier = 0.0625;
+  float gainMultiplier = 62.5; // Standardising to microvolts
 
-  return (adcAverage * gainMultiplier) + offset;
+  return (byteValue * gainMultiplier) + offset;
 }
