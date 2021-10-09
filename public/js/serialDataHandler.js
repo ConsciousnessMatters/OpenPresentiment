@@ -1,6 +1,7 @@
 'use strict';
 
-const connectButton = document.getElementById('connect');
+const connectButton = document.getElementById('connect'),
+    microvoltMode = false;
 
 let port,
     inputReader,
@@ -67,9 +68,17 @@ function handleIncomingDataPoint(dataPoint) {
         galvanicSkinResponse = new CustomEvent('GSRDataPoint', {
             detail: {
                 time: parseInt(dataItems[0]),
-                millivolts: parseFloat(dataItems[1]),
+                millivolts: getMillivolts(dataItems),
             }
         });
 
     document.dispatchEvent(galvanicSkinResponse);
+}
+
+function getMillivolts(dataItems) {
+    if (microvoltMode) {
+        return parseFloat(dataItems[1] / 1000);
+    } else {
+        return parseFloat(dataItems[1]);
+    }
 }

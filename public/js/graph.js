@@ -3,7 +3,7 @@
 let gsrData = [],
     scaleFactor = window.devicePixelRatio || 1,
     canvasActivated = false,
-    axisSpaceX = 50 * scaleFactor,
+    axisSpaceX = 100 * scaleFactor,
     axisSpaceY = 50 * scaleFactor,
     plotWidth,
     plotHeight,
@@ -118,7 +118,7 @@ function renderScaleX() {
 }
 
 function renderScaleY() {
-    const scales = [100, 50, 10, 5, 1, 0.5, 0.1, 0.05, 0.01, 0.005, 0.001],
+    const scales = [100, 50, 10, 5, 1, 0.5, 0.1, 0.05, 0.01, 0.005, 0.001, 0.0005, 0.0001],
         requiredDivisions = 4,
         millivoltRange = millivoltsMax - millivoltsMin,
         intervalY = scales.find((scale) => {
@@ -167,7 +167,7 @@ function formatNumberForYAxis(number, intervalY) {
     } else if (number == 0) {
         return 0;
     } else {
-        return number.toFixed(1);
+        return number.toFixed(2);
     }
 }
 
@@ -212,4 +212,12 @@ function scaleValue(value, min, max, scale, flipscale = false) {
     }
 
     return valueNeutralScaling * scale;
+}
+
+function calculateSuperAverage() {
+    let totalValue = gsrData.reduce((previousDP, currentDP) => {
+        return previousDP + currentDP.millivolts;
+    }, 0);
+
+    return totalValue / gsrData.length;
 }
