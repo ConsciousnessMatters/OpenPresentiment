@@ -1,4 +1,5 @@
 #include <Adafruit_ADS1X15.h>
+// Supersampling, multi-input, single-read, 5v / 3.3v
 
 Adafruit_ADS1115 ads;
 unsigned long sampleWindowTime = 40000; // 50000 =  20 FPS / 40000 = 25 FPS / 33333 = 30 FPS
@@ -41,8 +42,8 @@ void loop(void)
   if (nextSerialOutputTime <= runtime) {
     samplesThisWindow = samples - lastSamples;
     adcSuperSampledAverage = (float) sampleAccumulatorValue / (float) sampleAccumulatorSetSize;
-    adcSuperSampledAverageVolts = adcSuperSampledAverage * 0.0625;
-    adc0Volt = (float) adc0 * 0.0625;
+    adcSuperSampledAverageVolts = computeVoltageEquivalent(adcSuperSampledAverage);
+    adc0Volt = computeVoltageEquivalent((float) adc0);
     
     Serial.print(millis()); Serial.print(","); Serial.println(adcSuperSampledAverageVolts);
 //    Serial.print(millis()); Serial.print(","); Serial.print(samplesThisWindow); Serial.print(","); Serial.println(adcSuperSampledAverageVolts);
@@ -56,4 +57,12 @@ void loop(void)
   }
 
   samples++;
+}
+
+float computeVoltageEquivalent(float adcAverage)
+{
+  float offset = -0.078;
+  float gainMultiplier = 0.0625;
+
+  return (adcAverage * gainMultiplier) + offset;
 }
