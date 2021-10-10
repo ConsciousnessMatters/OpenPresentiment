@@ -21,6 +21,7 @@ document.addEventListener('GSRDataPoint', (event) => {
         const graphOnline = new CustomEvent('GraphOnline');
         document.dispatchEvent(graphOnline);
         canvasSetup();
+        canvasActivated = true;
     }
     renderGraph();
 });
@@ -46,6 +47,8 @@ function renderGraph() {
         console.debug('No Datapoints');
         return false;
     }
+
+    graphCC.clearRect(0, 0, graphCC.canvas.width, graphCC.canvas.height);
 
     timeMin = minimumDataPointValue(datapoints, 'time').time;
     timeMax = (plotWidth / spacingPerSecond) * 1000 + timeMin;
@@ -187,6 +190,7 @@ function renderPlot(datapoints, offsetX) {
         }
     });
     graphCC.strokeStyle = "#00ff00";
+    graphCC.lineWidth = 1 * scaleFactor;
     graphCC.stroke();
 }
 

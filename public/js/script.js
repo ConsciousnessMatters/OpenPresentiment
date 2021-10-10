@@ -13,10 +13,10 @@ document.querySelector('#exportData').addEventListener('click', (event) => {
 });
 
 function updateButtonOptionsToStage2() {
-    document.querySelector('#setup > .options').classList.remove('hidden');
-    document.querySelector('#setup > .connect').classList.add('hidden');
-    document.querySelector('#setup > .axis-x-label').classList.remove('hidden');
-    document.querySelector('#setup > .axis-y-label').classList.remove('hidden');
+    document.querySelector('.open-gsr > .options').classList.remove('hidden');
+    document.querySelector('.open-gsr > .connect').classList.add('hidden');
+    document.querySelector('.open-gsr > .axis-x-label').classList.remove('hidden');
+    document.querySelector('.open-gsr > .axis-y-label').classList.remove('hidden');
 }
 
 function clearData() {
