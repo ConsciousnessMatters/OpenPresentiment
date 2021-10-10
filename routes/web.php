@@ -17,8 +17,8 @@ Route::get('/', function () {
     return view('root');
 });
 
-Route::get('/dashboard', function () {
-    return view('dashboard');
-})->middleware(['auth','verified'])->name('dashboard');
+Route::get('/mylab', function () {
+    return view('mylab');
+})->middleware(['auth','verified'])->name('mylab');
 
 require __DIR__.'/auth.php';
