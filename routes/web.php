@@ -17,6 +17,10 @@ Route::get('/', function () {
     return view('root');
 });
 
+Route::get('/opengsr', function () {
+    return view('opengsr');
+});
+
 Route::get('/mylab', function () {
     return view('mylab');
 })->middleware(['auth','verified'])->name('mylab');

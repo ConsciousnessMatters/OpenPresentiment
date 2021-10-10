@@ -1,6 +1,6 @@
 'use strict';
 
-const connectButton = document.getElementById('connect'),
+const connectButton = document.querySelector('button.connect'),
     microvoltMode = true;
 
 let port,

@@ -1,7 +1,7 @@
 body {
-  font-family: "Open Sans", sans-serif;
+  font-family: 'Open Sans', sans-serif;
   font-weight: 300;
-  background: #333 url("/images/psi_white.svg") no-repeat 50% 50%;
+  background: #333 url('/images/psi_white.svg') no-repeat 50% 50%;
   background-size: 85vh;
   color: white;
   display: flex;
@@ -13,13 +13,15 @@ body {
 
 h1 {
   font-weight: 300;
-}
-h1 em {
-  font-weight: 800;
-  font-style: normal;
-}
-h1 span.version {
-  font-size: 20px;
+
+  em {
+    font-weight: 800;
+    font-style: normal;
+  }
+
+  span.version {
+    font-size: 20px;
+  }
 }
 
 .open-gsr {
@@ -36,9 +38,10 @@ button {
 a.button-wrapper {
   display: inline-block;
   margin: 0 4px;
-}
-a.button-wrapper button {
-  margin: 0;
+
+  button {
+    margin: 0;
+  }
 }
 
 canvas {
@@ -58,4 +61,3 @@ canvas {
   top: 50vh;
   left: -60px;
 }
-

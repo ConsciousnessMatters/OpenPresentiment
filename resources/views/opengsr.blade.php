@@ -1,15 +1,17 @@
 <x-guest-layout>
     <div class="open-gsr">
-        <h1>Open<em>Presentiment</em> <span class="version">0.3 α1</span></h1>
-
-        <div class="connect">
-            <button id="connect">Connect to Arduino</button>
-        </div>
-        <div class="options hidden">
-            <button id="participate">Participate</button>
-            <button id="clearData">Clear Data</button>
-            <button id="exportData">Export Data</button>
-        </div>
+        <header>
+            <h1>Open<em>GSR</em> <span class="version">1.0 beta</span></h1>
+            <div class="connect">
+                <button class="connect">Connect to Arduino</button>
+                <a class="button-wrapper" href="/" tabindex="-1"><button class="goBackHome">Go Back Home</button></a>
+            </div>
+            <div class="options hidden">
+                <button class="clearData">Clear Data</button>
+                <button class="exportData">Export Data (CSV)</button>
+                <a class="button-wrapper" href="/" tabindex="-1"><button class="goBackHome">Go Back Home</button></a>
+            </div>
+        </header>
 
         <canvas id="graph"></canvas>
         <div class="axis-x-label hidden">Time in seconds (s)</div>

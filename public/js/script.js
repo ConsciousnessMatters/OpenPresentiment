@@ -4,19 +4,25 @@ document.addEventListener('GraphOnline', (event) => {
     updateButtonOptionsToStage2();
 });
 
-document.querySelector('#clearData').addEventListener('click', (event) => {
+document.querySelector('button.clearData').addEventListener('click', (event) => {
     clearData();
 });
 
-document.querySelector('#exportData').addEventListener('click', (event) => {
+document.querySelector('button.exportData').addEventListener('click', (event) => {
     exportData();
 });
 
+// document.querySelectorAll('button.goBackHome').forEach((element) => {
+//     element.addEventListener('click', (event) => {
+//         window.location = '/';
+//     });
+// });
+
 function updateButtonOptionsToStage2() {
-    document.querySelector('.open-gsr > .options').classList.remove('hidden');
-    document.querySelector('.open-gsr > .connect').classList.add('hidden');
-    document.querySelector('.open-gsr > .axis-x-label').classList.remove('hidden');
-    document.querySelector('.open-gsr > .axis-y-label').classList.remove('hidden');
+    document.querySelector('.open-gsr .options').classList.remove('hidden');
+    document.querySelector('.open-gsr .connect').classList.add('hidden');
+    document.querySelector('.open-gsr .axis-x-label').classList.remove('hidden');
+    document.querySelector('.open-gsr .axis-y-label').classList.remove('hidden');
 }
 
 function clearData() {
