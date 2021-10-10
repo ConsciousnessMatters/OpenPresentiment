@@ -11,8 +11,14 @@ body {
   padding: 0;
 }
 
+a {
+  color: white;
+}
 h1 {
   font-weight: 300;
+}
+h1:first-child {
+  margin-top: 0;
 }
 h1 em {
   font-weight: 800;
@@ -42,14 +48,44 @@ canvas {
   padding-right: 20px;
 }
 
+label {
+  display: flex;
+  margin-bottom: 11px;
+  align-items: center;
+}
+label span {
+  display: block;
+  min-width: 150px;
+}
+
+input[type=text], input[type=email], input[type=password] {
+  padding: 4px 8px;
+  min-width: 250px;
+}
+
+input[type=checkbox] {
+  width: 16px;
+  height: 16px;
+  margin: 0;
+}
+
 .hidden {
   display: none;
+}
+
+.call-to-action-bar {
+  margin-top: 20px;
+  display: flex;
+  justify-content: center;
 }
 
 .open-gsr {
   display: flex;
   flex-direction: column;
   text-align: center;
+}
+.open-gsr header {
+  margin-top: 20px;
 }
 .open-gsr .axis-y-label {
   position: fixed;
@@ -72,5 +108,13 @@ canvas {
   text-align: right;
   margin-bottom: 30px;
   margin-top: -10px;
+}
+
+.login {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  align-content: center;
+  justify-content: center;
 }
 
