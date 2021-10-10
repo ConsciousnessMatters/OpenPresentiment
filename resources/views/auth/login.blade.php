@@ -18,18 +18,12 @@
                 <input type="password" name="password" required autocomplete="current-password">
             </label>
 
-            <label>
-                <span>{{ __('Remember me') }}</span>
-                <input id="remember_me" type="checkbox" name="remember">
-            </label>
-
-            @if (Route::has('password.request'))
-                <a class="underline text-sm text-gray-600 hover:text-gray-900" href="{{ route('password.request') }}">
-                    {{ __('Forgot your password?') }}
-                </a>
-            @endif
-
             <div class="call-to-action-bar">
+                @if (Route::has('password.request'))
+                    <a href="{{ route('password.request') }}" class="button-wrapper" tabindex="-1">
+                        <button type="button">{{ __('Reset Password') }}</button>
+                    </a>
+                @endif
                 <button type="submit">{{ __('Log in') }}</button>
             </div>
         </form>

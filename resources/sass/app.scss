@@ -73,8 +73,12 @@ label {
 }
 
 input[type="text"], input[type="email"], input[type="password"] {
-  padding: 4px 8px;
+  padding: 8px 12px;
   min-width: 250px;
+  border: 0;
+  color: white;
+  background-color: rgba(0,0,0, 0.2);
+  border-bottom: 1px solid rgba(255,255,255, 0.4);
 }
 
 input[type="checkbox"] {
@@ -83,12 +87,28 @@ input[type="checkbox"] {
   margin: 0;
 }
 
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus,
+textarea:-webkit-autofill,
+textarea:-webkit-autofill:hover,
+textarea:-webkit-autofill:focus,
+select:-webkit-autofill,
+select:-webkit-autofill:hover,
+select:-webkit-autofill:focus {
+  border: 0;
+  border-bottom: 1px solid rgba(255,255,255, 0.4);
+  -webkit-text-fill-color: white;
+  -webkit-box-shadow: 0 0 0px 1000px #226 inset;
+  transition: background-color 5000s ease-in-out 0s;
+}
+
 .hidden {
   display: none;
 }
 
 .call-to-action-bar {
-  margin-top: 20px;
+  margin-top: 30px;
   display: flex;
   justify-content: center;
 }
