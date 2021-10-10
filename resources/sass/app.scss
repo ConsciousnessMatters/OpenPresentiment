@@ -5,6 +5,7 @@ body {
   background-size: 85vh;
   color: white;
   display: flex;
+  flex-direction: column;
   justify-content: center;
   min-height: 100vh;
   margin: 0;
@@ -23,7 +24,7 @@ a {
   }
 }
 
-h1 {
+h1, .ident {
   font-weight: 300;
 
   &:first-child {
@@ -117,6 +118,7 @@ select:-webkit-autofill:focus {
   display: flex;
   flex-direction: column;
   text-align: center;
+  min-height: 100vh;
 
   header {
     margin-top: 20px;
@@ -154,4 +156,53 @@ select:-webkit-autofill:focus {
   align-items: center;
   align-content: center;
   justify-content: center;
+}
+
+body.logged-in {
+  min-height: 100vh;
+  justify-content: space-between;
+
+  nav {
+    padding: 40px 50px;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+
+    .ident {
+      display: flex;
+      min-width: 300px;
+      font-size: 18px;
+
+      > div {
+        flex-direction: column;
+        display: flex;
+        align-items: end;
+      }
+
+      .version {
+        font-size: 11px;
+        margin-top: -4px;
+      }
+    }
+
+    .page-title {
+      font-size: 28px;
+    }
+
+    .further-options {
+      display: flex;
+      justify-content: end;
+      min-width: 300px;
+    }
+  }
+
+  main {
+    padding: 40px 50px;
+  }
+
+  footer {
+    padding: 40px 50px;
+    background-color: rgba(0,0,0, 0.2);
+  }
 }

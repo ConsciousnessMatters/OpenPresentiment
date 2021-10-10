@@ -5,6 +5,7 @@ body {
   background-size: 85vh;
   color: white;
   display: flex;
+  flex-direction: column;
   justify-content: center;
   min-height: 100vh;
   margin: 0;
@@ -14,17 +15,17 @@ body {
 a {
   color: white;
 }
-h1 {
+h1, .ident {
   font-weight: 300;
 }
-h1:first-child {
+h1:first-child, .ident:first-child {
   margin-top: 0;
 }
-h1 em {
+h1 em, .ident em {
   font-weight: 800;
   font-style: normal;
 }
-h1 span.version {
+h1 span.version, .ident span.version {
   font-size: 20px;
 }
 
@@ -104,6 +105,7 @@ select:-webkit-autofill:focus {
   display: flex;
   flex-direction: column;
   text-align: center;
+  min-height: 100vh;
 }
 .open-gsr header {
   margin-top: 20px;
@@ -137,5 +139,46 @@ select:-webkit-autofill:focus {
   align-items: center;
   align-content: center;
   justify-content: center;
+}
+
+body.logged-in {
+  min-height: 100vh;
+  justify-content: space-between;
+}
+body.logged-in nav {
+  padding: 40px 50px;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+}
+body.logged-in nav .ident {
+  display: flex;
+  min-width: 300px;
+  font-size: 18px;
+}
+body.logged-in nav .ident > div {
+  flex-direction: column;
+  display: flex;
+  align-items: end;
+}
+body.logged-in nav .ident .version {
+  font-size: 11px;
+  margin-top: -4px;
+}
+body.logged-in nav .page-title {
+  font-size: 28px;
+}
+body.logged-in nav .further-options {
+  display: flex;
+  justify-content: end;
+  min-width: 300px;
+}
+body.logged-in main {
+  padding: 40px 50px;
+}
+body.logged-in footer {
+  padding: 40px 50px;
+  background-color: rgba(0, 0, 0, 0.2);
 }
 
