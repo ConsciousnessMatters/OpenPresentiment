@@ -4,12 +4,12 @@
             <h1>Open<em>GSR</em> <span class="version">1.0 beta</span></h1>
             <div class="connect">
                 <button class="connect">Connect to Arduino</button>
-                <a class="button-wrapper" href="/" tabindex="-1"><button class="goBackHome">Go Back Home</button></a>
+                <a href="/" class="button-wrapper" tabindex="-1"><button class="goBackHome">Go Back Home</button></a>
             </div>
             <div class="options hidden">
                 <button class="clearData">Clear Data</button>
                 <button class="exportData">Export Data (CSV)</button>
-                <a class="button-wrapper" href="/" tabindex="-1"><button class="goBackHome">Go Back Home</button></a>
+                <a href="/" class="button-wrapper" tabindex="-1"><button class="goBackHome">Go Back Home</button></a>
             </div>
         </header>
 

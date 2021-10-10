@@ -15,11 +15,11 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
     return view('root');
-});
+})->name('root');;
 
 Route::get('/opengsr', function () {
     return view('opengsr');
-});
+})->name('opengsr');;
 
 Route::get('/mylab', function () {
     return view('mylab');

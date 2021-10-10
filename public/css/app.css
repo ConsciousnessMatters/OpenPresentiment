@@ -22,12 +22,6 @@ h1 span.version {
   font-size: 20px;
 }
 
-.open-gsr {
-  display: flex;
-  flex-direction: column;
-  text-align: center;
-}
-
 button {
   padding: 5px 20px;
   margin: 0 4px;
@@ -52,10 +46,31 @@ canvas {
   display: none;
 }
 
-.axis-y-label {
+.open-gsr {
+  display: flex;
+  flex-direction: column;
+  text-align: center;
+}
+.open-gsr .axis-y-label {
   position: fixed;
   transform: rotate(270deg);
   top: 50vh;
   left: -60px;
+}
+
+.root {
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  justify-content: center;
+}
+.root h1 {
+  font-size: 64px;
+  margin: 0;
+}
+.root .version {
+  text-align: right;
+  margin-bottom: 30px;
+  margin-top: -10px;
 }
 
