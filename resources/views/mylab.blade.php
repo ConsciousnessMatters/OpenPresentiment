@@ -1,5 +1,22 @@
 <x-app-layout>
-    <main>
-        <h1>{{ __('MyLab') }}</h1>
+    <main class="mylab">
+        <section>
+            <h1>Experiment Options</h1>
+            <a href="">
+                <div class="experiment-option">
+                    <h2>Dean Radin, PRNG</h2>
+                    Conduct Classic Dean Radin Presentiment Experiment with Pseudorandom Number Generator
+                </div>
+            </a>
+        </section>
+        <section>
+            <h1>Results Analysis</h1>
+            <a href="">
+                <div class="experiment-option">
+                    <h2>Dean Radin, PRNG</h2>
+                    Analyse Results From Dean Radin Presentiment Experiment with Pseudorandom Number Generator
+                </div>
+            </a>
+        </section>
     </main>
 </x-app-layout>
