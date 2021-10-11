@@ -133,7 +133,16 @@ select:-webkit-autofill:focus {
   margin-top: -10px;
 }
 
-.login, .register {
+.email-verification-message, .new-verification-link-sent {
+  max-width: 500px;
+  text-align: center;
+}
+
+.new-verification-link-sent {
+  margin-top: 20px;
+}
+
+.login, .register, .please-verify-email {
   display: flex;
   flex-direction: column;
   align-items: center;
