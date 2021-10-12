@@ -5,7 +5,6 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 function jQuerySetup() {
-    console.debug('test');
     $('body').on('click', '.full-screen-alert-dismiss', function() {
         $(this).parents('.full-screen-alert').remove();
     });
