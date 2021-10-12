@@ -30,8 +30,17 @@ h1 span.version, .ident span.version {
 }
 
 button {
-  padding: 5px 20px;
+  padding: 8px 24px;
   margin: 0 4px;
+  background-image: linear-gradient(to top, #007700 0%, #009900 100%);
+  font-size: 16px;
+  color: white;
+  font-weight: 800;
+  border: 0;
+  border-radius: 4px;
+}
+button.neutral {
+  background-image: linear-gradient(to top, #444444 0%, #555555 100%);
 }
 
 a.button-wrapper {
@@ -86,13 +95,13 @@ select:-webkit-autofill:focus {
   border: 0;
   border-bottom: 1px solid rgba(255, 255, 255, 0.4);
   -webkit-text-fill-color: white;
-  -webkit-box-shadow: 0 0 0px 1000px #226 inset;
+  -webkit-box-shadow: 0 0 0px 1000px #262 inset;
   -webkit-transition: background-color 5000s ease-in-out 0s;
   transition: background-color 5000s ease-in-out 0s;
 }
 
 .hidden {
-  display: none;
+  display: none !important;
 }
 
 .call-to-action-bar {
@@ -109,6 +118,17 @@ select:-webkit-autofill:focus {
 }
 .open-gsr header {
   margin-top: 20px;
+}
+.open-gsr .connection-progress {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 48px;
 }
 .open-gsr .axis-y-label {
   position: fixed;
@@ -148,6 +168,26 @@ select:-webkit-autofill:focus {
   align-items: center;
   align-content: center;
   justify-content: center;
+}
+
+.full-screen-alert {
+  position: fixed;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  background: rgba(0, 0, 0, 0.4);
+  -webkit-backdrop-filter: blur(64px);
+          backdrop-filter: blur(64px);
+  left: 0;
+  top: 0;
+  right: 0;
+  bottom: 0;
+}
+.full-screen-alert ul {
+  list-style: none;
+  margin: 0 0 30px 0;
+  padding: 0;
 }
 
 body.logged-in {
@@ -197,6 +237,9 @@ body.logged-in footer {
 }
 .mylab section {
   width: calc(50% - 20px);
+}
+.mylab section h1 {
+  font-size: 60px;
 }
 .mylab a {
   text-decoration: none;

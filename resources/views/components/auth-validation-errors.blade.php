@@ -1,16 +1,17 @@
-<!-- ToDo: Requires Clean Up -->
 @props(['errors'])
 
 @if ($errors->any())
-    <div {{ $attributes }}>
-        <div class="font-medium text-red-600">
-            {{ __('Whoops! Something went wrong.') }}
-        </div>
+    <div class="validation-errors full-screen-alert">
+        <h1>
+            {{ __('Authentication Error') }}
+        </h1>
 
-        <ul class="mt-3 list-disc list-inside text-sm text-red-600">
+        <ul>
             @foreach ($errors->all() as $error)
                 <li>{{ $error }}</li>
             @endforeach
         </ul>
+
+        <button class="full-screen-alert-dismiss">Dismiss</button>
     </div>
 @endif

@@ -8,10 +8,14 @@ let port,
     inputStream,
     inputStreamBuffer = '',
     inputOverPromise,
-    discardDataPoints = 20;
+    discardDataPoints = 10;
 
 document.addEventListener('DOMContentLoaded', () => {
-    connectButton.addEventListener('click', clickConnect);
+    connectButton.addEventListener('click', () => {
+        clickConnect().catch(() => {
+            document.body.classList.add('portSelectionFailure');
+        });
+    });
 });
 
 async function clickConnect() {
@@ -22,12 +26,15 @@ async function connect() {
     let streamDecoder = new TextDecoderStream();
 
     port = await navigator.serial.requestPort();
-    await port.open({ baudRate: 9600 });
 
+    fireCustomEventOnDocument('SerialPortSelected');
+
+    await port.open({ baudRate: 9600 });
     inputOverPromise = port.readable.pipeTo(streamDecoder.writable);
     inputStream = streamDecoder.readable;
     inputReader = inputStream.getReader();
 
+    fireCustomEventOnDocument('SerialPortReading');
     serialReadLoop();
 }
 
@@ -64,15 +71,21 @@ async function serialReadLoop() {
 }
 
 function handleIncomingDataPoint(dataPoint) {
-    const dataItems = dataPoint.split(","),
-        galvanicSkinResponse = new CustomEvent('GSRDataPoint', {
-            detail: {
-                time: parseInt(dataItems[0]),
-                millivolts: getMillivolts(dataItems),
-            }
-        });
+    // const dataItems = dataPoint.split(","),
+    //     galvanicSkinResponse = new CustomEvent('GSRDataPoint', {
+    //         detail: {
+    //             time: parseInt(dataItems[0]),
+    //             millivolts: getMillivolts(dataItems),
+    //         }
+    //     });
+    //
+    // document.dispatchEvent(galvanicSkinResponse);
+    const dataItems = dataPoint.split(",");
 
-    document.dispatchEvent(galvanicSkinResponse);
+    fireCustomEventOnDocument('GSRDataPoint', {
+        time: parseInt(dataItems[0]),
+        millivolts: getMillivolts(dataItems),
+    });
 }
 
 function getMillivolts(dataItems) {
@@ -81,4 +94,17 @@ function getMillivolts(dataItems) {
     } else {
         return parseFloat(dataItems[1]);
     }
+}
+
+function fireCustomEventOnDocument(name, detailsObject = null) {
+    let data = null;
+
+    if (detailsObject !== null) {
+        data = {
+            detail: detailsObject
+        };
+    }
+
+    const customEvent = new CustomEvent(name, data);
+    document.dispatchEvent(customEvent);
 }

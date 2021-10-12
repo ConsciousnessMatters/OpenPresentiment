@@ -1,7 +1,22 @@
 'use strict';
 
+const connectionProgress = document.querySelector('.open-gsr .connection-progress');
+
+document.addEventListener('UserCancelledConnection', (event) => {
+    alert('User cancelled connection, reload page to try again.');
+});
+
+document.querySelector('button.connect').addEventListener('click', (event) => {
+    connectionProgress.classList.remove('hidden');
+    connectionProgress.innerHTML = 'Please select a port.';
+});
+
+document.addEventListener('SerialPortSelected', (event) => {
+    connectionProgress.innerHTML = 'Connecting...';
+});
+
 document.addEventListener('GraphOnline', (event) => {
-    updateButtonOptionsToStage2();
+    updateToStage3();
 });
 
 document.querySelector('button.clearData').addEventListener('click', (event) => {
@@ -18,7 +33,12 @@ document.querySelector('button.exportData').addEventListener('click', (event) =>
 //     });
 // });
 
-function updateButtonOptionsToStage2() {
+function updateToStage2() {
+
+}
+
+function updateToStage3() {
+    document.querySelector('.open-gsr .connection-progress').classList.add('hidden');
     document.querySelector('.open-gsr .options').classList.remove('hidden');
     document.querySelector('.open-gsr .connect').classList.add('hidden');
     document.querySelector('.open-gsr .axis-x-label').classList.remove('hidden');

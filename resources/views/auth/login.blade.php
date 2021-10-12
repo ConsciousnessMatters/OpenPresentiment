@@ -21,7 +21,7 @@
             <div class="call-to-action-bar">
                 @if (Route::has('password.request'))
                     <a href="{{ route('password.request') }}" class="button-wrapper" tabindex="-1">
-                        <button type="button">{{ __('Reset Password') }}</button>
+                        <button type="button" class="neutral">{{ __('Reset Password') }}</button>
                     </a>
                 @endif
                 <button type="submit">{{ __('Log in') }}</button>

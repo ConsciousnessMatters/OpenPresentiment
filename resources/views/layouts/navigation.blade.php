@@ -15,7 +15,7 @@
 
         <a href="{{ route('logout') }}"
            onclick="event.preventDefault(); this.closest('form').submit(); ">
-            <button type="button">{{ __('Log Out') }}</button>
+            <button type="button" class="neutral">{{ __('Log Out') }}</button>
         </a>
     </form>
 </nav>

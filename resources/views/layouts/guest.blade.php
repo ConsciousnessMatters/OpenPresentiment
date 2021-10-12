@@ -17,6 +17,13 @@
 
         <link rel="stylesheet" href="{{ asset('css/app.css') }}">
         <script src="{{ asset('js/app.js') }}" defer></script>
+        <!-- Copy out to static to enhance privacy - BEGIN -->
+        <script
+                src="https://code.jquery.com/jquery-3.6.0.slim.min.js"
+                integrity="sha256-u7e5khyithlIdTpu22PHhENmPcRdFiHRjhAuHcs05RI="
+                crossorigin="anonymous"
+                defer></script>
+        <!-- Copy out to static to enhance privacy - END -->
     </head>
     <body>
         {{ $slot }}
