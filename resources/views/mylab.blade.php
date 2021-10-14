@@ -2,7 +2,7 @@
     <main class="mylab">
         <section>
             <h1>Experiment Options</h1>
-            <a href="">
+            <a href="{{ route('mylab.experiment.presentiment.1') }}">
                 <div class="experiment-option">
                     <h2>Dean Radin, PRNG</h2>
                     Conduct Classic Dean Radin Presentiment Experiment with Pseudorandom Number Generator
