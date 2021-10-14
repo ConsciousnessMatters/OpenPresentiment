@@ -283,3 +283,31 @@ body.logged-in {
     }
   }
 }
+
+.experiment {
+  section {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+
+    h1:last-child {
+      margin-bottom: 0;
+    }
+
+    span.part {
+      font-size: 24px;
+      font-weight: 100;
+      padding: 20px 0;
+      border-bottom: 1px solid #ddd;
+
+      &.current {
+        font-weight: 600;
+        font-size: 32px;
+      }
+
+      &:last-child {
+        border-bottom: 0;
+      }
+    }
+  }
+}

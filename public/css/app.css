@@ -252,3 +252,25 @@ body.logged-in footer {
   margin-top: 0;
 }
 
+.experiment section {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+.experiment section h1:last-child {
+  margin-bottom: 0;
+}
+.experiment section span.part {
+  font-size: 24px;
+  font-weight: 100;
+  padding: 20px 0;
+  border-bottom: 1px solid #ddd;
+}
+.experiment section span.part.current {
+  font-weight: 600;
+  font-size: 32px;
+}
+.experiment section span.part:last-child {
+  border-bottom: 0;
+}
+
