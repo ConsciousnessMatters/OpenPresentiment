@@ -11,6 +11,9 @@ body {
   margin: 0;
   padding: 0;
 }
+body.full-screen-alert {
+  overflow: hidden;
+}
 
 a {
   color: white;
@@ -51,13 +54,6 @@ a.button-wrapper button {
   margin: 0;
 }
 
-canvas {
-  margin-top: 30px;
-  width: calc(100vw - 100px);
-  height: calc(100vh - 200px);
-  padding-right: 20px;
-}
-
 label {
   display: flex;
   margin-bottom: 11px;
@@ -96,78 +92,10 @@ select:-webkit-autofill:focus {
   border-bottom: 1px solid rgba(255, 255, 255, 0.4);
   -webkit-text-fill-color: white;
   -webkit-box-shadow: 0 0 0px 1000px #262 inset;
-  -webkit-transition: background-color 5000s ease-in-out 0s;
-  transition: background-color 5000s ease-in-out 0s;
 }
 
 .hidden {
   display: none !important;
-}
-
-.call-to-action-bar {
-  margin-top: 30px;
-  display: flex;
-  justify-content: center;
-}
-
-.open-gsr {
-  display: flex;
-  flex-direction: column;
-  text-align: center;
-  min-height: 100vh;
-}
-.open-gsr header {
-  margin-top: 20px;
-}
-.open-gsr .connection-progress {
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  font-size: 48px;
-}
-.open-gsr .axis-y-label {
-  position: fixed;
-  transform: rotate(270deg);
-  top: 50vh;
-  left: -60px;
-}
-
-.root {
-  display: flex;
-  align-items: center;
-  flex-direction: column;
-  justify-content: center;
-}
-.root h1 {
-  font-size: 64px;
-  margin: 0;
-}
-.root .version {
-  text-align: right;
-  margin-bottom: 30px;
-  margin-top: -10px;
-}
-
-.email-verification-message, .new-verification-link-sent {
-  max-width: 500px;
-  text-align: center;
-}
-
-.new-verification-link-sent {
-  margin-top: 20px;
-}
-
-.login, .register, .please-verify-email {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  align-content: center;
-  justify-content: center;
 }
 
 .full-screen-alert {
@@ -190,87 +118,177 @@ select:-webkit-autofill:focus {
   padding: 0;
 }
 
-body.logged-in {
+body.open-gsr {
+  text-align: center;
+  justify-content: start;
+}
+body.open-gsr header {
+  margin-top: 20px;
+}
+body.open-gsr canvas {
+  margin-top: 30px;
+  width: calc(100vw - 100px);
+  height: calc(100vh - 200px);
+  padding-right: 20px;
+}
+body.open-gsr .connection-progress {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 48px;
+}
+body.open-gsr .axis-y-label {
+  position: fixed;
+  transform: rotate(270deg);
+  top: 50vh;
+  left: -60px;
+}
+
+body.root {
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  justify-content: center;
+}
+body.root h1 {
+  font-size: 64px;
+  margin: 0;
+}
+body.root .version {
+  text-align: right;
+  margin-bottom: 30px;
+  margin-top: -10px;
+}
+
+body.root .call-to-action-bar {
+  margin-top: 30px;
+  display: flex;
+  justify-content: center;
+}
+body.root .email-verification-message, body.root .new-verification-link-sent {
+  max-width: 500px;
+  text-align: center;
+}
+body.root .new-verification-link-sent {
+  margin-top: 20px;
+}
+body.root .login, body.root .register, body.root .please-verify-email {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  align-content: center;
+  justify-content: center;
+}
+
+body.mylab {
   min-height: 100vh;
   justify-content: space-between;
+  overflow-x: hidden;
 }
-body.logged-in nav {
+body.mylab nav {
   padding: 40px 50px;
   display: flex;
   flex-direction: row;
   justify-content: space-between;
   align-items: center;
 }
-body.logged-in nav .ident {
+body.mylab nav .ident {
   display: flex;
   min-width: 300px;
   font-size: 18px;
 }
-body.logged-in nav .ident > div {
+body.mylab nav .ident > div {
   flex-direction: column;
   display: flex;
   align-items: end;
 }
-body.logged-in nav .ident .version {
+body.mylab nav .ident .version {
   font-size: 11px;
   margin-top: -4px;
 }
-body.logged-in nav .page-title {
+body.mylab nav .page-title {
   font-size: 28px;
+  vertical-align: center;
 }
-body.logged-in nav .further-options {
+body.mylab nav .page-title a {
+  text-decoration: none;
+}
+body.mylab nav .page-title .seperator {
+  color: #F1E8B8;
+}
+body.mylab nav .page-title .smaller {
+  font-size: 22px;
+}
+body.mylab nav .further-options {
   display: flex;
   justify-content: end;
   min-width: 300px;
 }
-body.logged-in main {
-  padding: 40px 50px;
-}
-body.logged-in footer {
-  padding: 40px 50px;
-  background-color: rgba(0, 0, 0, 0.2);
-}
-
-.mylab {
+body.mylab main {
+  padding: 40px 0;
   display: flex;
   justify-content: space-between;
 }
-.mylab section {
-  width: calc(50% - 20px);
+body.mylab main section {
+  width: 50vw;
+  padding: 0 25px;
 }
-.mylab section h1 {
+body.mylab main section h1 {
   font-size: 60px;
 }
-.mylab a {
+body.mylab main a {
   text-decoration: none;
 }
-.mylab .experiment-option {
+body.mylab main .experiment-option {
   background: rgba(0, 0, 0, 0.2);
   padding: 20px;
 }
-.mylab .experiment-option h2 {
+body.mylab main .experiment-option h2 {
   margin-top: 0;
 }
+body.mylab footer {
+  padding: 40px 50px;
+  background-color: rgba(241, 232, 184, 0.2);
+  /* rgba(0,0,0, 0.2); */
+}
 
-.experiment section {
+body.mylab.experiment main {
+  width: 150vw;
+  transition: transform 1s ease-in-out;
+}
+body.mylab.experiment main section {
   display: flex;
   flex-direction: column;
   justify-content: center;
 }
-.experiment section h1:last-child {
+body.mylab.experiment main section h1:last-child {
   margin-bottom: 0;
 }
-.experiment section span.part {
+body.mylab.experiment main section span.part {
   font-size: 24px;
   font-weight: 100;
   padding: 20px 0;
   border-bottom: 1px solid #ddd;
 }
-.experiment section span.part.current {
+body.mylab.experiment main section span.part:last-child {
+  border-bottom: 0;
+}
+body.mylab.experiment main.part-1 section.part-1, body.mylab.experiment main.part-1 section.part-2, body.mylab.experiment main.part-1 section.part-3, body.mylab.experiment main.part-1 section.part-4, body.mylab.experiment main.part-2 section.part-1, body.mylab.experiment main.part-2 section.part-2, body.mylab.experiment main.part-2 section.part-3, body.mylab.experiment main.part-2 section.part-4, body.mylab.experiment main.part-3 section.part-1, body.mylab.experiment main.part-3 section.part-2, body.mylab.experiment main.part-3 section.part-3, body.mylab.experiment main.part-3 section.part-4, body.mylab.experiment main.part-4 section.part-1, body.mylab.experiment main.part-4 section.part-2, body.mylab.experiment main.part-4 section.part-3, body.mylab.experiment main.part-4 section.part-4 {
+  display: none;
+}
+body.mylab.experiment main.part-1 section.part-1, body.mylab.experiment main.part-2 section.part-2, body.mylab.experiment main.part-3 section.part-3, body.mylab.experiment main.part-4 section.part-4 {
+  display: flex;
+}
+body.mylab.experiment main.part-1 .experiment-structure .part-1, body.mylab.experiment main.part-2 .experiment-structure .part-2, body.mylab.experiment main.part-3 .experiment-structure .part-3, body.mylab.experiment main.part-4 .experiment-structure .part-4 {
   font-weight: 600;
   font-size: 32px;
 }
-.experiment section span.part:last-child {
-  border-bottom: 0;
+body.mylab.experiment main.shift-right {
+  transform: translateX(-50vw);
 }
 

@@ -1,0 +1,88 @@
+// body.mylab {
+
+& {
+  min-height: 100vh;
+  justify-content: space-between;
+  overflow-x: hidden;
+
+  nav {
+    padding: 40px 50px;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+
+    .ident {
+      display: flex;
+      min-width: 300px;
+      font-size: 18px;
+
+      > div {
+        flex-direction: column;
+        display: flex;
+        align-items: end;
+      }
+
+      .version {
+        font-size: 11px;
+        margin-top: -4px;
+      }
+    }
+
+    .page-title {
+      font-size: 28px;
+      vertical-align: center;
+
+      a {
+        text-decoration: none;
+      }
+
+      .seperator {
+        color: #F1E8B8;
+      }
+
+      .smaller {
+        font-size: 22px;
+      }
+    }
+
+    .further-options {
+      display: flex;
+      justify-content: end;
+      min-width: 300px;
+    }
+  }
+
+  main {
+    padding: 40px 0;
+    display: flex;
+    justify-content: space-between;
+
+    section {
+      width: 50vw;
+      padding: 0 25px;
+
+      h1 {
+        font-size: 60px;
+      }
+    }
+
+    a {
+      text-decoration: none;
+    }
+
+    .experiment-option {
+      background: rgba(0,0,0, 0.2);
+      padding: 20px;
+
+      h2 {
+        margin-top: 0;
+      }
+    }
+  }
+
+  footer {
+    padding: 40px 50px;
+    background-color: rgba(241,232,184, 0.2); /* rgba(0,0,0, 0.2); */
+  }
+}

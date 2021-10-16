@@ -25,7 +25,7 @@
                 defer></script>
         <!-- Copy out to static to enhance privacy - END -->
     </head>
-    <body>
+    <body class="guest {{ $bodyClass ?? 'default' }}">
         {{ $slot }}
     </body>
 </html>

@@ -8,6 +8,8 @@ class ExperimentPresentiment1Controller extends ExperimentPresentimentController
 {
     public function show()
     {
-        return view('mylab.experiments.presentiment.1');
+        return view('mylab.experiments.presentiment.1', [
+            'bodyClass' => 'mylab experiment experiment-1',
+        ]);
     }
 }

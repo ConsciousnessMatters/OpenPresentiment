@@ -1,5 +1,5 @@
 <!-- ToDo: Requires Clean Up -->
-<x-guest-layout>
+<x-guest-layout bodyClass="{{$bodyClass}}">
     <x-auth-card>
         <x-slot name="logo">
             <a href="/">

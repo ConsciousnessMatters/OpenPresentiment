@@ -1,4 +1,4 @@
-<x-app-layout>
+<x-app-layout bodyClass="{{ $bodyClass }}">
     <main class="mylab">
         <section>
             <h1>Experiment Options</h1>

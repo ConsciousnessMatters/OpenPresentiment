@@ -1,4 +1,4 @@
-<x-guest-layout>
+<x-guest-layout bodyClass="{{$bodyClass}}">
     <div class="register">
         <h1>Register</h1>
 

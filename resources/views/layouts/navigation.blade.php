@@ -7,7 +7,11 @@
     </div>
 
     <div class="page-title">
-        MyLab
+        <a href="{{ route('mylab') }}">MyLab</a>
+        <span class="smaller">
+            <span class="seperator">></span>
+            <a href="{{ route('mylab.experiment.presentiment.1') }}">Presentiment Experiment 1</a>
+        </span>
     </div>
 
     <form class="further-options" method="POST" action="{{ route('logout') }}">

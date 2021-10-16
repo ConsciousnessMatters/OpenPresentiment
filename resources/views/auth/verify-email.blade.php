@@ -1,4 +1,4 @@
-<x-guest-layout>
+<x-guest-layout bodyClass="{{$bodyClass}}">
     <div class="please-verify-email">
         <h1>Email Verification</h1>
 

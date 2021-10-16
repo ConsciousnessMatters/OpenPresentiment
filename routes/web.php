@@ -15,17 +15,17 @@ use App\Http\Controllers\ExperimentPresentiment1Controller;
 */
 
 Route::get('/', function () {
-    return view('root');
+    return view('root', ['bodyClass' => 'root']);
 })->name('root');
 
 Route::get('/opengsr', function () {
-    return view('opengsr');
+    return view('opengsr', ['bodyClass' => 'open-gsr']);
 })->name('opengsr');
 
 Route::prefix('mylab')->middleware(['auth','verified'])->name('mylab')->group(function () {
 
     Route::get('/', function () {
-        return view('mylab');
+        return view('mylab', ['bodyClass' => 'mylab']);
     })->name('');
 
     Route::prefix('experiment')->name('.experiment')->group(function () {

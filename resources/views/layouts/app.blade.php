@@ -25,7 +25,7 @@
                 defer></script>
         <!-- Copy out to static to enhance privacy - END -->
     </head>
-    <body class="logged-in">
+    <body class="logged-in app {{ $bodyClass ?? 'default' }}">
         @include('layouts.navigation')
         {{ $slot }}
         @include('layouts.footer')
