@@ -15,7 +15,7 @@ main {
       font-size: 24px;
       font-weight: 100;
       padding: 20px 0;
-      border-bottom: 1px solid #ddd;
+      border-bottom: 1px solid rgba(255,255,255, 0.25);
 
       &:last-child {
         border-bottom: 0;
@@ -50,5 +50,9 @@ main {
     //section:nth-child(3) {
     //  width: calc(60vw - 20px);
     //}
+  }
+
+  .part.not-yet {
+    color: rgba(255,255,255, 0.25);
   }
 }

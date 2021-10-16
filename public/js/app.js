@@ -7,15 +7,26 @@
  * If you are looking for production-ready output files, see mode: "production" (https://webpack.js.org/configuration/mode/).
  */
 /******/ (() => { // webpackBootstrap
+/******/ 	"use strict";
 /******/ 	var __webpack_modules__ = ({
+
+/***/ "./resources/js/$full-screen-alerts.js":
+/*!*********************************************!*\
+  !*** ./resources/js/$full-screen-alerts.js ***!
+  \*********************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"default\": () => (__WEBPACK_DEFAULT_EXPORT__)\n/* harmony export */ });\n/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (function () {\n  function eventsSetup() {\n    $('body').on('click', '.full-screen-alert-dismiss', function () {\n      $(this).parents('.full-screen-alert:not(body)').remove();\n      $('body').removeClass('full-screen-alert');\n    });\n  }\n\n  function startingConditionCheck() {\n    if ($('.full-screen-alert:visible').length > 0) {\n      $('body').addClass('full-screen-alert');\n    }\n  }\n\n  eventsSetup();\n  startingConditionCheck();\n});//# sourceURL=[module]\n//# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJmaWxlIjoiLi9yZXNvdXJjZXMvanMvJGZ1bGwtc2NyZWVuLWFsZXJ0cy5qcy5qcyIsIm1hcHBpbmdzIjoiOzs7O0FBQUEsaUVBQWUsWUFBTTtBQUVqQixXQUFTQSxXQUFULEdBQXVCO0FBQ25CQyxJQUFBQSxDQUFDLENBQUMsTUFBRCxDQUFELENBQVVDLEVBQVYsQ0FBYSxPQUFiLEVBQXNCLDRCQUF0QixFQUFvRCxZQUFXO0FBQzNERCxNQUFBQSxDQUFDLENBQUMsSUFBRCxDQUFELENBQVFFLE9BQVIsQ0FBZ0IsOEJBQWhCLEVBQWdEQyxNQUFoRDtBQUNBSCxNQUFBQSxDQUFDLENBQUMsTUFBRCxDQUFELENBQVVJLFdBQVYsQ0FBc0IsbUJBQXRCO0FBQ0gsS0FIRDtBQUlIOztBQUVELFdBQVNDLHNCQUFULEdBQWtDO0FBQzlCLFFBQUlMLENBQUMsQ0FBQyw0QkFBRCxDQUFELENBQWdDTSxNQUFoQyxHQUF5QyxDQUE3QyxFQUFnRDtBQUM1Q04sTUFBQUEsQ0FBQyxDQUFDLE1BQUQsQ0FBRCxDQUFVTyxRQUFWLENBQW1CLG1CQUFuQjtBQUNIO0FBQ0o7O0FBRURSLEVBQUFBLFdBQVc7QUFDWE0sRUFBQUEsc0JBQXNCO0FBQ3pCLENBakJEIiwic291cmNlcyI6WyJ3ZWJwYWNrOi8vLy4vcmVzb3VyY2VzL2pzLyRmdWxsLXNjcmVlbi1hbGVydHMuanM/NDgyZiJdLCJzb3VyY2VzQ29udGVudCI6WyJleHBvcnQgZGVmYXVsdCAoKSA9PiB7XG5cbiAgICBmdW5jdGlvbiBldmVudHNTZXR1cCgpIHtcbiAgICAgICAgJCgnYm9keScpLm9uKCdjbGljaycsICcuZnVsbC1zY3JlZW4tYWxlcnQtZGlzbWlzcycsIGZ1bmN0aW9uKCkge1xuICAgICAgICAgICAgJCh0aGlzKS5wYXJlbnRzKCcuZnVsbC1zY3JlZW4tYWxlcnQ6bm90KGJvZHkpJykucmVtb3ZlKCk7XG4gICAgICAgICAgICAkKCdib2R5JykucmVtb3ZlQ2xhc3MoJ2Z1bGwtc2NyZWVuLWFsZXJ0Jyk7XG4gICAgICAgIH0pO1xuICAgIH1cblxuICAgIGZ1bmN0aW9uIHN0YXJ0aW5nQ29uZGl0aW9uQ2hlY2soKSB7XG4gICAgICAgIGlmICgkKCcuZnVsbC1zY3JlZW4tYWxlcnQ6dmlzaWJsZScpLmxlbmd0aCA+IDApIHtcbiAgICAgICAgICAgICQoJ2JvZHknKS5hZGRDbGFzcygnZnVsbC1zY3JlZW4tYWxlcnQnKTtcbiAgICAgICAgfVxuICAgIH1cblxuICAgIGV2ZW50c1NldHVwKCk7XG4gICAgc3RhcnRpbmdDb25kaXRpb25DaGVjaygpO1xufTtcbiJdLCJuYW1lcyI6WyJldmVudHNTZXR1cCIsIiQiLCJvbiIsInBhcmVudHMiLCJyZW1vdmUiLCJyZW1vdmVDbGFzcyIsInN0YXJ0aW5nQ29uZGl0aW9uQ2hlY2siLCJsZW5ndGgiLCJhZGRDbGFzcyJdLCJzb3VyY2VSb290IjoiIn0=\n//# sourceURL=webpack-internal:///./resources/js/$full-screen-alerts.js\n");
+
+/***/ }),
 
 /***/ "./resources/js/app.js":
 /*!*****************************!*\
   !*** ./resources/js/app.js ***!
   \*****************************/
-/***/ (() => {
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
-eval("// Temporary solution, even though I know how to write fine in vanilla JS, jQuery is just so damn quick to develop in.\ndocument.addEventListener('DOMContentLoaded', function () {\n  jQuerySetup();\n  fullScreenAlertCheck();\n});\n\nfunction jQuerySetup() {\n  $('body').on('click', '.full-screen-alert-dismiss', function () {\n    $(this).parents('.full-screen-alert:not(body)').remove();\n    $('body').removeClass('full-screen-alert');\n  });\n}\n\nfunction fullScreenAlertCheck() {\n  if ($('.full-screen-alert:visible').length > 0) {\n    $('body').addClass('full-screen-alert');\n  }\n}//# sourceURL=[module]\n//# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbIndlYnBhY2s6Ly8vLi9yZXNvdXJjZXMvanMvYXBwLmpzPzZkNDAiXSwibmFtZXMiOlsiZG9jdW1lbnQiLCJhZGRFdmVudExpc3RlbmVyIiwialF1ZXJ5U2V0dXAiLCJmdWxsU2NyZWVuQWxlcnRDaGVjayIsIiQiLCJvbiIsInBhcmVudHMiLCJyZW1vdmUiLCJyZW1vdmVDbGFzcyIsImxlbmd0aCIsImFkZENsYXNzIl0sIm1hcHBpbmdzIjoiQUFBQTtBQUVBQSxRQUFRLENBQUNDLGdCQUFULENBQTBCLGtCQUExQixFQUE4QyxZQUFNO0FBQ2hEQyxFQUFBQSxXQUFXO0FBQ1hDLEVBQUFBLG9CQUFvQjtBQUN2QixDQUhEOztBQUtBLFNBQVNELFdBQVQsR0FBdUI7QUFDbkJFLEVBQUFBLENBQUMsQ0FBQyxNQUFELENBQUQsQ0FBVUMsRUFBVixDQUFhLE9BQWIsRUFBc0IsNEJBQXRCLEVBQW9ELFlBQVc7QUFDM0RELElBQUFBLENBQUMsQ0FBQyxJQUFELENBQUQsQ0FBUUUsT0FBUixDQUFnQiw4QkFBaEIsRUFBZ0RDLE1BQWhEO0FBQ0FILElBQUFBLENBQUMsQ0FBQyxNQUFELENBQUQsQ0FBVUksV0FBVixDQUFzQixtQkFBdEI7QUFDSCxHQUhEO0FBSUg7O0FBRUQsU0FBU0wsb0JBQVQsR0FBZ0M7QUFDNUIsTUFBSUMsQ0FBQyxDQUFDLDRCQUFELENBQUQsQ0FBZ0NLLE1BQWhDLEdBQXlDLENBQTdDLEVBQWdEO0FBQzVDTCxJQUFBQSxDQUFDLENBQUMsTUFBRCxDQUFELENBQVVNLFFBQVYsQ0FBbUIsbUJBQW5CO0FBQ0g7QUFDSiIsInNvdXJjZXNDb250ZW50IjpbIi8vIFRlbXBvcmFyeSBzb2x1dGlvbiwgZXZlbiB0aG91Z2ggSSBrbm93IGhvdyB0byB3cml0ZSBmaW5lIGluIHZhbmlsbGEgSlMsIGpRdWVyeSBpcyBqdXN0IHNvIGRhbW4gcXVpY2sgdG8gZGV2ZWxvcCBpbi5cblxuZG9jdW1lbnQuYWRkRXZlbnRMaXN0ZW5lcignRE9NQ29udGVudExvYWRlZCcsICgpID0+IHtcbiAgICBqUXVlcnlTZXR1cCgpO1xuICAgIGZ1bGxTY3JlZW5BbGVydENoZWNrKCk7XG59KTtcblxuZnVuY3Rpb24galF1ZXJ5U2V0dXAoKSB7XG4gICAgJCgnYm9keScpLm9uKCdjbGljaycsICcuZnVsbC1zY3JlZW4tYWxlcnQtZGlzbWlzcycsIGZ1bmN0aW9uKCkge1xuICAgICAgICAkKHRoaXMpLnBhcmVudHMoJy5mdWxsLXNjcmVlbi1hbGVydDpub3QoYm9keSknKS5yZW1vdmUoKTtcbiAgICAgICAgJCgnYm9keScpLnJlbW92ZUNsYXNzKCdmdWxsLXNjcmVlbi1hbGVydCcpO1xuICAgIH0pO1xufVxuXG5mdW5jdGlvbiBmdWxsU2NyZWVuQWxlcnRDaGVjaygpIHtcbiAgICBpZiAoJCgnLmZ1bGwtc2NyZWVuLWFsZXJ0OnZpc2libGUnKS5sZW5ndGggPiAwKSB7XG4gICAgICAgICQoJ2JvZHknKS5hZGRDbGFzcygnZnVsbC1zY3JlZW4tYWxlcnQnKTtcbiAgICB9XG59XG4iXSwiZmlsZSI6Ii4vcmVzb3VyY2VzL2pzL2FwcC5qcy5qcyIsInNvdXJjZVJvb3QiOiIifQ==\n//# sourceURL=webpack-internal:///./resources/js/app.js\n");
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony import */ var _$full_screen_alerts__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./$full-screen-alerts */ \"./resources/js/$full-screen-alerts.js\");\n// $variable (as opposed to variable) designates jQuery based module.\n\ndocument.addEventListener('DOMContentLoaded', function () {\n  (0,_$full_screen_alerts__WEBPACK_IMPORTED_MODULE_0__[\"default\"])();\n});//# sourceURL=[module]\n//# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJmaWxlIjoiLi9yZXNvdXJjZXMvanMvYXBwLmpzLmpzIiwibWFwcGluZ3MiOiI7O0FBQUE7QUFFQTtBQUVBQyxRQUFRLENBQUNDLGdCQUFULENBQTBCLGtCQUExQixFQUE4QyxZQUFNO0FBQ2hERixFQUFBQSxnRUFBaUI7QUFDcEIsQ0FGRCIsInNvdXJjZXMiOlsid2VicGFjazovLy8uL3Jlc291cmNlcy9qcy9hcHAuanM/NmQ0MCJdLCJzb3VyY2VzQ29udGVudCI6WyIvLyAkdmFyaWFibGUgKGFzIG9wcG9zZWQgdG8gdmFyaWFibGUpIGRlc2lnbmF0ZXMgalF1ZXJ5IGJhc2VkIG1vZHVsZS5cblxuaW1wb3J0ICRmdWxsU2NyZWVuQWxlcnRzIGZyb20gJy4vJGZ1bGwtc2NyZWVuLWFsZXJ0cyc7XG5cbmRvY3VtZW50LmFkZEV2ZW50TGlzdGVuZXIoJ0RPTUNvbnRlbnRMb2FkZWQnLCAoKSA9PiB7XG4gICAgJGZ1bGxTY3JlZW5BbGVydHMoKTtcbn0pO1xuIl0sIm5hbWVzIjpbIiRmdWxsU2NyZWVuQWxlcnRzIiwiZG9jdW1lbnQiLCJhZGRFdmVudExpc3RlbmVyIl0sInNvdXJjZVJvb3QiOiIifQ==\n//# sourceURL=webpack-internal:///./resources/js/app.js\n");
 
 /***/ }),
 
@@ -25,7 +36,6 @@ eval("// Temporary solution, even though I know how to write fine in vanilla JS,
   \*********************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
-"use strict";
 eval("__webpack_require__.r(__webpack_exports__);\n// extracted by mini-css-extract-plugin\n//# sourceURL=[module]\n//# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJmaWxlIjoiLi9yZXNvdXJjZXMvc2Fzcy9hcHAuc2Nzcy5qcyIsIm1hcHBpbmdzIjoiO0FBQUEiLCJzb3VyY2VzIjpbIndlYnBhY2s6Ly8vLi9yZXNvdXJjZXMvc2Fzcy9hcHAuc2Nzcz80NzVmIl0sInNvdXJjZXNDb250ZW50IjpbIi8vIGV4dHJhY3RlZCBieSBtaW5pLWNzcy1leHRyYWN0LXBsdWdpblxuZXhwb3J0IHt9OyJdLCJuYW1lcyI6W10sInNvdXJjZVJvb3QiOiIifQ==\n//# sourceURL=webpack-internal:///./resources/sass/app.scss\n");
 
 /***/ }),
@@ -36,7 +46,6 @@ eval("__webpack_require__.r(__webpack_exports__);\n// extracted by mini-css-extr
   \*******************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
-"use strict";
 eval("__webpack_require__.r(__webpack_exports__);\n// extracted by mini-css-extract-plugin\n//# sourceURL=[module]\n//# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJmaWxlIjoiLi9yZXNvdXJjZXMvY3NzL2FwcC5jc3MuanMiLCJtYXBwaW5ncyI6IjtBQUFBIiwic291cmNlcyI6WyJ3ZWJwYWNrOi8vLy4vcmVzb3VyY2VzL2Nzcy9hcHAuY3NzPzVjMmMiXSwic291cmNlc0NvbnRlbnQiOlsiLy8gZXh0cmFjdGVkIGJ5IG1pbmktY3NzLWV4dHJhY3QtcGx1Z2luXG5leHBvcnQge307Il0sIm5hbWVzIjpbXSwic291cmNlUm9vdCI6IiJ9\n//# sourceURL=webpack-internal:///./resources/css/app.css\n");
 
 /***/ })
@@ -100,6 +109,18 @@ eval("__webpack_require__.r(__webpack_exports__);\n// extracted by mini-css-extr
 /******/ 				}
 /******/ 			}
 /******/ 			return result;
+/******/ 		};
+/******/ 	})();
+/******/ 	
+/******/ 	/* webpack/runtime/define property getters */
+/******/ 	(() => {
+/******/ 		// define getter functions for harmony exports
+/******/ 		__webpack_require__.d = (exports, definition) => {
+/******/ 			for(var key in definition) {
+/******/ 				if(__webpack_require__.o(definition, key) && !__webpack_require__.o(exports, key)) {
+/******/ 					Object.defineProperty(exports, key, { enumerable: true, get: definition[key] });
+/******/ 				}
+/******/ 			}
 /******/ 		};
 /******/ 	})();
 /******/ 	

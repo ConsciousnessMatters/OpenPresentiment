@@ -273,7 +273,7 @@ body.mylab.experiment main section span.part {
   font-size: 24px;
   font-weight: 100;
   padding: 20px 0;
-  border-bottom: 1px solid #ddd;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.25);
 }
 body.mylab.experiment main section span.part:last-child {
   border-bottom: 0;
@@ -290,5 +290,8 @@ body.mylab.experiment main.part-1 .experiment-structure .part-1, body.mylab.expe
 }
 body.mylab.experiment main.shift-right {
   transform: translateX(-50vw);
+}
+body.mylab.experiment main .part.not-yet {
+  color: rgba(255, 255, 255, 0.25);
 }
 
