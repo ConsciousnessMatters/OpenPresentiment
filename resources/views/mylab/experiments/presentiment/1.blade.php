@@ -1,5 +1,5 @@
 <x-app-layout bodyClass="{{ $bodyClass }}">
-    <main class="mylab experiment presentiment xp1 part-1">
+    <main class="part-1">
         <section>
             <h1>Experiment 1, Dean Radin, PRNG</h1>
         </section>

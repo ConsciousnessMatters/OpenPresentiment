@@ -1,24 +1,24 @@
 // body.auth {
 
-.call-to-action-bar {
-  margin-top: 30px;
-  display: flex;
-  justify-content: center;
-}
-
-.email-verification-message, .new-verification-link-sent {
-  max-width: 500px;
-  text-align: center;
-}
-
-.new-verification-link-sent {
-  margin-top: 20px;
-}
-
-.login, .register, .please-verify-email {
+& {
   display: flex;
   flex-direction: column;
   align-items: center;
   align-content: center;
   justify-content: center;
+
+  .call-to-action-bar {
+    margin-top: 30px;
+    display: flex;
+    justify-content: center;
+  }
+
+  .email-verification-message, .new-verification-link-sent {
+    max-width: 500px;
+    text-align: center;
+  }
+
+  .new-verification-link-sent {
+    margin-top: 20px;
+  }
 }

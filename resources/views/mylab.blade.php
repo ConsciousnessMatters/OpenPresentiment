@@ -1,5 +1,5 @@
 <x-app-layout bodyClass="{{ $bodyClass }}">
-    <main class="mylab">
+    <main>
         <section>
             <h1>Experiment Options</h1>
             <a href="{{ route('mylab.experiment.presentiment.1') }}">
