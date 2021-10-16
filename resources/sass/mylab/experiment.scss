@@ -1,11 +1,11 @@
 main {
-  width: 150vw;
-  transition: transform 1s ease-in-out;
 
   section {
     display: flex;
     flex-direction: column;
     justify-content: center;
+    transition: transform 1s ease-in-out;
+    transform-origin: calc(20px + 0%) center;
 
     h1:last-child {
       margin-bottom: 0;
@@ -23,33 +23,12 @@ main {
     }
   }
 
-  &.part-1, &.part-2, &.part-3, &.part-4 {
-    section {
-      &.part-1, &.part-2, &.part-3, &.part-4 {
-        display: none;
-      }
-    }
-  }
-
-  &.part-1 section.part-1, &.part-2 section.part-2, &.part-3 section.part-3, &.part-4 section.part-4 {
-    display: flex;
-  }
-
-  &.part-1 .experiment-structure .part-1, &.part-2 .experiment-structure .part-2, &.part-3 .experiment-structure .part-3, &.part-4 .experiment-structure .part-4 {
+  .experiment-structure .part.current {
     font-weight: 600;
-    font-size: 32px;
   }
 
   &.shift-right {
     transform: translateX(-50vw);
-
-    //section:nth-child(2) {
-    //  width: calc(40vw - 20px);
-    //}
-    //
-    //section:nth-child(3) {
-    //  width: calc(60vw - 20px);
-    //}
   }
 
   .part.not-yet {

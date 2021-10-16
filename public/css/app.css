@@ -235,7 +235,7 @@ body.mylab main {
   justify-content: space-between;
 }
 body.mylab main section {
-  width: 50vw;
+  width: calc(50vw - 50px);
   padding: 0 25px;
 }
 body.mylab main section h1 {
@@ -257,14 +257,12 @@ body.mylab footer {
   /* rgba(0,0,0, 0.2); */
 }
 
-body.mylab.experiment main {
-  width: 150vw;
-  transition: transform 1s ease-in-out;
-}
 body.mylab.experiment main section {
   display: flex;
   flex-direction: column;
   justify-content: center;
+  transition: transform 1s ease-in-out;
+  transform-origin: calc(20px + 0%) center;
 }
 body.mylab.experiment main section h1:last-child {
   margin-bottom: 0;
@@ -278,15 +276,8 @@ body.mylab.experiment main section span.part {
 body.mylab.experiment main section span.part:last-child {
   border-bottom: 0;
 }
-body.mylab.experiment main.part-1 section.part-1, body.mylab.experiment main.part-1 section.part-2, body.mylab.experiment main.part-1 section.part-3, body.mylab.experiment main.part-1 section.part-4, body.mylab.experiment main.part-2 section.part-1, body.mylab.experiment main.part-2 section.part-2, body.mylab.experiment main.part-2 section.part-3, body.mylab.experiment main.part-2 section.part-4, body.mylab.experiment main.part-3 section.part-1, body.mylab.experiment main.part-3 section.part-2, body.mylab.experiment main.part-3 section.part-3, body.mylab.experiment main.part-3 section.part-4, body.mylab.experiment main.part-4 section.part-1, body.mylab.experiment main.part-4 section.part-2, body.mylab.experiment main.part-4 section.part-3, body.mylab.experiment main.part-4 section.part-4 {
-  display: none;
-}
-body.mylab.experiment main.part-1 section.part-1, body.mylab.experiment main.part-2 section.part-2, body.mylab.experiment main.part-3 section.part-3, body.mylab.experiment main.part-4 section.part-4 {
-  display: flex;
-}
-body.mylab.experiment main.part-1 .experiment-structure .part-1, body.mylab.experiment main.part-2 .experiment-structure .part-2, body.mylab.experiment main.part-3 .experiment-structure .part-3, body.mylab.experiment main.part-4 .experiment-structure .part-4 {
+body.mylab.experiment main .experiment-structure .part.current {
   font-weight: 600;
-  font-size: 32px;
 }
 body.mylab.experiment main.shift-right {
   transform: translateX(-50vw);

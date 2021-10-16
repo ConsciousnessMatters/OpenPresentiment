@@ -59,7 +59,7 @@
     justify-content: space-between;
 
     section {
-      width: 50vw;
+      width: calc(50vw - 50px);
       padding: 0 25px;
 
       h1 {
