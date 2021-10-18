@@ -19,13 +19,12 @@ function setupPartNavigation() {
         $experimentPartSections = $('.experiment section.part'),
         $experimentPartMap = $('.experiment .experiment-structure .part');
 
-    $experimentPartMap.on('click', function() {
+    $experimentPartMap.off('click.e6', "**");
+    $experimentPartMap.on('click.e6', function() {
         const $mainParent = $(this).parents('main')
 
         $mainParent.removeClass(availableParts.join(' '));
         availableParts.forEach((availablePart) => {
-            const part = availablePart.split('-')[1];
-
             if ($(this).hasClass(availablePart)) {
                 $mainParent.addClass(availablePart);
                 $experimentPartSections.addClass('hidden');
@@ -51,29 +50,22 @@ function getAvailableParts() {
 }
 
 function setupGsrTrigger() {
-    $('button#connect-to-gsr').on('click', () => {
-        $(document).on('GSRDataPoint.$e1', () => {
-            const $something = $('button#begin-trials');
+    const $buttonConnectToGSR = $('button#connect-to-gsr');
 
-            $something.removeClass('neutral');
-            $something.on('click.$e2', () => {
-                $('#trials-container').removeClass('hidden');
-                trials = 0;
-                setupTrialFlow();
-                if (window.graph !== undefined) {
-                    window.graph.stop();
-                }
-
-                $(document).off('click.$e2', "**");
-            });
-
-            $(document).off('GSRDataPoint.$e1', "**");
-        });
+    $buttonConnectToGSR.off('click.e7', "**");
+    $buttonConnectToGSR.on('click.e7', () => {
+        $(document).on('GSRDataPoint.e1', setupTrialTrigger);
+        $(document).off('GSRDataPoint.e1', "**");
     });
 }
 
 function setupTrialTrigger() {
-    $('button#begin-trials').on('click', () => {
+    const $buttonBeginTrials = $('button#begin-trials');
+
+    console.debug("function setupTrialTrigger() {");
+
+    $buttonBeginTrials.off('click.e3', "**");
+    $buttonBeginTrials.on('click.e3', () => {
         $('#trials-container').removeClass('hidden');
         trials = 0;
         setupTrialFlow();
@@ -81,7 +73,12 @@ function setupTrialTrigger() {
 }
 
 function setupTrialFlow() {
-    $('button#goto-phase-2').on('click', initiatePhase2);
+    const $buttonBeginPhase2 = $('button#goto-phase-2');
+
+    console.debug("function setupTrialFlow() {");
+
+    $buttonBeginPhase2.off('click.e4', "**");
+    $buttonBeginPhase2.on('click.e4', initiatePhase2);
     initiatePhase1();
 }
 
@@ -127,7 +124,7 @@ function logEvent(event) {
 function initiatePhase1() {
     logEvent(`P1-T${trials + 1}`);
 
-    $(document).on('GSRDataPoint', logDataPoint);
+    $(document).on('GSRDataPoint.e5', logDataPoint);
     $('.phase').addClass('hidden');
     $('#phase-1').removeClass('hidden');
     $('#phase-1 .trial-number').html(trials + 1);
@@ -136,6 +133,7 @@ function initiatePhase1() {
 
 function initiatePhase2() {
     logEvent(`P2-T${trials + 1}`);
+    console.debug("function initiatePhase2() {");
 
     $('.phase').addClass('hidden');
     $('#phase-2').removeClass('hidden');
@@ -178,52 +176,21 @@ function stepPhase4() {
 }
 
 function endTrial() {
+    const $gotoPart5 = $('#goto-part-5');
+
     logEvent(`PE-T${trials + 1}`);
+    sendDataToServer();
     trials++;
 
     if (trials < totalTrials) {
         initiatePhase1();
     } else {
-        let report = JSON.stringify({
-            'gsrData': JSON.stringify(gsrData),
-            'eventData': JSON.stringify(eventData),
-        });
-
-        // $.ajax({
-        //     url: '/mylab/experiment/presentiment/1',
-        //     type: 'POST',
-        //     data: report,
-        //     contentType: 'application/json; charset=utf-8',
-        //     dataType: 'json',
-        //     async: false,
-        //     success: (message) => {
-        //         console.log(message);
-        //         console.log(report);
-        //     },
-        // }).fail((message) => {
-        //     console.log(message);
-        //     console.log(report);
-        // });
-
-        let xhr = new XMLHttpRequest(),
-            url = '/mylab/experiment/presentiment/1';
-
-        xhr.open("POST", url, true);
-        xhr.setRequestHeader("Content-Type", "application/json");
-        xhr.onreadystatechange = function () {
-            if (xhr.readyState === 4 && xhr.status === 200) {
-                console.log(xhr.responseText);
-                console.log(report);
-            } else if (xhr.readyState === 4) {
-                console.log(xhr.responseText);
-                console.log(report);
-            }
-        };
-        xhr.send(report);
+        $(document).off('GSRDataPoint.e5', "**");
 
         $('.phase').addClass('hidden');
         $('#end').removeClass('hidden');
-        $('#goto-part-5').on('click', () => {
+        $gotoPart5.off('click.e8', "**");
+        $gotoPart5.on('click.e8', () => {
             $('#trials-container').addClass('hidden');
             $('.experiment-structure .part-5').click();
         });
@@ -234,12 +201,58 @@ function endTrial() {
     }
 }
 
+function sendDataToServer() {
+    let xhr = new XMLHttpRequest(),
+        url = '/mylab/experiment/presentiment/1',
+        report = JSON.stringify({
+            'gsrData': formatGsrData(),
+            'eventData': formatEventData(),
+        });
+
+    xhr.open("POST", url, true);
+    xhr.setRequestHeader("Content-Type", "application/json");
+    xhr.onreadystatechange = function () {
+        if (xhr.readyState === 4 && xhr.status === 200) {
+            console.log(xhr.responseText);
+            console.log(report);
+        } else if (xhr.readyState === 4) {
+            console.log(xhr.responseText);
+            console.log(report);
+        }
+    };
+    xhr.send(report);
+}
+
+function formatGsrData() {
+    let csvTypeData = '';
+
+    gsrData.forEach((gsrDataPoint) => {
+        const microvolts = Math.round(gsrDataPoint.millivolts * 1000);
+        csvTypeData = csvTypeData + `${gsrDataPoint.computerTime},${gsrDataPoint.time},${microvolts}\n`;
+    });
+    gsrData = [];
+
+    return csvTypeData;
+}
+
+function formatEventData() {
+    let csvTypeData = '';
+
+    eventData.forEach((eventDataPoint) => {
+        csvTypeData = csvTypeData + `${eventDataPoint.computerTime},${eventDataPoint.event}\n`;
+    });
+    eventData = [];
+
+    return csvTypeData;
+}
+
 function initiate() {
     setupGsrTrigger();
-    setupTrialTrigger();
     setupPartNavigation();
 }
 
 export const experiment1 = {
-    initiate
+    initiate,
+    gsrData,
+    eventData,
 };

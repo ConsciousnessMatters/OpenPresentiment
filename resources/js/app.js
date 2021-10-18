@@ -14,4 +14,6 @@ document.addEventListener('DOMContentLoaded', () => {
         graph.initiate('canvas.open-gsr');
         window.graph = graph;
     }
+
+    window.experiment1 = experiment1;
 });
