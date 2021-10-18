@@ -21,7 +21,7 @@
             <p>We'll need confirmation that the GSR is online and working before trials begin.</p>
 
             <div>
-                <button id="connect-to-gsr">Connect To GSR</button><button id="begin-trials" class="neutral">Start Experiment</button>
+                <button id="connect-to-gsr">Connect To GSR</button><button id="begin-trials" class="neutral" disabled>Start Experiment</button>
             </div>
 
             <div class="full-screen-interaction hidden" id="trials-container">

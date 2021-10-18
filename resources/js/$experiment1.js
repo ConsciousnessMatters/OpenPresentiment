@@ -6,7 +6,8 @@ let intervalTimer = null,
     randomDelay,
     trials,
     gsrData = [],
-    eventData = [];
+    eventData = [],
+    setupTrialTriggered = false;
 
 function setupTrial() {
     trialTime = trialTimeSetting;
@@ -54,16 +55,20 @@ function setupGsrTrigger() {
 
     $buttonConnectToGSR.off('click.e7', "**");
     $buttonConnectToGSR.on('click.e7', () => {
-        $(document).on('GSRDataPoint.e1', setupTrialTrigger);
-        $(document).off('GSRDataPoint.e1', "**");
+        $(document).on('GSRDataPoint.e1', () => {
+            if (! setupTrialTriggered) {
+                setupTrialTriggered = true;
+                $buttonConnectToGSR.off('GSRDataPoint.e1', "**");
+                setupTrialTrigger();
+            }
+        });
     });
 }
 
 function setupTrialTrigger() {
     const $buttonBeginTrials = $('button#begin-trials');
 
-    console.debug("function setupTrialTrigger() {");
-
+    $buttonBeginTrials.removeClass('neutral').removeAttr('disabled');;
     $buttonBeginTrials.off('click.e3', "**");
     $buttonBeginTrials.on('click.e3', () => {
         $('#trials-container').removeClass('hidden');
@@ -75,10 +80,13 @@ function setupTrialTrigger() {
 function setupTrialFlow() {
     const $buttonBeginPhase2 = $('button#goto-phase-2');
 
-    console.debug("function setupTrialFlow() {");
-
     $buttonBeginPhase2.off('click.e4', "**");
     $buttonBeginPhase2.on('click.e4', initiatePhase2);
+
+    if (window.graph !== undefined) {
+        window.graph.stop();
+    }
+
     initiatePhase1();
 }
 
@@ -133,7 +141,6 @@ function initiatePhase1() {
 
 function initiatePhase2() {
     logEvent(`P2-T${trials + 1}`);
-    console.debug("function initiatePhase2() {");
 
     $('.phase').addClass('hidden');
     $('#phase-2').removeClass('hidden');

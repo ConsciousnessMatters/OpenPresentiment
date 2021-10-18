@@ -54,9 +54,14 @@ button {
   font-weight: 800;
   border: 0;
   border-radius: 4px;
+  transition: opacity 1s ease-in-out;
 
   &.neutral {
     background-image: linear-gradient(to top, #444444 0%, #555555 100%);
+  }
+
+  &[disabled] {
+    opacity: 0.25;
   }
 }
 
