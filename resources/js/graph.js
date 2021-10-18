@@ -1,3 +1,5 @@
+const maxGsrDataSize = 15000;
+
 let gsrData = [],
     scaleFactor = window.devicePixelRatio || 1,
     canvasActivated = false,
@@ -10,7 +12,8 @@ let gsrData = [],
     millivoltsMin,
     millivoltsMax,
     graphCC,
-    spacingPerSecond = 50 * scaleFactor;;
+    spacingPerSecond = 50 * scaleFactor,
+    graphActive = true;
 
 function initiate(canvasSelector) {
     graphCC = document.querySelector(canvasSelector).getContext('2d');
@@ -22,22 +25,30 @@ function initiate(canvasSelector) {
 }
 
 function stop() {
-    document.removeEventListener('GSRDataPoint', onGSRDataPoint);
+    graphActive = false;
 }
 
 function resume() {
-    document.addEventListener('GSRDataPoint', onGSRDataPoint);
+    graphActive = true;
 }
 
 function onGSRDataPoint(event) {
+    if (gsrData.length >= maxGsrDataSize) {
+        gsrData.shift();
+    }
+
     gsrData.push(event.detail);
+
     if (!canvasActivated) {
         const graphOnline = new CustomEvent('GraphOnline');
         document.dispatchEvent(graphOnline);
         canvasSetup();
         canvasActivated = true;
     }
-    renderGraph();
+
+    if (graphActive) {
+        renderGraph();
+    }
 }
 
 function canvasSetup() {

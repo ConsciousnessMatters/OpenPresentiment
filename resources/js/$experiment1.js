@@ -4,7 +4,9 @@ const trialTimeSetting = -7000,
 let intervalTimer = null,
     trialTime,
     randomDelay,
-    trials;
+    trials,
+    gsrData = [],
+    eventData = [];
 
 function setupTrial() {
     trialTime = trialTimeSetting;
@@ -108,7 +110,24 @@ function intervalProcessor() {
     }
 }
 
+function logDataPoint() {
+    gsrData.push({
+        ...event.detail,
+        computerTime: Date.now(),
+    });
+}
+
+function logEvent(event) {
+    eventData.push({
+        event: event,
+        computerTime: Date.now(),
+    });
+}
+
 function initiatePhase1() {
+    logEvent(`P1-T${trials + 1}`);
+
+    $(document).on('GSRDataPoint', logDataPoint);
     $('.phase').addClass('hidden');
     $('#phase-1').removeClass('hidden');
     $('#phase-1 .trial-number').html(trials + 1);
@@ -116,6 +135,8 @@ function initiatePhase1() {
 }
 
 function initiatePhase2() {
+    logEvent(`P2-T${trials + 1}`);
+
     $('.phase').addClass('hidden');
     $('#phase-2').removeClass('hidden');
     setupTrial();
@@ -128,6 +149,8 @@ function stepPhase2() {
 
 function initiatePhase3() {
     const theRandomDecision = Math.floor(Math.random() * 2);
+
+    logEvent(`P3-T${trials + 1}`);
 
     if (theRandomDecision == 0) {
         $('#phase-3').addClass('calm');
@@ -144,6 +167,8 @@ function stepPhase3() {
 }
 
 function initiatePhase4() {
+    logEvent(`P4-T${trials + 1}`);
+
     $('.phase').addClass('hidden');
     $('#phase-4').removeClass('hidden');
 }
@@ -153,17 +178,59 @@ function stepPhase4() {
 }
 
 function endTrial() {
+    logEvent(`PE-T${trials + 1}`);
     trials++;
 
     if (trials < totalTrials) {
         initiatePhase1();
     } else {
+        let report = JSON.stringify({
+            'gsrData': JSON.stringify(gsrData),
+            'eventData': JSON.stringify(eventData),
+        });
+
+        // $.ajax({
+        //     url: '/mylab/experiment/presentiment/1',
+        //     type: 'POST',
+        //     data: report,
+        //     contentType: 'application/json; charset=utf-8',
+        //     dataType: 'json',
+        //     async: false,
+        //     success: (message) => {
+        //         console.log(message);
+        //         console.log(report);
+        //     },
+        // }).fail((message) => {
+        //     console.log(message);
+        //     console.log(report);
+        // });
+
+        let xhr = new XMLHttpRequest(),
+            url = '/mylab/experiment/presentiment/1';
+
+        xhr.open("POST", url, true);
+        xhr.setRequestHeader("Content-Type", "application/json");
+        xhr.onreadystatechange = function () {
+            if (xhr.readyState === 4 && xhr.status === 200) {
+                console.log(xhr.responseText);
+                console.log(report);
+            } else if (xhr.readyState === 4) {
+                console.log(xhr.responseText);
+                console.log(report);
+            }
+        };
+        xhr.send(report);
+
         $('.phase').addClass('hidden');
         $('#end').removeClass('hidden');
         $('#goto-part-5').on('click', () => {
             $('#trials-container').addClass('hidden');
             $('.experiment-structure .part-5').click();
         });
+
+        if (window.graph !== undefined) {
+            window.graph.resume();
+        }
     }
 }
 
