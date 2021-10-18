@@ -114,7 +114,7 @@ select:-webkit-autofill:focus {
   display: none !important;
 }
 
-body .full-screen-alert {
+body .full-screen-alert, body .full-screen-interaction {
   position: fixed;
   display: flex;
   flex-direction: column;

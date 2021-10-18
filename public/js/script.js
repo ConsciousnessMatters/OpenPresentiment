@@ -27,16 +27,6 @@ document.querySelector('button.exportData').addEventListener('click', (event) =>
     exportData();
 });
 
-// document.querySelectorAll('button.goBackHome').forEach((element) => {
-//     element.addEventListener('click', (event) => {
-//         window.location = '/';
-//     });
-// });
-
-function updateToStage2() {
-
-}
-
 function updateToStage3() {
     document.querySelector('.open-gsr .connection-progress').classList.add('hidden');
     document.querySelector('.open-gsr .options').classList.remove('hidden');

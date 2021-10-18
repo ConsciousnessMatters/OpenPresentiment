@@ -98,7 +98,7 @@ select:-webkit-autofill:focus {
   display: none !important;
 }
 
-body .full-screen-alert {
+body .full-screen-alert, body .full-screen-interaction {
   position: fixed;
   display: flex;
   flex-direction: column;
@@ -112,7 +112,7 @@ body .full-screen-alert {
   right: 0;
   bottom: 0;
 }
-body .full-screen-alert ul {
+body .full-screen-alert ul, body .full-screen-interaction ul {
   list-style: none;
   margin: 0 0 30px 0;
   padding: 0;
@@ -276,6 +276,14 @@ body.mylab.experiment main section span.part {
 body.mylab.experiment main section span.part:last-child {
   border-bottom: 0;
 }
+body.mylab.experiment main button {
+  width: 200px;
+}
+body.mylab.experiment main canvas.open-gsr {
+  height: calc(100vh - 400px);
+  position: relative;
+  left: -40px;
+}
 body.mylab.experiment main .experiment-structure .part.current {
   font-weight: 600;
 }
@@ -284,5 +292,42 @@ body.mylab.experiment main.shift-right {
 }
 body.mylab.experiment main .part.not-yet {
   color: rgba(255, 255, 255, 0.25);
+}
+body.mylab.experiment main #trials-container {
+  font-size: 32px;
+}
+body.mylab.experiment main #trials-container .phase {
+  justify-content: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+body.mylab.experiment main #trials-container .phase button {
+  width: 320px;
+  height: 80px;
+  font-size: 32px;
+}
+body.mylab.experiment main #trials-container .phase .timer {
+  font-size: 64px;
+}
+body.mylab.experiment main #trials-container #phase-1 span, body.mylab.experiment main #trials-container #end span {
+  margin-bottom: 40px;
+}
+body.mylab.experiment main #trials-container #phase-3 {
+  width: 100%;
+  height: 100%;
+}
+body.mylab.experiment main #trials-container #phase-3.calm {
+  background: green;
+}
+body.mylab.experiment main #trials-container #phase-3.emotional {
+  background: red;
+}
+body.mylab.experiment main #trials-container #end span:first-child {
+  font-size: 90px;
+  margin-bottom: 10px;
+}
+body.mylab.experiment main #trials-container #end button {
+  width: 400px;
 }
 

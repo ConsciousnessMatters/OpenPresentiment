@@ -4,7 +4,7 @@
             <span class="part part-1 current">Part 1, Experiment Introduction</span>
             <span class="part part-2">Part 2, Subject Selection</span>
             <span class="part part-3 not-yet">Part 3, Subject Agreement</span>
-            <span class="part part-4 not-yet">Part 4, Trials</span>
+            <span class="part part-4 not-yet">Part 4, Start Experiment</span>
             <span class="part part-5 not-yet">Part 5, Thanks, Results & Further Information</span>
         </section>
         <section class="part part-1">
@@ -17,31 +17,36 @@
             <h1>Part 3</h1>
         </section>
         <section class="part part-4 hidden">
-            <h1>Part 4</h1>
+            <canvas class="open-gsr"></canvas>
             <p>We'll need confirmation that the GSR is online and working before trials begin.</p>
 
-            <button type="button">Start</button>
+            <div>
+                <button id="connect-to-gsr">Connect To GSR</button><button id="begin-trials" class="neutral">Start Experiment</button>
+            </div>
 
-            <div class="trials hidden">
-                <div>
-                    Click the button or press space to continue when you're ready.
-                    Progress: 1 of 16
+            <div class="full-screen-interaction hidden" id="trials-container">
+                <div class="phase" id="phase-1">
+                    <span>Click the button or press space bar to continue when you're ready.</span>
+                    {{--Task reminder. Why this matters.--}}
+                    <span>Trial <span class="trial-number"></span> of <span class="trial-totals"></span></span>
+                    <button id="goto-phase-2">Ready</button>
                 </div>
-                <div>
-                    T -7
+                <div class="phase hidden" id="phase-2">
+                    <div class="timer">
+                        <span>T </span><span class="value"></span>
+                    </div>
                 </div>
-                <div>
-                    Show Picture
+                <div class="phase hidden" id="phase-3">
                 </div>
-                <div>
-                    T +10
+                <div class="phase hidden" id="phase-4">
+                    <div class="timer">
+                        <span>T </span><span class="value"></span>
+                    </div>
                 </div>
-                <div>
-                    T +10
-                </div>
-
-                <div>
-                    End only: Trials Complete
+                <div class="phase hidden" id="end">
+                    <span>Experiment Complete</span>
+                    <span>Thank you for helping us figure out what's going on.</span>
+                    <button id="goto-part-5">See Results & More</button>
                 </div>
             </div>
         </section>

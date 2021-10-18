@@ -23,6 +23,16 @@ main {
     }
   }
 
+  button {
+    width: 200px;
+  }
+
+  canvas.open-gsr {
+    height: calc(100vh - 400px);
+    position: relative;
+    left: -40px;
+  }
+
   .experiment-structure .part.current {
     font-weight: 600;
   }
@@ -33,5 +43,56 @@ main {
 
   .part.not-yet {
     color: rgba(255,255,255, 0.25);
+  }
+
+  #trials-container {
+    font-size: 32px;
+
+    .phase {
+      justify-content: center;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+
+      button {
+        width: 320px;
+        height: 80px;
+        font-size: 32px;
+      }
+
+      .timer {
+        font-size: 64px;
+      }
+    }
+
+    #phase-1, #end {
+      span {
+        margin-bottom: 40px;
+      }
+    }
+
+    #phase-3 {
+      width: 100%;
+      height: 100%;
+
+      &.calm {
+        background: green;
+      }
+
+      &.emotional {
+        background: red;
+      }
+    }
+
+    #end {
+      span:first-child {
+        font-size: 90px;
+        margin-bottom: 10px;
+      }
+
+      button {
+        width: 400px;
+      }
+    }
   }
 }
