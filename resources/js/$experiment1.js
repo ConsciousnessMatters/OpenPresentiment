@@ -210,24 +210,31 @@ function endTrial() {
 
 function sendDataToServer() {
     let xhr = new XMLHttpRequest(),
-        url = '/mylab/experiment/presentiment/1',
-        report = JSON.stringify({
-            'gsrData': formatGsrData(),
-            'eventData': formatEventData(),
-        });
+        formData = new FormData(),
+        gsrData = formatGsrData(),
+        eventData = formatEventData(),
+        form = document.querySelector('[name="ajax-info"]'),
+        url = form.action,
+        csrfToken = form._token.value;
 
+    formData.append("gsrData", gsrData);
+    formData.append("eventData", eventData);
     xhr.open("POST", url, true);
-    xhr.setRequestHeader("Content-Type", "application/json");
+    xhr.setRequestHeader('X-CSRF-TOKEN', csrfToken);
     xhr.onreadystatechange = function () {
         if (xhr.readyState === 4 && xhr.status === 200) {
             console.log(xhr.responseText);
-            console.log(report);
+            console.log(gsrData);
+            console.log(eventData);
+            console.log(csrfToken);
         } else if (xhr.readyState === 4) {
             console.log(xhr.responseText);
-            console.log(report);
+            console.log(gsrData);
+            console.log(eventData);
+            console.log(csrfToken);
         }
     };
-    xhr.send(report);
+    xhr.send(formData);
 }
 
 function formatGsrData() {

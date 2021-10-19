@@ -12,4 +12,15 @@ class ExperimentPresentiment1Controller extends ExperimentPresentimentController
             'bodyClass' => 'mylab experiment experiment-1',
         ]);
     }
+
+    public function storeTrial(Request $request)
+    {
+        $gsrData = $request->input('gsrData');
+        $eventData = $request->input('eventData');
+
+        return response()->json([
+            'gsrData' => $gsrData,
+            'eventData' => $eventData,
+        ]);
+    }
 }

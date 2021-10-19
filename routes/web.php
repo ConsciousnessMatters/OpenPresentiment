@@ -31,6 +31,7 @@ Route::prefix('mylab')->middleware(['auth','verified'])->name('mylab')->group(fu
     Route::prefix('experiment')->name('.experiment')->group(function () {
 
         Route::get('/presentiment/1', [ExperimentPresentiment1Controller::class, 'show'])->name('.presentiment.1');
+        Route::post('/presentiment/1', [ExperimentPresentiment1Controller::class, 'storeTrial'])->name('.presentiment.1.storeTrial');
 
     });
 

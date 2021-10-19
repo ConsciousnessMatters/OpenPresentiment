@@ -1,5 +1,8 @@
 <x-app-layout bodyClass="{{ $bodyClass }}">
     <main>
+        <form action="{{ route('mylab.experiment.presentiment.1.storeTrial') }}" name="ajax-info">
+            @csrf
+        </form>
         <section class="experiment-structure">
             <span class="part part-1 current">Part 1, Experiment Introduction</span>
             <span class="part part-2">Part 2, Subject Selection</span>
