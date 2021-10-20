@@ -1,6 +1,6 @@
 const trialTimeSetting = -7000,
     totalTrials = 2,
-    timerFontsize = '160px',
+    timerFontsize = '128px',
     scaleFactor = window.devicePixelRatio || 1,
     canvasSelector = 'canvas#experimental-core',
     eCC = document.querySelector(canvasSelector).getContext('2d');

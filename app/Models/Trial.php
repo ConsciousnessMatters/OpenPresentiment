@@ -16,4 +16,9 @@ class Trial extends Model
     {
         return $this->belongsTo(Experiment::class);
     }
+
+    public function image(): BelongsTo
+    {
+        return $this->belongsTo(Image::class);
+    }
 }
