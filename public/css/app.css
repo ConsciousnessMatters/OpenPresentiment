@@ -305,36 +305,20 @@ body.mylab.experiment main #trials-container .phase {
   display: flex;
   flex-direction: column;
   align-items: center;
+  height: 100vh;
+  width: 100vw;
 }
 body.mylab.experiment main #trials-container .phase button {
   width: 320px;
   height: 80px;
   font-size: 32px;
 }
-body.mylab.experiment main #trials-container .phase .timer {
-  font-size: 64px;
-}
 body.mylab.experiment main #trials-container #phase-1 span, body.mylab.experiment main #trials-container #end span {
   margin-bottom: 40px;
 }
-body.mylab.experiment main #trials-container #phase-3 .image {
-  position: fixed;
-  top: 0;
-  left: 0;
-  bottom: 0;
-  right: 0;
-  width: 100vw;
-  height: 100vh;
-  background-size: contain;
-  background-repeat: no-repeat;
-  background-position: center center;
-  transform: translateX(100vw);
-}
-body.mylab.experiment main #trials-container #phase-3.peaceful .image.peaceful {
-  transform: translateX(0);
-}
-body.mylab.experiment main #trials-container #phase-3.emotional .image.emotional {
-  transform: translateX(0);
+body.mylab.experiment main #trials-container #phase-2 canvas {
+  width: 100%;
+  height: 100%;
 }
 body.mylab.experiment main #trials-container #end span:first-child {
   font-size: 90px;

@@ -1,5 +1,9 @@
 const trialTimeSetting = -7000,
-    totalTrials = 2;
+    totalTrials = 2,
+    timerFontsize = '160px',
+    scaleFactor = window.devicePixelRatio || 1,
+    canvasSelector = 'canvas#experimental-core',
+    eCC = document.querySelector(canvasSelector).getContext('2d');
 
 let intervalTimer = null,
     trialTime,
@@ -11,17 +15,9 @@ let intervalTimer = null,
     emotionalImage,
     peacefulImage;
 
-function setupTrial() {
-    trialTime = trialTimeSetting;
-    randomDelay = Math.floor(Math.random() * 5) * 1000;
-
-    console.debug(intervalTimer);
-    stopIntervalProcessor();
-    $('.timer .value').html((trialTime / 1000).toFixed(1));
-}
-
-function stopIntervalProcessor() {
-    clearInterval(intervalTimer);
+function initiate() {
+    setupPartNavigation();
+    setupGsrTrigger();
 }
 
 function setupPartNavigation() {
@@ -82,11 +78,11 @@ function setupTrialTrigger() {
     $buttonBeginTrials.on('click.e3', () => {
         $('#trials-container').removeClass('hidden');
         trials = 0;
-        setupTrialFlow();
+        initiatePhase1();
     });
 }
 
-function setupTrialFlow() {
+function initiatePhase1() {
     const $buttonBeginPhase2 = $('button#goto-phase-2');
 
     $buttonBeginPhase2.off('click.e4', "**");
@@ -96,7 +92,50 @@ function setupTrialFlow() {
         window.graph.stop();
     }
 
-    initiatePhase1();
+    logEvent(`P1-T${trials + 1}`);
+
+    $(document).on('GSRDataPoint.e5', logDataPoint);
+    $('#phase-2, #end').addClass('hidden');
+    $('#phase-1').removeClass('hidden');
+    $('#phase-1 .trial-number').html(trials + 1);
+    $('#phase-1 .trial-totals').html(totalTrials);
+}
+
+function logEvent(event) {
+    eventData.push({
+        event: event,
+        computerTime: Date.now(),
+    });
+}
+
+function logDataPoint() {
+    gsrData.push({
+        ...event.detail,
+        computerTime: Date.now(),
+    });
+}
+
+function initiatePhase2() {
+    logEvent(`P2-T${trials + 1}`);
+
+    $('#phase-1, #end').addClass('hidden');
+    $('#phase-2').removeClass('hidden');
+    setupTrial();
+}
+
+function setupTrial() {
+    trialTime = trialTimeSetting;
+    randomDelay = Math.floor(Math.random() * 5) * 1000;
+
+    stopIntervalProcessor();
+    setIntervalTimer();
+    getImagePairUrls();
+    setupCanvas();
+    drawTimerOnCanvas();
+}
+
+function stopIntervalProcessor() {
+    clearInterval(intervalTimer);
 }
 
 function setIntervalTimer() {
@@ -124,42 +163,52 @@ function intervalProcessor() {
     }
 }
 
-function logDataPoint() {
-    gsrData.push({
-        ...event.detail,
-        computerTime: Date.now(),
+function getImagePairUrls() {
+    let xhr = new XMLHttpRequest(),
+        url = '/mylab/experiment/presentiment/1/getImages';
+
+    xhr.onreadystatechange = () => {
+        if (xhr.readyState === 4 && xhr.status === 200) {
+            loadImagePair(xhr.responseText);
+        } else if (xhr.readyState === 4) {
+            console.log('Something went wrong trying to obtain images.');
+        }
+    };
+
+    xhr.onerror = () => {
+        console.log('Something went very wrong trying to obtain images.');
+    };
+
+    xhr.open('GET', url, true);
+    xhr.send();
+}
+
+function loadImagePair(response) {
+    let returnData = JSON.parse(response);
+
+    emotionalImage = new Image();
+    peacefulImage = new Image();
+    emotionalImage.src = returnData.emotionalImageUrl;
+    peacefulImage.src = returnData.peacefulImageUrl;
+    emotionalImage.onload = () => {
+        console.log('Loaded peaceful image');
+    };
+}
+
+function setupCanvas() {
+    window.addEventListener('resize', () => {
+        resizeCanvas();
     });
+    resizeCanvas();
 }
 
-function logEvent(event) {
-    eventData.push({
-        event: event,
-        computerTime: Date.now(),
-    });
-}
-
-function initiatePhase1() {
-    logEvent(`P1-T${trials + 1}`);
-
-    $(document).on('GSRDataPoint.e5', logDataPoint);
-    $('#phase-2, #phase-4, #end').addClass('hidden');
-    $('#phase-1, #phase-3').removeClass('hidden');
-    $('#phase-1 .trial-number').html(trials + 1);
-    $('#phase-1 .trial-totals').html(totalTrials);
-}
-
-function initiatePhase2() {
-    logEvent(`P2-T${trials + 1}`);
-
-    $('#phase-1, #phase-4, #end').addClass('hidden');
-    $('#phase-2').removeClass('hidden');
-    setupTrial();
-    setIntervalTimer();
-    getImagePairUrls();
+function resizeCanvas() {
+    eCC.canvas.width = eCC.canvas.scrollWidth * scaleFactor;
+    eCC.canvas.height = eCC.canvas.scrollHeight * scaleFactor;
 }
 
 function stepPhase2() {
-    $('.timer .value').html((trialTime / 1000).toFixed(1));
+    drawTimerOnCanvas();
 }
 
 function initiatePhase3() {
@@ -168,28 +217,23 @@ function initiatePhase3() {
     logEvent(`P3-T${trials + 1}`);
 
     if (theRandomDecision == 0) {
-        $('#phase-3').addClass('peaceful');
+        drawImageOnCanvas(peacefulImage);
     } else if (theRandomDecision == 1) {
-        $('#phase-3').addClass('emotional');
+        drawImageOnCanvas(emotionalImage);
     }
-
-    $('#phase-1, #phase-2, #phase-4, #end').addClass('hidden');
 }
 
 function stepPhase3() {
-    $('.timer .value').html((trialTime / 1000).toFixed(1));
 }
 
 function initiatePhase4() {
     logEvent(`P4-T${trials + 1}`);
 
-    $('#phase-3').removeClass('peaceful emotional');
-    $('#phase-1, #phase-2, #end').addClass('hidden');
-    $('#phase-4').removeClass('hidden');
+    drawTimerOnCanvas();
 }
 
 function stepPhase4() {
-    $('.timer .value').html((trialTime / 1000).toFixed(1));
+    drawTimerOnCanvas();
 }
 
 function endTrial() {
@@ -264,36 +308,30 @@ function formatEventData() {
     return csvTypeData;
 }
 
-function getImagePairUrls() {
-    let xhr = new XMLHttpRequest(),
-        url = '/mylab/experiment/presentiment/1/getImages';
+function drawTimerOnCanvas() {
+    const currentTime = (trialTime / 1000).toFixed(1),
+        sign = currentTime >= 0 ? '+' : '';
 
-    xhr.onreadystatechange = () => {
-        if (xhr.readyState === 4 && xhr.status === 200) {
-            loadImagePair(xhr.responseText);
-        } else if (xhr.readyState === 4) {
-            console.log('Something went wrong trying to obtain images.');
-        }
-    };
-
-    xhr.onerror = () => {
-        console.log('Something went very wrong trying to obtain images.');
-    };
-
-    xhr.open('GET', url, true);
-    xhr.send();
+    eCC.clearRect(0, 0, eCC.canvas.width, eCC.canvas.height);
+    eCC.font = timerFontsize + ' "Open Sans"';
+    eCC.fillStyle = "#ffffff";
+    eCC.textAlign = "center";
+    eCC.fillText(`T${sign}${currentTime}`, eCC.canvas.width / 2, eCC.canvas.height / 2);
 }
 
-function loadImagePair(response) {
-    let returnData = JSON.parse(response);
+function drawImageOnCanvas(image) {
+    const originalWidth = image.naturalWidth,
+        originalHeight = image.naturalHeight,
+        imageWidthIfCanvasHeight = originalWidth * (eCC.canvas.height / originalHeight),
+        imageHeightIfCanvasWidth = originalHeight * (eCC.canvas.width / originalWidth),
+        constrainWidth = imageWidthIfCanvasHeight > eCC.canvas.width,
+        calculatedWidth = constrainWidth ? eCC.canvas.width : imageWidthIfCanvasHeight,
+        calculatedHeight = constrainWidth ? imageHeightIfCanvasWidth : eCC.canvas.height,
+        imageLocationX = (eCC.canvas.width / 2) - (calculatedWidth / 2),
+        imageLocationY = (eCC.canvas.height / 2) - (calculatedHeight / 2);
 
-    $('#phase-3 .image.peaceful').css(`background-image`, `url(${returnData.peacefulImageUrl})`);
-    $('#phase-3 .image.emotional').css(`background-image`, `url(${returnData.emotionalImageUrl})`);
-}
-
-function initiate() {
-    setupGsrTrigger();
-    setupPartNavigation();
+    eCC.clearRect(0, 0, eCC.canvas.width, eCC.canvas.height);
+    eCC.drawImage(image, imageLocationX, imageLocationY, calculatedWidth, calculatedHeight);
 }
 
 export const experiment1 = {

@@ -35,18 +35,7 @@
                     <button id="goto-phase-2">Ready</button>
                 </div>
                 <div class="phase hidden" id="phase-2">
-                    <div class="timer">
-                        <span>T </span><span class="value"></span>
-                    </div>
-                </div>
-                <div class="phase hidden" id="phase-3">
-                    <div class="image emotional"></div>
-                    <div class="image peaceful"></div>
-                </div>
-                <div class="phase hidden" id="phase-4">
-                    <div class="timer">
-                        <span>T </span><span class="value"></span>
-                    </div>
+                    <canvas id="experimental-core"></canvas>
                 </div>
                 <div class="phase hidden" id="end">
                     <span>Experiment Complete</span>
