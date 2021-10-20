@@ -20,12 +20,16 @@ class ExperimentPresentiment1Controller extends ExperimentPresentimentController
     {
         $emotionalImagePath = public_path('images/emotional_images/');
         $peacefulImagePath = public_path('images/peaceful_images/');
+        $blankPublicPath = public_path('');
 
         $emotionalImagePool = glob($emotionalImagePath . '*.{jpg,jpeg,png,gif}', GLOB_BRACE);
         $peacefulImagePool = glob($peacefulImagePath . '*.{jpg,jpeg,png,gif}', GLOB_BRACE);
 
-        $emotionalImageUrl = asset($emotionalImagePool[array_rand($emotionalImagePool)]);
-        $peacefulImageUrl = asset($peacefulImagePool[array_rand($peacefulImagePool)]);
+        $emotionalRelativePath = str_replace($blankPublicPath, '', $emotionalImagePool[array_rand($emotionalImagePool)]);
+        $peacefulRelativePath = str_replace($blankPublicPath, '', $peacefulImagePool[array_rand($peacefulImagePool)]);
+
+        $emotionalImageUrl = asset($emotionalRelativePath);
+        $peacefulImageUrl = asset($peacefulRelativePath);
 
         return response()->json([
             'emotionalImageUrl' => $emotionalImageUrl,
