@@ -7,12 +7,15 @@ let intervalTimer = null,
     trials,
     gsrData = [],
     eventData = [],
-    setupTrialTriggered = false;
+    setupTrialTriggered = false,
+    emotionalImage,
+    peacefulImage;
 
 function setupTrial() {
     trialTime = trialTimeSetting;
     randomDelay = Math.floor(Math.random() * 5) * 1000;
     clearInterval(intervalTimer);
+    $('.timer .value').html((trialTime / 1000).toFixed(1));
 }
 
 function setupPartNavigation() {
@@ -137,6 +140,7 @@ function initiatePhase1() {
     $('#phase-1').removeClass('hidden');
     $('#phase-1 .trial-number').html(trials + 1);
     $('#phase-1 .trial-totals').html(totalTrials);
+    $('#phase-3').removeClass('hidden');
 }
 
 function initiatePhase2() {
@@ -146,6 +150,7 @@ function initiatePhase2() {
     $('#phase-2').removeClass('hidden');
     setupTrial();
     setIntervalTimer();
+    getImagePairUrls();
 }
 
 function stepPhase2() {
@@ -158,7 +163,7 @@ function initiatePhase3() {
     logEvent(`P3-T${trials + 1}`);
 
     if (theRandomDecision == 0) {
-        $('#phase-3').addClass('calm');
+        $('#phase-3').addClass('peaceful');
     } else if (theRandomDecision == 1) {
         $('#phase-3').addClass('emotional');
     }
@@ -174,6 +179,7 @@ function stepPhase3() {
 function initiatePhase4() {
     logEvent(`P4-T${trials + 1}`);
 
+    $('#phase-3').removeClass('peaceful emotional');
     $('.phase').addClass('hidden');
     $('#phase-4').removeClass('hidden');
 }
@@ -221,7 +227,7 @@ function sendDataToServer() {
     formData.append("eventData", eventData);
     xhr.open("POST", url, true);
     xhr.setRequestHeader('X-CSRF-TOKEN', csrfToken);
-    xhr.onreadystatechange = function () {
+    xhr.onreadystatechange = () => {
         if (xhr.readyState === 4 && xhr.status === 200) {
             console.log(xhr.responseText);
             console.log(gsrData);
@@ -258,6 +264,33 @@ function formatEventData() {
     eventData = [];
 
     return csvTypeData;
+}
+
+function getImagePairUrls() {
+    let xhr = new XMLHttpRequest(),
+        url = '/mylab/experiment/presentiment/1/getImages';
+
+    xhr.onreadystatechange = () => {
+        if (xhr.readyState === 4 && xhr.status === 200) {
+            loadImagePair(xhr.responseText);
+        } else if (xhr.readyState === 4) {
+            console.log('Something went wrong trying to obtain images.');
+        }
+    };
+
+    xhr.onerror = () => {
+        console.log('Something went very wrong trying to obtain images.');
+    };
+
+    xhr.open('GET', url, true);
+    xhr.send();
+}
+
+function loadImagePair(response) {
+    let returnData = JSON.parse(response);
+
+    $('#phase-3 .image.peaceful').css(`background-image`, `url(${returnData.peacefulImageUrl})`);
+    $('#phase-3 .image.emotional').css(`background-image`, `url(${returnData.emotionalImageUrl})`);
 }
 
 function initiate() {

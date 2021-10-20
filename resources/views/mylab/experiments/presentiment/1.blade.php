@@ -40,6 +40,8 @@
                     </div>
                 </div>
                 <div class="phase hidden" id="phase-3">
+                    <div class="image emotional"></div>
+                    <div class="image peaceful"></div>
                 </div>
                 <div class="phase hidden" id="phase-4">
                     <div class="timer">
