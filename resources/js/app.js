@@ -7,12 +7,18 @@ import {graph} from './graph';
 
 document.addEventListener('DOMContentLoaded', () => {
     fullScreenAlerts.initiate();
-    experiment1.initiate();
-    serialDataHandler.initiate('#connect-to-gsr');
 
-    if ($('canvas.open-gsr').length) {
+    if (document.querySelectorAll('canvas.open-gsr').length) {
+        serialDataHandler.initiate('#connect-to-gsr');
+    }
+
+    if (document.querySelectorAll('canvas.open-gsr').length) {
         graph.initiate('canvas.open-gsr');
         window.graph = graph;
+    }
+
+    if (document.body.classList.contains('experiment')) {
+        experiment1.initiate();
     }
 
     window.experiment1 = experiment1;

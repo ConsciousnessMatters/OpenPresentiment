@@ -175,6 +175,7 @@ body.auth {
   align-items: center;
   align-content: center;
   justify-content: center;
+  text-align: center;
 }
 body.auth .call-to-action-bar {
   margin-top: 30px;
@@ -183,7 +184,6 @@ body.auth .call-to-action-bar {
 }
 body.auth .email-verification-message, body.auth .new-verification-link-sent {
   max-width: 500px;
-  text-align: center;
 }
 body.auth .new-verification-link-sent {
   margin-top: 20px;

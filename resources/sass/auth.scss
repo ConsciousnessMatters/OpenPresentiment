@@ -6,6 +6,7 @@
   align-items: center;
   align-content: center;
   justify-content: center;
+  text-align: center;
 
   .call-to-action-bar {
     margin-top: 30px;
@@ -15,7 +16,6 @@
 
   .email-verification-message, .new-verification-link-sent {
     max-width: 500px;
-    text-align: center;
   }
 
   .new-verification-link-sent {
