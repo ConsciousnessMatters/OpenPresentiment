@@ -313,7 +313,7 @@ function drawTimerOnCanvas() {
         sign = currentTime >= 0 ? '+' : '';
 
     eCC.clearRect(0, 0, eCC.canvas.width, eCC.canvas.height);
-    eCC.font = timerFontsize + ' "Open Sans"';
+    eCC.font = `200 ${timerFontsize} "Open Sans"`;
     eCC.fillStyle = "#ffffff";
     eCC.textAlign = "center";
     eCC.fillText(`T${sign}${currentTime}`, eCC.canvas.width / 2, eCC.canvas.height / 2);
