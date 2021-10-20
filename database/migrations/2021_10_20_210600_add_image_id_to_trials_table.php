@@ -12,7 +12,7 @@ class AddImageIdToTrialsTable extends Migration
     public function up(): void
     {
         Schema::table('trials', function (Blueprint $table) {
-            $table->foreignId('image_id');
+            $table->foreignId('image_id')->after('experiment_id');
         });
     }
 

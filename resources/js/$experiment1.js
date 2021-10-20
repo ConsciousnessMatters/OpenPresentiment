@@ -191,7 +191,10 @@ function loadImagePair(response) {
     emotionalImage.src = returnData.emotionalImageUrl;
     peacefulImage.src = returnData.peacefulImageUrl;
     emotionalImage.onload = () => {
-        console.log('Loaded peaceful image');
+        console.debug('Loaded peaceful image');
+    };
+    emotionalImage.onload = () => {
+        console.debug('Loaded emotional image');
     };
 }
 
