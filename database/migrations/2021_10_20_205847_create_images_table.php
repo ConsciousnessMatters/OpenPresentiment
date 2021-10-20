@@ -13,7 +13,7 @@ class CreateImagesTable extends Migration
     {
         Schema::create('images', function (Blueprint $table) {
             $table->id();
-            $table->string('path', 2048)->unique();
+            $table->string('path', 768)->unique();
             $table->timestamps();
         });
     }
