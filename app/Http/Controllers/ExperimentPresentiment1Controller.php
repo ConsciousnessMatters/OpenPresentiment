@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Trial;
 use Illuminate\Http\Client\Response;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
 
@@ -37,7 +38,7 @@ class ExperimentPresentiment1Controller extends ExperimentPresentimentController
         ]);
     }
 
-    public function storeTrial(Request $request): Response
+    public function storeTrial(Request $request): JsonResponse
     {
         $gsrData = $request->input('gsrData');
         $eventData = $request->input('eventData');

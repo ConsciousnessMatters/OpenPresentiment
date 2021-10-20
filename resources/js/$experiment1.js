@@ -14,8 +14,14 @@ let intervalTimer = null,
 function setupTrial() {
     trialTime = trialTimeSetting;
     randomDelay = Math.floor(Math.random() * 5) * 1000;
-    clearInterval(intervalTimer);
+
+    console.debug(intervalTimer);
+    stopIntervalProcessor();
     $('.timer .value').html((trialTime / 1000).toFixed(1));
+}
+
+function stopIntervalProcessor() {
+    clearInterval(intervalTimer);
 }
 
 function setupPartNavigation() {
@@ -136,17 +142,16 @@ function initiatePhase1() {
     logEvent(`P1-T${trials + 1}`);
 
     $(document).on('GSRDataPoint.e5', logDataPoint);
-    $('.phase').addClass('hidden');
-    $('#phase-1').removeClass('hidden');
+    $('#phase-2, #phase-4, #end').addClass('hidden');
+    $('#phase-1, #phase-3').removeClass('hidden');
     $('#phase-1 .trial-number').html(trials + 1);
     $('#phase-1 .trial-totals').html(totalTrials);
-    $('#phase-3').removeClass('hidden');
 }
 
 function initiatePhase2() {
     logEvent(`P2-T${trials + 1}`);
 
-    $('.phase').addClass('hidden');
+    $('#phase-1, #phase-4, #end').addClass('hidden');
     $('#phase-2').removeClass('hidden');
     setupTrial();
     setIntervalTimer();
@@ -168,8 +173,7 @@ function initiatePhase3() {
         $('#phase-3').addClass('emotional');
     }
 
-    $('.phase').addClass('hidden');
-    $('#phase-3').removeClass('hidden');
+    $('#phase-1, #phase-2, #phase-4, #end').addClass('hidden');
 }
 
 function stepPhase3() {
@@ -180,7 +184,7 @@ function initiatePhase4() {
     logEvent(`P4-T${trials + 1}`);
 
     $('#phase-3').removeClass('peaceful emotional');
-    $('.phase').addClass('hidden');
+    $('#phase-1, #phase-2, #end').addClass('hidden');
     $('#phase-4').removeClass('hidden');
 }
 
@@ -230,14 +234,8 @@ function sendDataToServer() {
     xhr.onreadystatechange = () => {
         if (xhr.readyState === 4 && xhr.status === 200) {
             console.log(xhr.responseText);
-            console.log(gsrData);
-            console.log(eventData);
-            console.log(csrfToken);
         } else if (xhr.readyState === 4) {
             console.log(xhr.responseText);
-            console.log(gsrData);
-            console.log(eventData);
-            console.log(csrfToken);
         }
     };
     xhr.send(formData);
@@ -302,4 +300,5 @@ export const experiment1 = {
     initiate,
     gsrData,
     eventData,
+    stopIntervalProcessor,
 };
