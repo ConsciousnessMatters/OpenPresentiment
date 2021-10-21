@@ -71,9 +71,11 @@
       text-decoration: none;
     }
 
-    .experiment-option {
+    .option {
       background: rgba(0,0,0, 0.2);
       padding: 20px;
+      backdrop-filter: blur(64px);
+      margin-bottom: 25px;
 
       h2 {
         margin-top: 0;

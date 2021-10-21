@@ -17,6 +17,9 @@
     <form class="further-options" method="POST" action="{{ route('logout') }}">
         @csrf
 
+        <a href="{{ route('mylab.setup') }}">
+            <button type="button" class="neutral">{{ __('Setup') }}</button>
+        </a>
         <a href="{{ route('logout') }}"
            onclick="event.preventDefault(); this.closest('form').submit(); ">
             <button type="button" class="neutral">{{ __('Log Out') }}</button>

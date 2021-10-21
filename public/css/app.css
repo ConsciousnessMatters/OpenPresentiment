@@ -248,11 +248,14 @@ body.mylab main section h1 {
 body.mylab main a {
   text-decoration: none;
 }
-body.mylab main .experiment-option {
+body.mylab main .option {
   background: rgba(0, 0, 0, 0.2);
   padding: 20px;
+  -webkit-backdrop-filter: blur(64px);
+          backdrop-filter: blur(64px);
+  margin-bottom: 25px;
 }
-body.mylab main .experiment-option h2 {
+body.mylab main .option h2 {
   margin-top: 0;
 }
 body.mylab footer {
@@ -326,5 +329,9 @@ body.mylab.experiment main #trials-container #end span:first-child {
 }
 body.mylab.experiment main #trials-container #end button {
   width: 400px;
+}
+
+body.mylab.setup main {
+  justify-content: center;
 }
 

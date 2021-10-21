@@ -4,6 +4,7 @@ import {fullScreenAlerts} from './$full-screen-alerts';
 import {experiment1} from './$experiment1';
 import {serialDataHandler} from './serialDataHandler';
 import {graph} from './graph';
+import {setup} from './setup';
 
 document.addEventListener('DOMContentLoaded', () => {
     fullScreenAlerts.initiate();
@@ -19,6 +20,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
     if (document.body.classList.contains('experiment')) {
         experiment1.initiate();
+    }
+
+    if (document.body.classList.contains('setup')) {
+        setup.initiate();
     }
 
     window.experiment1 = experiment1;

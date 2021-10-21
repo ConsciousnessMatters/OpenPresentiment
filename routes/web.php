@@ -2,6 +2,8 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ExperimentPresentiment1Controller;
+use App\Http\Controllers\MyLabController;
+use App\Http\Controllers\SetupController;
 
 /*
 |--------------------------------------------------------------------------
@@ -23,19 +25,18 @@ Route::get('/opengsr', function () {
 })->name('opengsr');
 
 Route::prefix('mylab')->middleware(['auth','verified'])->name('mylab')->group(function () {
+    Route::get('/', [MyLabController::class, 'show'])->name('');
 
-    Route::get('/', function () {
-        return view('mylab', ['bodyClass' => 'mylab']);
-    })->name('');
+    Route::prefix('setup')->name('.setup')->group(function () {
+        Route::get('/', [SetupController::class, 'show'])->name('');
+        Route::get('/importImages', [SetupController::class, 'importImages'])->name('.importImages');
+    });
 
     Route::prefix('experiment')->name('.experiment')->group(function () {
-
         Route::get('/presentiment/1', [ExperimentPresentiment1Controller::class, 'show'])->name('.presentiment.1');
         Route::get('/presentiment/1/getImages', [ExperimentPresentiment1Controller::class, 'getImages'])->name('.presentiment.1.getImages');
         Route::post('/presentiment/1', [ExperimentPresentiment1Controller::class, 'storeTrial'])->name('.presentiment.1.storeTrial');
-
     });
-
 });
 
 require __DIR__.'/auth.php';

@@ -19,3 +19,7 @@ body.mylab {
 body.mylab.experiment {
   @import 'mylab/experiment';
 }
+
+body.mylab.setup {
+  @import 'mylab/setup';
+}
