@@ -13,7 +13,10 @@ let intervalTimer = null,
     setupTrialTriggered = false,
     emotionalImage,
     peacefulImage,
-    eCC;
+    emotionalImageId,
+    peacefulImageId,
+    eCC,
+    chosenImageId = null;
 
 function initiate() {
     setupPartNavigation();
@@ -190,6 +193,8 @@ function loadImagePair(response) {
     peacefulImage = new Image();
     emotionalImage.src = returnData.emotionalImageUrl;
     peacefulImage.src = returnData.peacefulImageUrl;
+    emotionalImageId = returnData.emotionalImageId;
+    peacefulImageId = returnData.peacefulImageId;
     emotionalImage.onload = () => {
         console.debug('Loaded emotional image');
     };
@@ -222,8 +227,10 @@ function initiatePhase3() {
 
     if (theRandomDecision == 0) {
         drawImageOnCanvas(peacefulImage);
+        chosenImageId = peacefulImageId;
     } else if (theRandomDecision == 1) {
         drawImageOnCanvas(emotionalImage);
+        chosenImageId = emotionalImageId;
     }
 }
 
@@ -277,6 +284,7 @@ function sendDataToServer() {
 
     formData.append("gsrData", gsrData);
     formData.append("eventData", eventData);
+    formData.append("imageId", chosenImageId);
     xhr.open("POST", url, true);
     xhr.setRequestHeader('X-CSRF-TOKEN', csrfToken);
     xhr.onreadystatechange = () => {

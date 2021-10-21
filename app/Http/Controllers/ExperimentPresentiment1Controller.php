@@ -48,12 +48,13 @@ class ExperimentPresentiment1Controller extends ExperimentPresentimentController
     {
         $gsrData = $request->input('gsrData');
         $eventData = $request->input('eventData');
+        $imageId = $request->input('imageId');
 
         $trial = new Trial();
         $trial->experiment_id = 1;
         $trial->gsr_data = $gsrData;
         $trial->event_data = $eventData;
-        $trial->image_id = 1;
+        $trial->image_id = $imageId;
         $success = $trial->save();
 
         return response()->json([
