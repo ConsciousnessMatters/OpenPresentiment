@@ -18,8 +18,6 @@ class SetupController extends Controller
 
     public function importImages(Request $request)
     {
-        $success = false;
-
         $imagesOnFilesystem = $this->getRelativeImagePathPools();
         $imagesOnDatabase = Image::get();
         $types = Type::get();
@@ -29,7 +27,6 @@ class SetupController extends Controller
         $alreadyRegistered = 0;
         $imagesRegistered = 0;
         $errors = 0;
-
 
         // ToDo: Look into Laravel batch inserts using models. This method is quick but heavy on DB.
         foreach ($imagesOnFilesystem as $type => $imagesOnFilesystemByType) {
@@ -52,9 +49,9 @@ class SetupController extends Controller
         $imagesNowOnDatabase = Image::get();
         $imagesNowOnDatabaseByPath = $imagesNowOnDatabase->pluck('path');
 
+        // ToDo: Implement success testing and reporting.
         return response()->json([
             'imagesInDb' => $imagesNowOnDatabaseByPath,
-            'success' => null,
         ]);
     }
 

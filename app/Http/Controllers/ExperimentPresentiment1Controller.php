@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Image;
 use App\Models\Trial;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Client\Response;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -19,22 +21,26 @@ class ExperimentPresentiment1Controller extends ExperimentPresentimentController
 
     public function getImages()
     {
-        $emotionalImagePath = public_path('images/emotional_images/');
-        $peacefulImagePath = public_path('images/peaceful_images/');
-        $blankPublicPath = public_path('');
+        $emotionalImageRelativePath = Image::whereHas('type', function (Builder $query) {
+                $query->where('name', 'Emotional');
+            })
+            ->inRandomOrder()
+            ->first();
 
-        $emotionalImagePool = glob($emotionalImagePath . '*.{jpg,jpeg,png,gif}', GLOB_BRACE);
-        $peacefulImagePool = glob($peacefulImagePath . '*.{jpg,jpeg,png,gif}', GLOB_BRACE);
+        $peacefulImageRelativePath = Image::whereHas('type', function (Builder $query) {
+                $query->where('name', 'Peaceful');
+            })
+            ->inRandomOrder()
+            ->first();
 
-        $emotionalRelativePath = str_replace($blankPublicPath, '', $emotionalImagePool[array_rand($emotionalImagePool)]);
-        $peacefulRelativePath = str_replace($blankPublicPath, '', $peacefulImagePool[array_rand($peacefulImagePool)]);
-
-        $emotionalImageUrl = asset($emotionalRelativePath);
-        $peacefulImageUrl = asset($peacefulRelativePath);
+        $emotionalImageUrl = asset($emotionalImageRelativePath->path);
+        $peacefulImageUrl = asset($peacefulImageRelativePath->path);
 
         return response()->json([
             'emotionalImageUrl' => $emotionalImageUrl,
             'peacefulImageUrl' => $peacefulImageUrl,
+            'emotionalImageId' => $emotionalImageRelativePath->id,
+            'peacefulImageId' => $peacefulImageRelativePath->id,
         ]);
     }
 
