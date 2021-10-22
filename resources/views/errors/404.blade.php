@@ -1,5 +1,4 @@
-@extends('errors::minimal')
-
-@section('title', __('Not Found'))
-@section('code', '404')
-@section('message', __('Not Found'))
+<x-guest-layout bodyClass="error code-404">
+    <h1>404</h1>
+    <p>Page / File / Resource Not Found</p>
+</x-guest-layout>

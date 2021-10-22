@@ -1,5 +1,4 @@
-@extends('errors::minimal')
-
-@section('title', __('Page Expired'))
-@section('code', '419')
-@section('message', __('Page Expired'))
+<x-guest-layout bodyClass="error code-419">
+    <h1>419</h1>
+    <p>Page Expired</p>
+</x-guest-layout>

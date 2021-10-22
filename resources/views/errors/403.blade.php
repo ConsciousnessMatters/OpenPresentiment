@@ -1,5 +1,4 @@
-@extends('errors::minimal')
-
-@section('title', __('Forbidden'))
-@section('code', '403')
-@section('message', __($exception->getMessage() ?: 'Forbidden'))
+<x-guest-layout bodyClass="error code-403">
+    <h1>403</h1>
+    <p>Page / File / Resource Forbidden</p>
+</x-guest-layout>

@@ -115,8 +115,19 @@ select:-webkit-autofill:focus {
   -webkit-box-shadow: 0 0 0px 1000px #262 inset;
 }
 
+input:focus,
+textarea:focus,
+select:focus {
+  border-color: #00ff00;
+  outline: 0;
+}
+
 .hidden {
   display: none !important;
+}
+
+.sort-of-hidden {
+  visibility: hidden !important;
 }
 
 body .full-screen-alert, body .full-screen-interaction {
@@ -138,4 +149,3 @@ body .full-screen-alert, body .full-screen-interaction {
     padding: 0;
   }
 }
-

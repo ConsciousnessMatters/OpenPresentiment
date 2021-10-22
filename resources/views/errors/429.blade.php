@@ -1,5 +1,4 @@
-@extends('errors::minimal')
-
-@section('title', __('Too Many Requests'))
-@section('code', '429')
-@section('message', __('Too Many Requests'))
+<x-guest-layout bodyClass="error code-429">
+    <h1>429</h1>
+    <p>Too Many Requests</p>
+</x-guest-layout>

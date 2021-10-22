@@ -1,5 +1,4 @@
-@extends('errors::minimal')
-
-@section('title', __('Service Unavailable'))
-@section('code', '503')
-@section('message', __('Service Unavailable'))
+<x-guest-layout bodyClass="error code-503">
+    <h1>503</h1>
+    <p>Service Unavailable</p>
+</x-guest-layout>

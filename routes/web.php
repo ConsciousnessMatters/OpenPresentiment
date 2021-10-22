@@ -35,6 +35,7 @@ Route::prefix('mylab')->middleware(['auth','verified'])->name('mylab')->group(fu
     Route::prefix('experiment')->name('.experiment')->group(function () {
         Route::get('/presentiment/1', [ExperimentPresentiment1Controller::class, 'show'])->name('.presentiment.1');
         Route::get('/presentiment/1/getImages', [ExperimentPresentiment1Controller::class, 'getImages'])->name('.presentiment.1.getImages');
+        Route::post('/presentiment/1/searchUser', [ExperimentPresentiment1Controller::class, 'searchUser'])->name('.presentiment.1.searchUser');
         Route::post('/presentiment/1', [ExperimentPresentiment1Controller::class, 'storeTrial'])->name('.presentiment.1.storeTrial');
     });
 });

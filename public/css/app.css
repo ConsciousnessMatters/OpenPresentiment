@@ -98,8 +98,19 @@ select:-webkit-autofill:focus {
   -webkit-box-shadow: 0 0 0px 1000px #262 inset;
 }
 
+input:focus,
+textarea:focus,
+select:focus {
+  border-color: #00ff00;
+  outline: 0;
+}
+
 .hidden {
   display: none !important;
+}
+
+.sort-of-hidden {
+  visibility: hidden !important;
 }
 
 body .full-screen-alert, body .full-screen-interaction {
@@ -189,6 +200,13 @@ body.auth .new-verification-link-sent {
   margin-top: 20px;
 }
 
+body.error.error h1 {
+  font-size: 96px;
+}
+body.error.error h1, body.error.error p {
+  text-align: center;
+}
+
 body.mylab {
   min-height: 100vh;
   justify-content: space-between;
@@ -264,6 +282,9 @@ body.mylab footer {
   /* rgba(0,0,0, 0.2); */
 }
 
+body.mylab.experiment p {
+  line-height: 1.7;
+}
 body.mylab.experiment main section {
   display: flex;
   flex-direction: column;
@@ -299,6 +320,37 @@ body.mylab.experiment main.shift-right {
 }
 body.mylab.experiment main .part.not-yet {
   color: rgba(255, 255, 255, 0.25);
+}
+body.mylab.experiment main .part-2 label {
+  align-items: flex-start;
+  flex-direction: column;
+}
+body.mylab.experiment main .part-2 p {
+  margin-bottom: 50px;
+}
+body.mylab.experiment main .part-2 form .search-input-group {
+  margin-left: -12px;
+}
+body.mylab.experiment main .part-2 form span {
+  margin-bottom: 40px;
+}
+body.mylab.experiment main .part-2 form input {
+  margin-left: 10px;
+}
+body.mylab.experiment main .part-2 .form-response {
+  margin-top: 40px;
+}
+body.mylab.experiment main .part-3 .call-to-action-bar {
+  margin-top: 30px;
+  margin-left: -6px;
+}
+body.mylab.experiment main .part-4 h1 {
+  position: absolute;
+  transition: opacity 1s ease-in-out;
+  opacity: 1;
+}
+body.mylab.experiment main .part-4.experiment-started h1 {
+  opacity: 0;
 }
 body.mylab.experiment main #trials-container {
   font-size: 32px;

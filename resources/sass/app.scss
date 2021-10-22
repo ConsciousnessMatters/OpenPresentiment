@@ -12,6 +12,10 @@ body.auth {
   @import 'auth';
 }
 
+body.error {
+  @import 'errors';
+}
+
 body.mylab {
   @import 'mylab';
 }

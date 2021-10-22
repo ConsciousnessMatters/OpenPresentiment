@@ -16,10 +16,14 @@ let intervalTimer = null,
     emotionalImageId,
     peacefulImageId,
     eCC,
-    chosenImageId = null;
+    chosenImageId = null,
+    subjectUserId = null,
+    subjectAgreement = null,
+    experimentId = '';
 
 function initiate() {
     setupPartNavigation();
+    setupFormInteractions();
     setupGsrTrigger();
 }
 
@@ -30,19 +34,21 @@ function setupPartNavigation() {
 
     $experimentPartMap.off('click.e6', "**");
     $experimentPartMap.on('click.e6', function() {
-        const $mainParent = $(this).parents('main')
+        const $mainParent = $(this).parents('main');
 
-        $mainParent.removeClass(availableParts.join(' '));
-        availableParts.forEach((availablePart) => {
-            if ($(this).hasClass(availablePart)) {
-                $mainParent.addClass(availablePart);
-                $experimentPartSections.addClass('hidden');
-                $experimentPartSections.filter('.' + availablePart).removeClass('hidden');
-            }
-        });
+        if (!$(this).hasClass('not-yet')) {
+            $mainParent.removeClass(availableParts.join(' '));
+            availableParts.forEach((availablePart) => {
+                if ($(this).hasClass(availablePart)) {
+                    $mainParent.addClass(availablePart);
+                    $experimentPartSections.addClass('hidden');
+                    $experimentPartSections.filter('.' + availablePart).removeClass('hidden');
+                }
+            });
 
-        $experimentPartMap.removeClass('current');
-        $(this).addClass('current');
+            $experimentPartMap.removeClass('current');
+            $(this).addClass('current');
+        }
     });
 }
 
@@ -58,6 +64,54 @@ function getAvailableParts() {
     return parts;
 }
 
+function setupFormInteractions() {
+    helpers.addAtemporalEventListener('submit', searchUser).querySelector('[name="ajax-search-user"]');
+    helpers.addAtemporalEventListener('click', subjectAgreementAccepted).querySelector('#subject-agreement-accepted');
+    helpers.addAtemporalEventListener('click', subjectAgreementRejected).querySelector('#subject-agreement-rejected');
+}
+
+function searchUser(event) {
+    const form = event.target;
+
+    event.preventDefault();
+
+    helpers.ajaxForm(form, (responseJson) => {
+        if (responseJson.userId !== null) {
+            subjectFound(responseJson, form);
+        } else {
+            subjectNotFound(responseJson, form);
+        }
+    }, (xhr) => {
+        subjectNotFound(responseJson, form);
+    });
+}
+
+function subjectFound(responseJson, form) {
+    form.querySelectorAll('.message').forEach((spanElement) => {
+        spanElement.classList.add('hidden');
+    });
+    form.querySelector('.success.message').classList.remove('hidden');
+    form.querySelectorAll('.subject-number').forEach((spanElement) => {
+        spanElement.innerHTML = responseJson.userId;
+    });
+    subjectUserId = responseJson.userId;
+    $('.part-3').removeClass('not-yet');
+}
+
+function subjectNotFound(responseJson, form) {
+    form.querySelector('.failure.message').classList.remove('hidden');
+}
+
+function subjectAgreementAccepted() {
+    subjectAgreement = true;
+    $('.part-4').removeClass('not-yet');
+}
+
+function subjectAgreementRejected() {
+    subjectAgreement = false;
+    $('.part-4').removeClass('not-yet');
+}
+
 function setupGsrTrigger() {
     const $buttonConnectToGSR = $('button#connect-to-gsr');
 
@@ -67,6 +121,7 @@ function setupGsrTrigger() {
             if (! setupTrialTriggered) {
                 setupTrialTriggered = true;
                 $buttonConnectToGSR.off('GSRDataPoint.e1', "**");
+                $('.part-4').addClass('experiment-started');
                 setupTrialTrigger();
             }
         });
@@ -270,6 +325,9 @@ function endTrial() {
         if (window.graph !== undefined) {
             window.graph.resume();
         }
+
+        experimentId = '';
+        $('.part-5').removeClass('not-yet');
     }
 }
 
@@ -280,21 +338,31 @@ function sendDataToServer() {
         eventData = formatEventData(),
         form = document.querySelector('[name="ajax-info"]'),
         url = form.action,
+        userId = form.user_id.value,
         csrfToken = form._token.value;
 
     formData.append("gsrData", gsrData);
     formData.append("eventData", eventData);
     formData.append("imageId", chosenImageId);
+    formData.append("userId", userId);
+    formData.append("subjectUserId", subjectUserId);
+    formData.append("experimentId", experimentId);
+    formData.append("subjectAgreement", subjectAgreement ? 1 : 0);
     xhr.open("POST", url, true);
     xhr.setRequestHeader('X-CSRF-TOKEN', csrfToken);
     xhr.onreadystatechange = () => {
         if (xhr.readyState === 4 && xhr.status === 200) {
             console.log(xhr.responseText);
+            successfullTrialSubmission(JSON.parse(xhr.responseText));
         } else if (xhr.readyState === 4) {
             console.log(xhr.responseText);
         }
     };
     xhr.send(formData);
+}
+
+function successfullTrialSubmission(jsonResponse) {
+    experimentId = jsonResponse.experimentId;
 }
 
 function formatGsrData() {
