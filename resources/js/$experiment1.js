@@ -19,6 +19,8 @@ let intervalTimer = null,
     chosenImageId = null,
     subjectUserId = null,
     subjectAgreement = null,
+    controlMode = false,
+    controlNumber = '',
     experimentId = '';
 
 function initiate() {
@@ -327,6 +329,7 @@ function endTrial() {
         }
 
         experimentId = '';
+        controlNumber = '';
         $('.part-5').removeClass('not-yet');
     }
 }
@@ -344,6 +347,7 @@ function sendDataToServer() {
     formData.append("gsrData", gsrData);
     formData.append("eventData", eventData);
     formData.append("imageId", chosenImageId);
+    formData.append("controlNumber", controlNumber);
     formData.append("userId", userId);
     formData.append("subjectUserId", subjectUserId);
     formData.append("experimentId", experimentId);
@@ -410,8 +414,26 @@ function drawImageOnCanvas(image) {
         imageLocationX = (eCC.canvas.width / 2) - (calculatedWidth / 2),
         imageLocationY = (eCC.canvas.height / 2) - (calculatedHeight / 2);
 
+    logEvent(`BeforeImageDraw-T${trials + 1}`);
+
     eCC.clearRect(0, 0, eCC.canvas.width, eCC.canvas.height);
     eCC.drawImage(image, imageLocationX, imageLocationY, calculatedWidth, calculatedHeight);
+
+    if (controlMode) {
+        const red = Math.floor(Math.random() * 256),
+            green = Math.floor(Math.random() * 256),
+            blue = Math.floor(Math.random() * 256),
+            redChannel = ((red + 1) * 65536) -1,
+            greenChannel = ((green + 1) * 256) -1,
+            blueChannel = ((blue + 1) * 1) - 1,
+            colourValue = redChannel + greenChannel + blueChannel;
+
+        controlNumber = colourValue;
+        eCC.fillStyle = `rgb(${red}, ${green}, ${blue})`;
+        eCC.fillRect(0.1, 0, eCC.canvas.width, eCC.canvas.height);
+    }
+
+    logEvent(`AfterImageDraw-T${trials + 1}`);
 }
 
 export const experiment1 = {

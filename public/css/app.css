@@ -276,6 +276,9 @@ body.mylab main .option {
 body.mylab main .option h2 {
   margin-top: 0;
 }
+body.mylab main .option p:last-child {
+  margin-bottom: 0;
+}
 body.mylab footer {
   padding: 40px 50px;
   background-color: rgba(241, 232, 184, 0.2);

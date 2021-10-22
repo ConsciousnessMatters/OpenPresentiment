@@ -37,6 +37,11 @@ Route::prefix('mylab')->middleware(['auth','verified'])->name('mylab')->group(fu
         Route::get('/presentiment/1/getImages', [ExperimentPresentiment1Controller::class, 'getImages'])->name('.presentiment.1.getImages');
         Route::post('/presentiment/1/searchUser', [ExperimentPresentiment1Controller::class, 'searchUser'])->name('.presentiment.1.searchUser');
         Route::post('/presentiment/1', [ExperimentPresentiment1Controller::class, 'storeTrial'])->name('.presentiment.1.storeTrial');
+
+        Route::get('/presentiment/2', [ExperimentPresentiment1Controller::class, 'show'])->name('.presentiment.2');
+        Route::get('/presentiment/2/getImages', [ExperimentPresentiment1Controller::class, 'getImages'])->name('.presentiment.2.getImages');
+        Route::post('/presentiment/2/searchUser', [ExperimentPresentiment1Controller::class, 'searchUser'])->name('.presentiment.2.searchUser');
+        Route::post('/presentiment/2', [ExperimentPresentiment1Controller::class, 'storeTrial'])->name('.presentiment.2.storeTrial');
     });
 });
 
