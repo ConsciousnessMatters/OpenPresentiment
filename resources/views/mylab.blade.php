@@ -21,7 +21,7 @@
         </section>
         <section>
             <h1>Results Analysis</h1>
-            <a href="">
+            <a href="{{ route('mylab.experiment.presentiment.1&2.dataAnalysis') }}">
                 <div class="experiment option">
                     <h2>Dean Radin, PRNG + Additional Control</h2>
                     <p>

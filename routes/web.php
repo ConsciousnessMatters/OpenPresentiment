@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ExperimentPresentiment1Controller;
 use App\Http\Controllers\MyLabController;
 use App\Http\Controllers\SetupController;
+use App\Http\Controllers\Experiments\DataAnalysisController;
 
 /*
 |--------------------------------------------------------------------------
@@ -33,15 +34,18 @@ Route::prefix('mylab')->middleware(['auth','verified'])->name('mylab')->group(fu
     });
 
     Route::prefix('experiment')->name('.experiment')->group(function () {
-        Route::get('/presentiment/1', [ExperimentPresentiment1Controller::class, 'show'])->name('.presentiment.1');
+        Route::get('/presentiment/1/data-acquisition', [ExperimentPresentiment1Controller::class, 'show'])->name('.presentiment.1');
         Route::get('/presentiment/1/getImages', [ExperimentPresentiment1Controller::class, 'getImages'])->name('.presentiment.1.getImages');
         Route::post('/presentiment/1/searchUser', [ExperimentPresentiment1Controller::class, 'searchUser'])->name('.presentiment.1.searchUser');
-        Route::post('/presentiment/1', [ExperimentPresentiment1Controller::class, 'storeTrial'])->name('.presentiment.1.storeTrial');
+        Route::post('/presentiment/1/data-acquisition', [ExperimentPresentiment1Controller::class, 'storeTrial'])->name('.presentiment.1.storeTrial');
 
-        Route::get('/presentiment/2', [ExperimentPresentiment1Controller::class, 'show'])->name('.presentiment.2');
+        Route::get('/presentiment/2/data-acquisition', [ExperimentPresentiment1Controller::class, 'show'])->name('.presentiment.2');
         Route::get('/presentiment/2/getImages', [ExperimentPresentiment1Controller::class, 'getImages'])->name('.presentiment.2.getImages');
         Route::post('/presentiment/2/searchUser', [ExperimentPresentiment1Controller::class, 'searchUser'])->name('.presentiment.2.searchUser');
-        Route::post('/presentiment/2', [ExperimentPresentiment1Controller::class, 'storeTrial'])->name('.presentiment.2.storeTrial');
+        Route::post('/presentiment/2/data-acquisition', [ExperimentPresentiment1Controller::class, 'storeTrial'])->name('.presentiment.2.storeTrial');
+
+        Route::get('/presentiment/1&2/data-analysis', [DataAnalysisController::class, 'show'])->name('.presentiment.1&2.dataAnalysis');
+        Route::any('/presentiment/1&2/get-data', [DataAnalysisController::class, 'getData'])->name('.presentiment.1&2.getData');
     });
 });
 

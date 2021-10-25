@@ -16,7 +16,7 @@
     <canvas id="graph"></canvas>
     <div class="axis-x-label hidden">Time in seconds (s)</div>
     <div class="axis-y-label hidden">Voltage in millivolts (mV)</div>
-    <script src="js/serialDataHandler.js"></script>
+    <script src="js/serial-data-service.js"></script>
     <script src="js/graph.js"></script>
     <script src="js/script.js"></script>
 </x-guest-layout>

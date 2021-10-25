@@ -20,8 +20,10 @@ let intervalTimer = null,
     subjectUserId = null,
     subjectAgreement = null,
     controlMode = false,
+    navigationOveride = true,
     controlNumber = '',
-    experimentId = '';
+    experimentId = '',
+    imageLoadEventHandlersRegistered = false;
 
 function initiate() {
     setupPartNavigation();
@@ -38,7 +40,7 @@ function setupPartNavigation() {
     $experimentPartMap.on('click.e6', function() {
         const $mainParent = $(this).parents('main');
 
-        if (!$(this).hasClass('not-yet')) {
+        if ((! $(this).hasClass('not-yet')) || navigationOveride) {
             $mainParent.removeClass(availableParts.join(' '));
             availableParts.forEach((availablePart) => {
                 if ($(this).hasClass(availablePart)) {
@@ -252,12 +254,17 @@ function loadImagePair(response) {
     peacefulImage.src = returnData.peacefulImageUrl;
     emotionalImageId = returnData.emotionalImageId;
     peacefulImageId = returnData.peacefulImageId;
-    emotionalImage.onload = () => {
-        console.debug('Loaded emotional image');
-    };
-    peacefulImage.onload = () => {
-        console.debug('Loaded peaceful image');
-    };
+    if (! imageLoadEventHandlersRegistered) {
+        emotionalImage.onload = () => {
+            preDrawImageOnCanvas(emotionalImage)
+            console.debug('Loaded emotional image');
+        };
+        peacefulImage.onload = () => {
+            preDrawImageOnCanvas(peacefulImage)
+            console.debug('Loaded peaceful image');
+        };
+        imageLoadEventHandlersRegistered = true;
+    }
 }
 
 function setupCanvas() {
@@ -403,6 +410,12 @@ function drawTimerOnCanvas() {
     eCC.fillText(`T${sign}${currentTime}`, eCC.canvas.width / 2, eCC.canvas.height / 2);
 }
 
+function preDrawImageOnCanvas(image) {
+    eCC.globalAlpha = 0.01;
+    eCC.drawImage(image, 0, 0, 0.1, 0.1);
+    eCC.globalAlpha = 1;
+}
+
 function drawImageOnCanvas(image) {
     const originalWidth = image.naturalWidth,
         originalHeight = image.naturalHeight,
@@ -425,10 +438,9 @@ function drawImageOnCanvas(image) {
             blue = Math.floor(Math.random() * 256),
             redChannel = ((red + 1) * 65536) -1,
             greenChannel = ((green + 1) * 256) -1,
-            blueChannel = ((blue + 1) * 1) - 1,
-            colourValue = redChannel + greenChannel + blueChannel;
+            blueChannel = ((blue + 1) * 1) - 1;
 
-        controlNumber = colourValue;
+        controlNumber = redChannel + greenChannel + blueChannel;
         eCC.fillStyle = `rgb(${red}, ${green}, ${blue})`;
         eCC.fillRect(0.1, 0, eCC.canvas.width, eCC.canvas.height);
     }

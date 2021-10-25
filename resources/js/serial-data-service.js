@@ -99,6 +99,6 @@ function fireCustomEventOnDocument(name, detailsObject = null) {
     document.dispatchEvent(customEvent);
 }
 
-export const serialDataHandler = {
+export const serialDataService = {
     initiate
 };
