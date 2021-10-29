@@ -17,7 +17,7 @@ let gsrData = [],
 
 function initiate(canvasSelector) {
     graphCC = document.querySelector(canvasSelector).getContext('2d');
-    document.addEventListener('GSRDataPoint', onGSRDataPoint);
+    document.addEventListener('SerialDataPoint', onSerialDataPoint);
 
     window.addEventListener('resize', () => {
         canvasSetup();
@@ -32,7 +32,7 @@ function resume() {
     graphActive = true;
 }
 
-function onGSRDataPoint(event) {
+function onSerialDataPoint(event) {
     if (gsrData.length >= maxGsrDataSize) {
         gsrData.shift();
     }
@@ -247,7 +247,7 @@ function calculateSuperAverage() {
     return totalValue / gsrData.length;
 }
 
-export const graph = {
+export const graphLive = {
     initiate,
     calculateSuperAverage,
     stop,

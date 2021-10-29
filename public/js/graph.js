@@ -15,7 +15,7 @@ let gsrData = [],
 const spacingPerSecond = 50 * scaleFactor,
     graphCC = document.getElementById('graph').getContext('2d');
 
-document.addEventListener('GSRDataPoint', (event) => {
+document.addEventListener('SerialDataPoint', (event) => {
     gsrData.push(event.detail);
     if (!canvasActivated) {
         const graphOnline = new CustomEvent('GraphOnline');

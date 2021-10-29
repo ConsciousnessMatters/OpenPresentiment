@@ -27,7 +27,6 @@ function ajaxForm(form, successCallback, failureCallback) {
     xhr.open("POST", url, true);
     xhr.onreadystatechange = () => {
         if (xhr.readyState === 4 && xhr.status === 200) {
-            console.debug(xhr.responseText);
             successCallback(JSON.parse(xhr.responseText));
         } else if (xhr.readyState === 4) {
             failureCallback(JSON.parse(xhr.responseText));

@@ -121,10 +121,10 @@ function setupGsrTrigger() {
 
     $buttonConnectToGSR.off('click.e7', "**");
     $buttonConnectToGSR.on('click.e7', () => {
-        $(document).on('GSRDataPoint.e1', () => {
+        $(document).on('SerialDataPoint.e1', () => {
             if (! setupTrialTriggered) {
                 setupTrialTriggered = true;
-                $buttonConnectToGSR.off('GSRDataPoint.e1', "**");
+                $buttonConnectToGSR.off('SerialDataPoint.e1', "**");
                 $('.part-4').addClass('experiment-started');
                 setupTrialTrigger();
             }
@@ -156,7 +156,7 @@ function initiatePhase1() {
 
     logEvent(`P1-T${trials + 1}`);
 
-    $(document).on('GSRDataPoint.e5', logDataPoint);
+    $(document).on('SerialDataPoint.e5', logDataPoint);
     $('#phase-2, #end').addClass('hidden');
     $('#phase-1').removeClass('hidden');
     $('#phase-1 .trial-number').html(trials + 1);
@@ -321,7 +321,7 @@ function endTrial() {
     if (trials < totalTrials) {
         initiatePhase1();
     } else {
-        $(document).off('GSRDataPoint.e5', "**");
+        $(document).off('SerialDataPoint.e5', "**");
 
         $('.phase').addClass('hidden');
         $('#end').removeClass('hidden');
@@ -379,9 +379,9 @@ function successfullTrialSubmission(jsonResponse) {
 function formatGsrData() {
     let csvTypeData = '';
 
-    gsrData.forEach((gsrDataPoint) => {
-        const microvolts = Math.round(gsrDataPoint.millivolts * 1000);
-        csvTypeData = csvTypeData + `${gsrDataPoint.computerTime},${gsrDataPoint.time},${microvolts}\n`;
+    gsrData.forEach((SerialDataPoint) => {
+        const microvolts = Math.round(SerialDataPoint.millivolts * 1000);
+        csvTypeData = csvTypeData + `${SerialDataPoint.computerTime},${SerialDataPoint.time},${microvolts}\n`;
     });
     gsrData = [];
 

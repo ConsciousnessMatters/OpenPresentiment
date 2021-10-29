@@ -1,27 +1,39 @@
-let experimetnalData;
+let internalState = {
+    dataset: null,
+};
 
 function initiate() {
-    console.log('We got here');
     loadData();
+    graph.initiate('#results-plotter');
 }
 
 function loadData() {
     const form = document.querySelector('form[name="ajax"]');
 
-    console.log('Loading Data...');
     helpers.ajaxForm(form, dataLoaded, dataLoadFailed);
 }
 
 function dataLoaded(data) {
-    console.log('Data Loaded');
-    experimetnalData = data;
+    let plot,
+        csvData = data.experimentalData[1].trials[0].gsr_data;
+
+    internalState.dataset = new Dataset(csvData);
+    internalState.dataset.limit();
+    plot = internalState.dataset.getPlot();
+
+    drawPlot(plot);
 }
 
 function dataLoadFailed() {
     console.log('Something went wrong loading data.');
 }
 
+function drawPlot(plot) {
+    graph.drawPlot(plot);
+}
+
+
+
 export const dataAnalysis = {
     initiate,
-    experimetnalData,
 };

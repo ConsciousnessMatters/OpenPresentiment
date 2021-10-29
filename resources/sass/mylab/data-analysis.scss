@@ -1,0 +1,8 @@
+main {
+  padding: 0;
+
+  canvas#results-plotter {
+    width: 100vw;
+    height: calc(100vh - 120px);
+  }
+}

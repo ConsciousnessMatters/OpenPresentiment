@@ -72,7 +72,7 @@ async function serialReadLoop() {
 
 function handleIncomingDataPoint(dataPoint) {
     // const dataItems = dataPoint.split(","),
-    //     galvanicSkinResponse = new CustomEvent('GSRDataPoint', {
+    //     galvanicSkinResponse = new CustomEvent('SerialDataPoint', {
     //         detail: {
     //             time: parseInt(dataItems[0]),
     //             millivolts: getMillivolts(dataItems),
@@ -82,7 +82,7 @@ function handleIncomingDataPoint(dataPoint) {
     // document.dispatchEvent(galvanicSkinResponse);
     const dataItems = dataPoint.split(",");
 
-    fireCustomEventOnDocument('GSRDataPoint', {
+    fireCustomEventOnDocument('SerialDataPoint', {
         time: parseInt(dataItems[0]),
         millivolts: getMillivolts(dataItems),
     });

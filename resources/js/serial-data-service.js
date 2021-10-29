@@ -1,5 +1,3 @@
-const microvoltMode = true;
-
 let port,
     inputReader,
     inputStream,
@@ -70,20 +68,13 @@ async function serialReadLoop() {
 }
 
 function handleIncomingDataPoint(dataPoint) {
-    const dataItems = dataPoint.split(",");
+    const dataItems = dataPoint.split(","),
+        time = parseInt(dataItems[0]);
 
-    fireCustomEventOnDocument('GSRDataPoint', {
-        time: parseInt(dataItems[0]),
-        millivolts: getMillivolts(dataItems),
+    fireCustomEventOnDocument('SerialDataPoint', {
+        time: time,
+        millivolts: parseFloat( dataItems[1] / 1000),
     });
-}
-
-function getMillivolts(dataItems) {
-    if (microvoltMode) {
-        return parseFloat(dataItems[1] / 1000);
-    } else {
-        return parseFloat(dataItems[1]);
-    }
 }
 
 function fireCustomEventOnDocument(name, detailsObject = null) {

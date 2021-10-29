@@ -27,3 +27,7 @@ body.mylab.experiment {
 body.mylab.setup {
   @import 'mylab/setup';
 }
+
+body.mylab.data-analysis {
+  @import 'mylab/data-analysis';
+}
