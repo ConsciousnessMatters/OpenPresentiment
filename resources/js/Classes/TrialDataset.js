@@ -37,4 +37,29 @@ export class TrialDataset {
             }
         });
     }
+
+    yMinMax() {
+        let min = null,
+            max = null;
+
+        this.getPlot().forEach((datapoint) => {
+            if (datapoint.y < min || min === null) {
+                min = datapoint.y;
+            }
+
+            if (datapoint.y > max || max === null) {
+                max = datapoint.y;
+            }
+        });
+
+        console.log({
+            yMin: min,
+            yMax: max,
+        });
+
+        return {
+            yMin: min,
+            yMax: max,
+        }
+    }
 }

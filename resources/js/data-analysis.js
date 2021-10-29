@@ -16,18 +16,19 @@ function loadData() {
 function dataLoaded(data) {
     const globalDataset = new GlobalDataset(data);
 
-    let trials = globalDataset.experiment(1).trials();
+    let trials = globalDataset.experiment(2).trials();
+    let yMinMax = globalDataset.experiment(2).yMinMax();
 
     trials.forEach((trial) => {
         let hexColour;
 
         trial.limit();
-        if (trial.image.type === 'Peaceful') {
+        if (trial.image.type.name === 'Peaceful') {
             hexColour = '#F1E8B8';
         } else {
             hexColour = '#00FF00';
         }
-        graph.drawPlot(trial.getPlot(), hexColour);
+        graph.drawPlot(trial.getPlot(), hexColour, yMinMax);
     });
 }
 

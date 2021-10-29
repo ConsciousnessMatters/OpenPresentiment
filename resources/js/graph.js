@@ -32,11 +32,11 @@ function canvasSetup() {
     internalState.CC.canvas.height = internalState.CC.canvas.scrollHeight * scaleFactor;
 }
 
-function drawPlot(plot, hexColour = "#00ff00") {
+function drawPlot(plot, hexColour = "#00ff00", yMinMax = null) {
     const xPlMin = plot.reduce(lowest).x,
         xPlMax = plot.reduce(highest).x,
-        yPlMin = plot.reduce(lowest).y,
-        yPlMax = plot.reduce(highest).y;
+        yPlMin = yMinMax.yMin ?? plot.reduce(lowest).y,
+        yPlMax = yMinMax.yMax ?? plot.reduce(highest).y;
 
     const xDaMin = internalState.margins.xMin,
         xDaMax = internalState.CC.canvas.width - internalState.margins.xMax,
