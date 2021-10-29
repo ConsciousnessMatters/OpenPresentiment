@@ -30,6 +30,8 @@ function dataLoaded(data) {
         }
         graph.drawPlot(trial.getPlot(), hexColour, yMinMax);
     });
+
+    graph.drawAxis();
 }
 
 function dataLoadFailed() {

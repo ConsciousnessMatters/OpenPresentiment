@@ -5,7 +5,7 @@ let internalState = {
     margins: {
         xMin: 100,
         yMin: 100,
-        xMax: 0,
+        xMax: 50,
         yMax: 0,
     },
     axis: {
@@ -38,10 +38,10 @@ function drawPlot(plot, hexColour = "#00ff00", yMinMax = null) {
         yPlMin = yMinMax.yMin ?? plot.reduce(lowest).y,
         yPlMax = yMinMax.yMax ?? plot.reduce(highest).y;
 
-    const xDaMin = internalState.margins.xMin,
-        xDaMax = internalState.CC.canvas.width - internalState.margins.xMax,
-        yDaMin = internalState.margins.yMin,
-        yDaMax = internalState.CC.canvas.height - internalState.margins.yMin,
+    const xDaMin = internalState.margins.xMin * scaleFactor,
+        xDaMax = internalState.CC.canvas.width - internalState.margins.xMax * scaleFactor,
+        yDaMin = internalState.margins.yMin * scaleFactor,
+        yDaMax = internalState.CC.canvas.height - internalState.margins.yMin * scaleFactor,
         daWidth = xDaMax - xDaMin,
         daHeight = yDaMax - yDaMin;
 
@@ -91,6 +91,18 @@ function highest(previous, current) {
 }
 
 function drawAxis() {
+    const xMin = internalState.margins.xMin * scaleFactor,
+        yMin = internalState.margins.yMin * scaleFactor,
+        xMax = internalState.margins.xMax * scaleFactor,
+        yMax = internalState.margins.yMax * scaleFactor;
+
+    internalState.CC.beginPath();
+    internalState.CC.moveTo(xMin, yMax);
+    internalState.CC.lineTo(xMin, internalState.CC.canvas.height - yMin);
+    internalState.CC.lineTo(internalState.CC.canvas.width - xMax, internalState.CC.canvas.height - yMin);
+    internalState.CC.strokeStyle = "#dddddd";
+    internalState.CC.stroke();
+
     return this;
 }
 
@@ -112,5 +124,6 @@ function flipYValue(yValue) {
 
 export const graph = {
     drawPlot,
+    drawAxis,
     initiate,
 };
