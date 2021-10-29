@@ -20,7 +20,7 @@ class DataAnalysisController extends Controller
 
     public function getData()
     {
-        $experimentalData = Experiment::with('trials')->get();
+        $experimentalData = Experiment::with('trials.image.type')->get();
 
         return response()->json([
             'experimentalData' => $experimentalData,

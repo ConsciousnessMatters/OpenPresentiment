@@ -4,7 +4,7 @@ let internalState = {
     dataset: null,
     margins: {
         xMin: 100,
-        yMin: 50,
+        yMin: 100,
         xMax: 0,
         yMax: 0,
     },
@@ -32,7 +32,7 @@ function canvasSetup() {
     internalState.CC.canvas.height = internalState.CC.canvas.scrollHeight * scaleFactor;
 }
 
-function drawPlot(plot) {
+function drawPlot(plot, hexColour = "#00ff00") {
     const xPlMin = plot.reduce(lowest).x,
         xPlMax = plot.reduce(highest).x,
         yPlMin = plot.reduce(lowest).y,
@@ -64,7 +64,7 @@ function drawPlot(plot) {
         }
     });
 
-    internalState.CC.strokeStyle = "#00ff00";
+    internalState.CC.strokeStyle = hexColour;
     internalState.CC.lineWidth = 1 * scaleFactor;
     internalState.CC.stroke();
 

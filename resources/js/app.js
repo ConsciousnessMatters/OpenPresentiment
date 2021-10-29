@@ -5,14 +5,18 @@ import {fullScreenAlerts} from './$full-screen-alerts';
 import {experiment1} from './$experiment1';
 import {dataAnalysis} from './data-analysis';
 import {serialDataService} from './serial-data-service';
-import {Dataset} from './Dataset';
+import {GlobalDataset} from './Classes/GlobalDataset';
+import {ExperimentalDataset} from './Classes/ExperimentalDataset';
+import {TrialDataset} from './Classes/TrialDataset';
 import {graph} from './graph';
 import {graphLive} from './graph-live';
 import {setup} from './setup';
 
 helpers.initiate();
 window.helpers = helpers;
-window.Dataset = Dataset;
+window.GlobalDataset = GlobalDataset;
+window.ExperimentalDataset = ExperimentalDataset;
+window.TrialDataset = TrialDataset;
 window.graph = graph;
 
 document.addEventListener('DOMContentLoaded', () => {

@@ -14,25 +14,26 @@ function loadData() {
 }
 
 function dataLoaded(data) {
-    let plot,
-        csvData = data.experimentalData[1].trials[0].gsr_data;
+    const globalDataset = new GlobalDataset(data);
 
-    internalState.dataset = new Dataset(csvData);
-    internalState.dataset.limit();
-    plot = internalState.dataset.getPlot();
+    let trials = globalDataset.experiment(1).trials();
 
-    drawPlot(plot);
+    trials.forEach((trial) => {
+        let hexColour;
+
+        trial.limit();
+        if (trial.image.type === 'Peaceful') {
+            hexColour = '#F1E8B8';
+        } else {
+            hexColour = '#00FF00';
+        }
+        graph.drawPlot(trial.getPlot(), hexColour);
+    });
 }
 
 function dataLoadFailed() {
     console.log('Something went wrong loading data.');
 }
-
-function drawPlot(plot) {
-    graph.drawPlot(plot);
-}
-
-
 
 export const dataAnalysis = {
     initiate,
