@@ -33,6 +33,12 @@ function dataLoaded(data) {
     let hexColour = '#00FF00';
     let emotionalAverage = globalDataset.experiment(2).averagePlotDataForEmotionalImages();
 
+    let emotionalImages = (trial) => {
+        return trial.image.type.name === 'Emotional';
+    };
+
+    globalDataset.experiment(2).plotset().filter(emotionalImages).averagePlot();
+
     graph.drawPlot(emotionalAverage, hexColour, yMinMax);
 
     hexColour = '#F1E8B8';

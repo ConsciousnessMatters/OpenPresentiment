@@ -1,32 +1,42 @@
 export class ExperimentalDataset {
+    #data;
+
     constructor(experimentData) {
-        this.data = experimentData.trials.map((trialData) => {
+        this.#data = experimentData.trials.map((trialData) => {
             return new TrialDataset(trialData);
         });
         this.id = experimentData.id;
     }
 
+    data() {
+        return this.#data;
+    }
+
     trial(id) {
-        return this.data.filter((trial) => {
+        return this.#data.filter((trial) => {
             return trial.id === id;
         })[0];
     }
 
     trials(idArray = null) {
         if (idArray === null) {
-            return this.data;
+            return this.#data;
         } else {
-            return this.data.filter((trial) => {
+            return this.#data.filter((trial) => {
                 return idArray.includes(trial.id);
             });
         }
+    }
+
+    plotset() {
+        return new Plotset(this);
     }
 
     yMinMax() {
         let min = null,
             max = null;
 
-        this.data.forEach((trial) => {
+        this.#data.forEach((trial) => {
             const yMinMaxForTrial = trial.yMinMax();
 
             if (yMinMaxForTrial.yMin < min || min === null) {
@@ -59,7 +69,7 @@ export class ExperimentalDataset {
     // ToDo: Think about how to compensate for timing anomalies. We're just assuming correct timing to do this average.
 
     averagePlotDataForFilter(filterFunction) {
-        let filteredTrials = this.data.filter(filterFunction),
+        let filteredTrials = this.#data.filter(filterFunction),
             assumedTiming = [],
             summedPlot = [],
             averagePlot = new Plot();

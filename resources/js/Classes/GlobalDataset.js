@@ -1,8 +1,5 @@
 export class GlobalDataset {
     constructor(rawData) {
-
-        console.debug(rawData);
-
         this.data = rawData.experimentalData.map((experimentData) => {
             return new ExperimentalDataset(experimentData);
         });
