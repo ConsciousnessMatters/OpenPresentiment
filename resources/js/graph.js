@@ -32,16 +32,16 @@ function canvasSetup() {
     internalState.CC.canvas.height = internalState.CC.canvas.scrollHeight * scaleFactor;
 }
 
-function drawPlot(plot, hexColour = "#00ff00", yMinMax = null) {
-    const xPlMin = plot.reduce(lowest).x,
-        xPlMax = plot.reduce(highest).x,
+function drawPlot(plot, hexColour = "#00ff00", yMinMax = null, opacity = 1) {
+    const xPlMin = plot.lowestValues().x,
+        xPlMax = plot.highestValues().x,
         yPlMin = yMinMax.yMin ?? plot.reduce(lowest).y,
         yPlMax = yMinMax.yMax ?? plot.reduce(highest).y;
 
     const xDaMin = internalState.margins.xMin * scaleFactor,
         xDaMax = internalState.CC.canvas.width - internalState.margins.xMax * scaleFactor,
         yDaMin = internalState.margins.yMin * scaleFactor,
-        yDaMax = internalState.CC.canvas.height - internalState.margins.yMin * scaleFactor,
+        yDaMax = internalState.CC.canvas.height - internalState.margins.yMax * scaleFactor,
         daWidth = xDaMax - xDaMin,
         daHeight = yDaMax - yDaMin;
 
@@ -66,28 +66,11 @@ function drawPlot(plot, hexColour = "#00ff00", yMinMax = null) {
 
     internalState.CC.strokeStyle = hexColour;
     internalState.CC.lineWidth = 1 * scaleFactor;
+    internalState.CC.globalAlpha = opacity;
     internalState.CC.stroke();
+    internalState.CC.globalAlpha = 1;
 
     return this;
-}
-
-function lowest(previous, current) {
-    let x = (previous.x < current.x) ? previous.x : current.x;
-    let y = (previous.y < current.y) ? previous.y : current.y;
-
-    // debugger;
-
-    return {
-        x: (previous.x < current.x) ? previous.x : current.x,
-        y: (previous.y < current.y) ? previous.y : current.y,
-    };
-}
-
-function highest(previous, current) {
-    return {
-        x: (previous.x > current.x) ? previous.x : current.x,
-        y: (previous.y > current.y) ? previous.y : current.y,
-    };
 }
 
 function drawAxis() {
