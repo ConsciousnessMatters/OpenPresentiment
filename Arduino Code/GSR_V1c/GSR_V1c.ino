@@ -1,12 +1,13 @@
-#include <Adafruit_ADS1X15.h>
 // Supersampling, multi-input, differential, 3.3v design
+
+#include <Adafruit_ADS1X15.h>
 
 Adafruit_ADS1115 ads;
 unsigned long sampleWindowTime = 40000; // 50000 =  20 FPS / 40000 = 25 FPS / 33333 = 30 FPS
-unsigned long samples = 0;
-unsigned long lastSamples = 0;
-unsigned long lastSerialOutputTime = 0;
-float sampleAccumulatorValue = 0;
+//unsigned long samples = 0;
+//unsigned long lastSamples = 0;
+unsigned long lastScheduledSerialOutputTime = 0;
+signed long sampleAccumulatorValue = 0;
 int sampleAccumulatorSetSize = 0;
 
 void setup(void)
@@ -14,48 +15,46 @@ void setup(void)
   Serial.begin(9600);
 //  ads.setGain(GAIN_TWO); // Max gain that wont overscale for pads touching.
   ads.setGain(GAIN_ONE);
-  ads.setDataRate(RATE_ADS1115_860SPS);
+  ads.setDataRate(RATE_ADS1115_475SPS);
   if (!ads.begin()) {
-    Serial.println("Failed to initialize ADS.");
+    Serial.println("Failed to initialize ADS115 ADC.");
     while (1);
   }
 }
 
 void loop(void)
 {
-  unsigned long runtime;
-  int16_t adc0, adc1, adc2, adc3, diff01;
+  unsigned long runtime, diffSum;
+  signed long diff0, diff1, diffSum;
   float adcAverage, adcAverageVolts, adcSuperSampledAverage, adcSuperSampledAverageVolts, adc0Volt;
-  unsigned long nextSerialOutputTime, samplesThisWindow;
+  unsigned long nextScheduledSerialOutputTime, samplesThisWindow;
 
-  adc0 = ads.readADC_Differential_0_1();
-  adc1 = ads.readADC_Differential_2_3();
-  adcAverage = ((float) adc0 + (float) adc1) / 2;
+  diff0 = (signed long) ads.readADC_Differential_0_1();
+  diff1 = (signed long) ads.readADC_Differential_2_3();
 
-  sampleAccumulatorValue = sampleAccumulatorValue + adcAverage;
-  sampleAccumulatorSetSize++;
+  diffSum = diff0 + diff1;
 
-  nextSerialOutputTime = lastSerialOutputTime + sampleWindowTime;
-  runtime = micros();
+  sampleAccumulatorValue = sampleAccumulatorValue + diffSum;
+  sampleAccumulatorSetSize = sampleAccumulatorSetSize + 2;
 
-  if (nextSerialOutputTime <= runtime) {
-    samplesThisWindow = samples - lastSamples;
-    adcSuperSampledAverage = sampleAccumulatorValue / (float) sampleAccumulatorSetSize;
+  nextScheduledSerialOutputTime = lastScheduledSerialOutputTime + sampleWindowTime;
+
+  if (nextSerialOutputTime <= micros()) {
+//    samplesThisWindow = samples - lastSamples;
+    adcSuperSampledAverage = (float) sampleAccumulatorValue / (float) sampleAccumulatorSetSize;
     adcSuperSampledAverageVolts = computeVoltageEquivalent(adcSuperSampledAverage);
-    adc0Volt = computeVoltageEquivalent((float) adc0);
     
     Serial.print(millis()); Serial.print(","); Serial.println(adcSuperSampledAverageVolts, 5);
 //    Serial.print(millis()); Serial.print(","); Serial.print(samplesThisWindow); Serial.print(","); Serial.println(adcSuperSampledAverageVolts);
 //    Serial.print(adc0); Serial.print(","); Serial.print(adc1); Serial.print(","); Serial.println(adcSuperSampledAverageVolts, 4);
-    lastSerialOutputTime = runtime;
-    lastSamples = samples;
+    lastScheduledSerialOutputTime = lastScheduledSerialOutputTime + sampleWindowTime;
+//    lastSamples = samples;
 
     sampleAccumulatorValue = 0;
     sampleAccumulatorSetSize = 0;
-    
   }
 
-  samples++;
+//  samples++;
 }
 
 float computeVoltageEquivalent(float adcAverage)
