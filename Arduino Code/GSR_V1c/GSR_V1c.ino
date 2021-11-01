@@ -24,7 +24,7 @@ void setup(void)
 
 void loop(void)
 {
-  unsigned long runtime, diffSum;
+  unsigned long runtime;
   signed long diff0, diff1, diffSum;
   float adcAverage, adcAverageVolts, adcSuperSampledAverage, adcSuperSampledAverageVolts, adc0Volt;
   unsigned long nextScheduledSerialOutputTime, samplesThisWindow;
@@ -39,7 +39,7 @@ void loop(void)
 
   nextScheduledSerialOutputTime = lastScheduledSerialOutputTime + sampleWindowTime;
 
-  if (nextSerialOutputTime <= micros()) {
+  if (nextScheduledSerialOutputTime <= micros()) {
 //    samplesThisWindow = samples - lastSamples;
     adcSuperSampledAverage = (float) sampleAccumulatorValue / (float) sampleAccumulatorSetSize;
     adcSuperSampledAverageVolts = computeVoltageEquivalent(adcSuperSampledAverage);
