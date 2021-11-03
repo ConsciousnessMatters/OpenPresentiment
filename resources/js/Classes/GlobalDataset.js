@@ -1,3 +1,5 @@
+import {ExperimentalDataset} from './ExperimentalDataset';
+
 export class GlobalDataset {
     constructor(rawData) {
         this.data = rawData.experimentalData.map((experimentData) => {

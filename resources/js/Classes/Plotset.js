@@ -2,6 +2,9 @@
  * A lazy loading Plotset data class.
  */
 
+import {ExperimentalDataset} from './ExperimentalDataset';
+import {Plot} from './Plot';
+
 export class Plotset {
     #data;
 

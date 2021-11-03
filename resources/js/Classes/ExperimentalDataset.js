@@ -1,3 +1,7 @@
+import {TrialDataset} from './TrialDataset';
+import {Plotset} from './Plotset';
+import {Plot} from './Plot';
+
 export class ExperimentalDataset {
     #data;
 

@@ -6,21 +6,13 @@ import {experiment1} from './$experiment1';
 import {dataAnalysis} from './data-analysis';
 import {serialDataService} from './serial-data-service';
 import {GlobalDataset} from './Classes/GlobalDataset';
-import {ExperimentalDataset} from './Classes/ExperimentalDataset';
-import {TrialDataset} from './Classes/TrialDataset';
-import {Plotset} from './Classes/Plotset';
-import {Plot} from './Classes/Plot';
 import {graph} from './graph';
 import {graphLive} from './graph-live';
 import {setup} from './setup';
 
 helpers.initiate();
-window.helpers = helpers;
 window.GlobalDataset = GlobalDataset;
-window.ExperimentalDataset = ExperimentalDataset;
-window.TrialDataset = TrialDataset;
-window.Plotset = Plotset;
-window.Plot = Plot;
+window.helpers = helpers;
 window.graph = graph;
 
 document.addEventListener('DOMContentLoaded', () => {

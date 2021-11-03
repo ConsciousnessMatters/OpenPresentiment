@@ -29,6 +29,36 @@ export class Plot {
         return this.#data.map(callback, thisArg);
     }
 
+    virtualYfromX(x) {
+        let belowX = null,
+            aboveX = null;
+
+        this.#data.forEach((datapoint) => {
+            if (belowX === null) {
+                belowX = datapoint;
+            } else {
+                let beforeXtest = (datapoint.x > belowX.x && datapoint.x < x);
+
+                if (beforeXtest) {
+                    belowX = datapoint;
+                } else if (beforeXtest || aboveX === null) {
+                    aboveX = datapoint;
+                }
+            }
+        });
+
+        let xscale = aboveX.x - belowX.x,
+            xfloor = belowX.x,
+            xVirtualPosition = x - xfloor,
+            scaleProportion = xVirtualPosition / xscale,
+            yScale = aboveX.y - belowX.y,
+            yfloor = belowX.y,
+            yVirtualPosition = yScale * scaleProportion,
+            y = yfloor + yVirtualPosition;
+
+        return y;
+    }
+
     lowestValues() {
         return this.#data.reduce((previous, current) => {
             return {

@@ -1,3 +1,5 @@
+import {Plot} from './Plot';
+
 export class TrialDataset {
     constructor(trialData) {
         this.data = trialData.gsr_data.split("\n").map((lineData) => {
