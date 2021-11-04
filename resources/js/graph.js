@@ -33,10 +33,12 @@ function canvasSetup() {
 }
 
 function drawPlot(plot, hexColour = "#00ff00", yMinMax = null, opacity = 1) {
+    // debugger;
+
     const xPlMin = plot.lowestValues().x,
         xPlMax = plot.highestValues().x,
-        yPlMin = yMinMax.yMin ?? plot.reduce(lowest).y,
-        yPlMax = yMinMax.yMax ?? plot.reduce(highest).y;
+        yPlMin = yMinMax?.yMin ?? plot.lowestValues().y,
+        yPlMax = yMinMax?.yMax ?? plot.highestValues().y;
 
     const xDaMin = internalState.margins.xMin * scaleFactor,
         xDaMax = internalState.CC.canvas.width - internalState.margins.xMax * scaleFactor,
@@ -64,6 +66,8 @@ function drawPlot(plot, hexColour = "#00ff00", yMinMax = null, opacity = 1) {
         }
     });
 
+    debugger;
+
     internalState.CC.strokeStyle = hexColour;
     internalState.CC.lineWidth = 1 * scaleFactor;
     internalState.CC.globalAlpha = opacity;
@@ -85,6 +89,12 @@ function drawAxis() {
     internalState.CC.lineTo(internalState.CC.canvas.width - xMax, internalState.CC.canvas.height - yMin);
     internalState.CC.strokeStyle = "#dddddd";
     internalState.CC.stroke();
+
+    return this;
+}
+
+function drawLabels() {
+    debugger;
 
     return this;
 }

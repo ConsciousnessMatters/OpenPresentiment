@@ -2,19 +2,78 @@ import {Plot} from './Plot';
 
 export class TrialDataset {
     constructor(trialData) {
-        this.data = trialData.gsr_data.split("\n").map((lineData) => {
-            return lineData.split(",").map(this.numericParsing);
-        });
-
         this.jsTimeField = 0;
         this.mcTimeField = 1;
         this.microvoltField = 2;
-
+        this.partContainingField = 1;
+        this.trialContainingField = 1;
         this.image = trialData.image;
         this.id = trialData.id;
+        this.number = null;
 
-        // ToDo: think about implementing the line below in a better way.
-        this.limit(20);
+        this.ingestGsrData(trialData);
+        this.ingestEventData(trialData);
+        this.addExperimentalTime();
+    }
+
+    ingestGsrData(trialData) {
+        this.gsrData = trialData.gsr_data.split("\n").map((lineData) => {
+            const lineDataItems = lineData.split(",").map(this.numericParsing);
+
+            return {
+                mcTime: parseInt(lineDataItems[this.mcTimeField],10),
+                jsTime: parseInt(lineDataItems[this.jsTimeField],10),
+                microVolts: parseInt(lineDataItems[this.microvoltField],10),
+            }
+        });
+    }
+
+    ingestEventData(trialData) {
+        let eventProcessing = trialData.event_data.split("\n").map((lineData) => {
+            const lineDataItems = lineData.split(",").map(this.numericParsing),
+                part = lineDataItems[this.partContainingField].match(/P([\d|E])+/),
+                trial = lineDataItems[this.trialContainingField ].match(/T(\d)+/),
+                time = lineDataItems[this.jsTimeField];
+
+            if (this.number === null) {
+                this.number = parseInt(trial[1],10);
+            }
+
+            if (part !== null && trial !== null && time !== null) {
+                return {
+                    part: isNaN(part[1]) ? part[1] : parseInt(part[1],10),
+                    jsTime: time,
+                }
+            } else {
+                return null;
+            }
+        });
+
+        this.eventData = eventProcessing.filter((event) => event !== null);
+    }
+
+    addExperimentalTime() {
+        this.gsrData = this.gsrData.map((datapoint) => {
+            let timeZeroEvent = this.eventData.filter((event) => event.part == 3)[0],
+                timeZero = timeZeroEvent.jsTime;
+
+            return {
+                ...datapoint,
+                experimentalTime: datapoint.jsTime - timeZero
+            };
+        });
+
+        this.eventData = this.eventData.map((datapoint) => {
+            let timeZeroEvent = this.eventData.filter((event) => event.part == 3)[0],
+                timeZero = timeZeroEvent.jsTime;
+
+            return {
+                ...datapoint,
+                experimentalTime: datapoint.jsTime - timeZero
+            };
+        });
+
+        return this;
     }
 
     numericParsing(lineElement) {
@@ -25,33 +84,26 @@ export class TrialDataset {
         return isNaN(lineElement) ? lineElement : number;
     }
 
-    limit(seconds = 20) {
-        let earliestTime = null,
-            millisecondLimit = seconds * 1000;
+    extractExperimentalDataWindow() {
+        // ToDo: Trim data from -11 to +11 seconds.
+        const timeWindow = 11000;
 
-        this.data = this.data.filter((datapoint) => {
-            let dataPointTime = parseInt(datapoint[this.mcTimeField], 10);
-
-            if (earliestTime === null) {
-                earliestTime = dataPointTime;
-            }
-
-            return dataPointTime <= earliestTime + millisecondLimit;
-        });
+        return this.gsrData.filter((datapoint) => datapoint.experimentalTime > (-1 * timeWindow)
+            && datapoint.experimentalTime < timeWindow);
     }
 
     plot() {
-        const plotData = this.data.map((datapoint) => {
+        const plotData = this.extractExperimentalDataWindow().map((datapoint) => {
             return {
-                x: parseInt(datapoint[this.mcTimeField], 10),
-                y: parseInt(datapoint[this.microvoltField], 10),
+                x: datapoint.experimentalTime,
+                y: datapoint.microVolts,
             }
         });
 
-        return new Plot(plotData);
+        return new Plot(plotData, this.eventData);
     }
 
-    yMinMax() {
+    yMinMax() { // ToDo: Deprecated (Move to plot)
         let min = null,
             max = null;
 

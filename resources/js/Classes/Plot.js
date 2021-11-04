@@ -1,39 +1,41 @@
 export class Plot {
-    #data;
+    plotData;
+    eventData;
 
-    constructor(plotData) {
-        this.#data = plotData ?? [];
+    constructor(plotData, eventData) {
+        this.plotData = plotData ?? [];
+        this.eventData = eventData ?? [];
     }
 
     data() {
-        return this.#data;
+        return this.plotData;
     }
 
     length() {
-        return this.#data.length;
+        return this.plotData.length;
     }
 
     forEach(callback, thisArg) {
-        return this.#data.forEach(callback, thisArg);
+        return this.plotData.forEach(callback, thisArg);
     }
 
     reduce(callback, initialValue) {
         if (initialValue === undefined) {
-            return this.#data.reduce(callback);
+            return this.plotData.reduce(callback);
         } else {
-            return this.#data.reduce(callback, initialValue);
+            return this.plotData.reduce(callback, initialValue);
         }
     }
 
     map(callback, thisArg) {
-        return this.#data.map(callback, thisArg);
+        return this.plotData.map(callback, thisArg);
     }
 
     virtualYfromX(x) {
         let belowX = null,
             aboveX = null;
 
-        this.#data.forEach((datapoint) => {
+        this.plotData.forEach((datapoint) => {
             if (belowX === null) {
                 belowX = datapoint;
             } else {
@@ -47,20 +49,22 @@ export class Plot {
             }
         });
 
-        let xscale = aboveX.x - belowX.x,
-            xfloor = belowX.x,
-            xVirtualPosition = x - xfloor,
-            scaleProportion = xVirtualPosition / xscale,
-            yScale = aboveX.y - belowX.y,
-            yfloor = belowX.y,
-            yVirtualPosition = yScale * scaleProportion,
-            y = yfloor + yVirtualPosition;
+        if (aboveX !== null && belowX !== null) {
+            let xscale = aboveX.x - belowX.x,
+                xfloor = belowX.x,
+                xVirtualPosition = x - xfloor,
+                scaleProportion = xVirtualPosition / xscale,
+                yScale = aboveX.y - belowX.y,
+                yfloor = belowX.y,
+                yVirtualPosition = yScale * scaleProportion,
+                y = yfloor + yVirtualPosition;
 
-        return y;
+            return y;
+        }
     }
 
     lowestValues() {
-        return this.#data.reduce((previous, current) => {
+        return this.plotData.reduce((previous, current) => {
             return {
                 x: (previous.x < current.x) ? previous.x : current.x,
                 y: (previous.y < current.y) ? previous.y : current.y,
@@ -69,7 +73,7 @@ export class Plot {
     }
 
     highestValues() {
-        return this.#data.reduce((previous, current) => {
+        return this.plotData.reduce((previous, current) => {
             return {
                 x: (previous.x > current.x) ? previous.x : current.x,
                 y: (previous.y > current.y) ? previous.y : current.y,
@@ -78,14 +82,14 @@ export class Plot {
     }
 
     addPoint(index, plotpoint) {
-        this.#data[index] = plotpoint;
+        this.plotData[index] = plotpoint;
         return this;
     }
 
     startXFromZero() {
-        let startTime = this.#data[0].x ?? 0;
+        let startTime = this.plotData[0].x ?? 0;
 
-        this.#data = this.#data.map((datapoint) => {
+        this.plotData = this.plotData.map((datapoint) => {
             return {
                 x: datapoint.x - startTime,
                 y: datapoint.y,
@@ -98,7 +102,7 @@ export class Plot {
     filterDuplicateData() {
         let uKeys = [];
 
-        this.#data = this.#data.filter((datapoint) => {
+        this.plotData = this.plotData.filter((datapoint) => {
             const uKey = `x_${datapoint.x} y_${datapoint.y}`,
                 uKeyNew = ! uKeys.includes(uKey);
 
@@ -113,7 +117,7 @@ export class Plot {
     }
 
     trimPlotQuantity(maxLength) {
-        this.#data = this.#data.slice(0, maxLength);
+        this.plotData = this.plotData.slice(0, maxLength);
 
         return this;
     }
@@ -124,7 +128,7 @@ export class Plot {
         let trimmedPlot = [],
             startTime = null;
 
-        this.#data.forEach((plot) => {
+        this.plotData.forEach((plot) => {
             if (startTime === null) {
                 startTime = plot.x;
             }
@@ -134,7 +138,7 @@ export class Plot {
             }
         });
 
-        this.#data = trimmedPlot;
+        this.plotData = trimmedPlot;
 
         return this;
     }
@@ -143,7 +147,7 @@ export class Plot {
         let intervals = [],
             previousTime = null;
 
-        this.#data.forEach((plot) => {
+        this.plotData.forEach((plot) => {
             const currentTime = plot.x;
 
             if (previousTime !== null) {
@@ -157,10 +161,10 @@ export class Plot {
     }
 
     latestRelativeTime() {
-        let startTime = this.#data[0].x ?? 0,
+        let startTime = this.plotData[0].x ?? 0,
             zeroStartPlot;
 
-        zeroStartPlot = this.#data.map((datapoint) => {
+        zeroStartPlot = this.plotData.map((datapoint) => {
             return datapoint.x - startTime;
         });
 

@@ -6,35 +6,35 @@ import {ExperimentalDataset} from './ExperimentalDataset';
 import {Plot} from './Plot';
 
 export class Plotset {
-    #data;
+    plotData;
 
     constructor(datasource) {
         this.datasource = datasource ?? null;
         this.filters = [];
-        this.#data = false;
+        this.plotData = false;
     }
 
     data() {
-        if (! this.#data) {
-            this.#actualiseData();
+        if (! this.plotData) {
+            this.actualiseData();
         }
-        return this.#data;
+        return this.plotData;
     }
 
     forEach(callback, thisArg) {
-        return this.#data.forEach(callback, thisArg);
+        return this.plotData.forEach(callback, thisArg);
     }
 
     reduce(callback, initialValue) {
         if (initialValue === undefined) {
-            return this.#data.reduce(callback);
+            return this.plotData.reduce(callback);
         } else {
-            return this.#data.reduce(callback, initialValue);
+            return this.plotData.reduce(callback, initialValue);
         }
     }
 
     map(callback, thisArg) {
-        return this.#data.map(callback, thisArg);
+        return this.plotData.map(callback, thisArg);
     }
 
 
@@ -43,15 +43,15 @@ export class Plotset {
         return this;
     }
 
-    #actualiseData() {
+    actualiseData() {
         const sourceData = this.datasource.data(),
-            filteredData = this.#actualiseFilter(sourceData),
-            flattenedData = this.#flattenData(filteredData);
+            filteredData = this.actualiseFilter(sourceData),
+            flattenedData = this.flattenData(filteredData);
 
-        this.#data = flattenedData;
+        this.plotData = flattenedData;
     }
 
-    #actualiseFilter(sourceData) {
+    actualiseFilter(sourceData) {
         if (this.filters.length > 0) {
             return sourceData.filter((dataItems) => {
                 return this.filters.every((filter) => {
@@ -63,7 +63,7 @@ export class Plotset {
         }
     }
 
-    #flattenData(dataItems) {
+    flattenData(dataItems) {
         return dataItems.map((dataItem) => {
             return dataItem.plot();
         });
@@ -71,7 +71,7 @@ export class Plotset {
 
     averagePlot() {
         if (this.datasource instanceof ExperimentalDataset) {
-            return this.#averagePlotFromExperimentalDataset();
+            return this.averagePlotFromExperimentalDataset();
         } else {
             console.error('Unfamiliar datasource provided.');
         }
@@ -80,7 +80,7 @@ export class Plotset {
     }
 
     startXFromZero() {
-        this.#data = this.data().map((plot) => {
+        this.plotData = this.data().map((plot) => {
             return plot.startXFromZero();
         });
 
@@ -88,32 +88,8 @@ export class Plotset {
     }
 
     filterDuplicateData() {
-        this.#data = this.data().map((plot) => {
+        this.plotData = this.data().map((plot) => {
             return plot.filterDuplicateData();
-        });
-
-        return this;
-    }
-
-    trimPlotsToTime(seconds) {
-        this.data().forEach((plot) => {
-            plot.trimPlotToTime(seconds);
-        });
-    }
-
-    trimPlotsetPlotQuantityToLowestCommonDenominator() {
-        let lowestValue = null;
-
-        this.data().forEach((plot) => {
-            const plotLength = plot.length();
-
-            if (plotLength < lowestValue || lowestValue === null) {
-                lowestValue = plotLength;
-            }
-        });
-
-        this.data().forEach((plot) => {
-            plot.trimPlotQuantity(lowestValue);
         });
 
         return this;
@@ -123,7 +99,6 @@ export class Plotset {
         // ToDo: Consider allowing different timing on different experiments via common denominators.
 
         const timingValues = this.data().map((plot) => {
-            console.debug(plot.averageTimingInterval());
             return plot.averageTimingInterval();
         });
 
@@ -140,72 +115,46 @@ export class Plotset {
         });
     }
 
-    #averagePlotFromExperimentalDataset() {
-        let averageTimingInterval,
-            halfTimingInterval,
-            latestRelativeTime,
-            timingBuckets = [],
-            averagePlotData = [];
+    averagePlotFromExperimentalDataset() {
+        const interval = 40;
+
+        let latestRelativeTime,
+            bucketsPlot = [],
+            averagePlot;
 
         this.startXFromZero();
         this.filterDuplicateData();
-        this.trimPlotsToTime(20); // ToDo: This needs to be moved later.
-        this.trimPlotsetPlotQuantityToLowestCommonDenominator();
-        averageTimingInterval = this.averageTimingInterval();
-        halfTimingInterval = averageTimingInterval / 2;
+        // this.trimPlotsToTime(20); // ToDo: This needs to be moved later.
         latestRelativeTime = this.latestRelativeTime();
 
-        console.debug({
-            averageTimingInterval, latestRelativeTime
-        });
-
         this.data().forEach((plot) => {
-            plot.forEach((datapoint) => {
-                let timeBucketBeginningThreshold,
-                    timeBucketEndingThreshold,
-                    t = 0,
-                    i = 0;
+            let highestX = plot.x;
 
-                do {
-                    if (timingBuckets[i] === undefined) {
-                        timingBuckets[i] = [];
-                    }
+            for (let t = 0; t <= latestRelativeTime && t <= highestX; t = t + interval) {
+                if (bucketsPlot[t] === undefined) {
+                    bucketsPlot[t] = [];
+                }
 
-                    timeBucketBeginningThreshold = t - halfTimingInterval;
-                    timeBucketEndingThreshold = t + halfTimingInterval;
+                let virtualPlot = plot.virtualYfromX(t)
 
-                    if (datapoint.x >= timeBucketBeginningThreshold && datapoint.x < timeBucketEndingThreshold) {
-                        timingBuckets[i].push(datapoint);
-                    }
-
-                    t = t + averageTimingInterval;
-                    i++;
-                } while (t < latestRelativeTime);
-            });
-        });
-
-        averagePlotData = timingBuckets.map((timeBucket) => {
-            let totalled = [],
-                timeBucketLength = timeBucket.length;
-
-            totalled = timeBucket.reduce((previousDatapoint, currentDatapoint) => {
-                return {
-                    x: previousDatapoint.x + currentDatapoint.x,
-                    y: previousDatapoint.y + currentDatapoint.y,
-                };
-            }, {
-                x: 0,
-                y: 0,
-            });
-
-            return {
-                x: totalled.x / timeBucketLength,
-                y: totalled.y / timeBucketLength,
+                if (isNaN(virtualPlot)) {
+                    debugger;
+                } else {
+                    bucketsPlot[t].push();
+                }
             }
         });
 
-        console.debug(averagePlotData);
+        averagePlot = bucketsPlot.map((bucket, index) => {
+            let bucketSum = bucket.reduce((p, c) => p + c);
+            return {
+                x: index,
+                y: bucketSum / bucket.length,
+            }
+        });
 
-        return new Plot(averagePlotData);
+        console.debug(averagePlot);
+
+        return new Plot(averagePlot);
     }
 }

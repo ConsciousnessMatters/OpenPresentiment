@@ -16,7 +16,6 @@ function loadData() {
 function dataLoaded(data) {
     const globalDataset = new GlobalDataset(data);
     window.globalDataset = globalDataset; // ToDo: What?
-    console.log('Yes');
 
     let trials = globalDataset.experiment(2).trials();
     let yMinMax = globalDataset.experiment(2).yMinMax();
@@ -28,18 +27,18 @@ function dataLoaded(data) {
         } else {
             hexColour = '#00FF00';
         }
-        graph.drawPlot(trial.plot(), hexColour, yMinMax, 0.33);
+        graph.drawPlot(trial.plot(), hexColour, null, 0.33);
     });
 
     hexColour = '#00FF00';
     let emotionalAverage = globalDataset.experiment(2).averagePlotDataForEmotionalImages();
 
-    graph.drawPlot(emotionalAverage, hexColour, yMinMax);
+    // graph.drawPlot(emotionalAverage, hexColour, yMinMax);
 
     hexColour = '#F1E8B8';
     let peacefulAverage = globalDataset.experiment(2).averagePlotDataForPeacefulImages();
 
-    graph.drawPlot(peacefulAverage, hexColour, yMinMax);
+    // graph.drawPlot(peacefulAverage, hexColour, yMinMax);
 
 
     let emotionalImages = (trial) => {
@@ -54,11 +53,16 @@ function dataLoaded(data) {
 
     hexColour = '#00FF00';
     let emotionalAverage2 = globalDataset.experiment(2).plotset().filter(emotionalImages).filterDuplicateData().startXFromZero().averagePlot();
-    graph.drawPlot(emotionalAverage2, hexColour, yMinMax);
 
-    hexColour = '#F1E8B8';
-    let peacefulAverage2 = globalDataset.experiment(2).plotset().filter(peacefulImages).filterDuplicateData().startXFromZero().averagePlot();
-    graph.drawPlot(peacefulAverage2, hexColour, yMinMax);
+    window.emotionalAverage2 = emotionalAverage2;
+
+    // graph.drawPlot(emotionalAverage2, hexColour);
+
+
+    //
+    // hexColour = '#F1E8B8';
+    // let peacefulAverage2 = globalDataset.experiment(2).plotset().filter(peacefulImages).filterDuplicateData().startXFromZero().averagePlot();
+    // graph.drawPlot(peacefulAverage2, hexColour, yMinMax);
 }
 
 function dataLoadFailed() {
