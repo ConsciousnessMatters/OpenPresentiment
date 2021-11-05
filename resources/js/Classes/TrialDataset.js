@@ -84,16 +84,8 @@ export class TrialDataset {
         return isNaN(lineElement) ? lineElement : number;
     }
 
-    extractExperimentalDataWindow() {
-        // ToDo: Trim data from -11 to +11 seconds.
-        const timeWindow = 11000;
-
-        return this.gsrData.filter((datapoint) => datapoint.experimentalTime > (-1 * timeWindow)
-            && datapoint.experimentalTime < timeWindow);
-    }
-
     plot() {
-        const plotData = this.extractExperimentalDataWindow().map((datapoint) => {
+        const plotData = this.gsrData.map((datapoint) => {
             return {
                 x: datapoint.experimentalTime,
                 y: datapoint.microVolts,
@@ -101,25 +93,5 @@ export class TrialDataset {
         });
 
         return new Plot(plotData, this.eventData);
-    }
-
-    yMinMax() { // ToDo: Deprecated (Move to plot)
-        let min = null,
-            max = null;
-
-        this.plot().forEach((datapoint) => {
-            if (datapoint.y < min || min === null) {
-                min = datapoint.y;
-            }
-
-            if (datapoint.y > max || max === null) {
-                max = datapoint.y;
-            }
-        });
-
-        return {
-            yMin: min,
-            yMax: max,
-        }
     }
 }

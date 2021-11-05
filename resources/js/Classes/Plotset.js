@@ -122,13 +122,15 @@ export class Plotset {
             bucketsPlot = [],
             averagePlot;
 
-        this.startXFromZero();
         this.filterDuplicateData();
         // this.trimPlotsToTime(20); // ToDo: This needs to be moved later.
         latestRelativeTime = this.latestRelativeTime();
 
         this.data().forEach((plot) => {
-            let highestX = plot.x;
+            // ToDo: Pay attention here and resolve issues.
+            console.debug(plot.data()[0]);
+
+            let highestX = plot.highestValues().x;
 
             for (let t = 0; t <= latestRelativeTime && t <= highestX; t = t + interval) {
                 if (bucketsPlot[t] === undefined) {
@@ -140,7 +142,7 @@ export class Plotset {
                 if (isNaN(virtualPlot)) {
                     debugger;
                 } else {
-                    bucketsPlot[t].push();
+                    bucketsPlot[t].push(virtualPlot);
                 }
             }
         });
@@ -156,5 +158,27 @@ export class Plotset {
         console.debug(averagePlot);
 
         return new Plot(averagePlot);
+    }
+
+    yMinMax() {
+        let min = null,
+            max = null;
+
+        this.data().forEach((plot) => {
+            const yMinMaxes = plot.yMinMax();
+
+            if (yMinMaxes.yMin < min || min === null) {
+                min = yMinMaxes.yMin;
+            }
+
+            if (yMinMaxes.yMax > max || max === null) {
+                max = yMinMaxes.yMax;
+            }
+        });
+
+        return {
+            yMin: min,
+            yMax: max,
+        }
     }
 }

@@ -33,10 +33,10 @@ function canvasSetup() {
 }
 
 function drawPlot(plot, hexColour = "#00ff00", yMinMax = null, opacity = 1) {
-    // debugger;
+    plot.trimPlotTime(7000, 10000);
 
-    const xPlMin = plot.lowestValues().x,
-        xPlMax = plot.highestValues().x,
+    const xPlMin = -7000,
+        xPlMax = 10000,
         yPlMin = yMinMax?.yMin ?? plot.lowestValues().y,
         yPlMax = yMinMax?.yMax ?? plot.highestValues().y;
 
@@ -65,8 +65,6 @@ function drawPlot(plot, hexColour = "#00ff00", yMinMax = null, opacity = 1) {
             internalState.CC.lineTo(dataPointXValue, flipYValue(dataPointYValue));
         }
     });
-
-    debugger;
 
     internalState.CC.strokeStyle = hexColour;
     internalState.CC.lineWidth = 1 * scaleFactor;

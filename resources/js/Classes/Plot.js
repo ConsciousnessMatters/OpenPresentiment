@@ -11,6 +11,14 @@ export class Plot {
         return this.plotData;
     }
 
+    index(index, setValue = null) {
+        if (setValue === null) {
+            return this.plotData[index];
+        } else {
+            this.plotData[index] = setValue;
+        }
+    }
+
     length() {
         return this.plotData.length;
     }
@@ -33,7 +41,8 @@ export class Plot {
 
     virtualYfromX(x) {
         let belowX = null,
-            aboveX = null;
+            aboveX = null,
+            xScale, xfloor, xVirtualPosition, scaleProportion, yScale, yfloor, yVirtualPosition, y;
 
         this.plotData.forEach((datapoint) => {
             if (belowX === null) {
@@ -50,35 +59,60 @@ export class Plot {
         });
 
         if (aboveX !== null && belowX !== null) {
-            let xscale = aboveX.x - belowX.x,
-                xfloor = belowX.x,
-                xVirtualPosition = x - xfloor,
-                scaleProportion = xVirtualPosition / xscale,
-                yScale = aboveX.y - belowX.y,
-                yfloor = belowX.y,
-                yVirtualPosition = yScale * scaleProportion,
-                y = yfloor + yVirtualPosition;
+            xScale = aboveX.x - belowX.x;
+
+            if (xScale === undefined) {
+                debugger;
+            }
+
+            // if (aboveX.x === 9311 && belowX.x === 9311) {
+            //     debugger;
+            // }
+
+            xfloor = belowX.x;
+            xVirtualPosition = x - xfloor;
+            scaleProportion = (xScale === 0) ? 0 : xVirtualPosition / xScale;
+            yScale = aboveX.y - belowX.y;
+            yfloor = belowX.y;
+            yVirtualPosition = yScale * scaleProportion;
+            y = yfloor + yVirtualPosition;
+
+            if (y === Infinity) {
+                debugger;
+            }
 
             return y;
         }
     }
 
     lowestValues() {
-        return this.plotData.reduce((previous, current) => {
+        let lowestValues =  this.plotData.reduce((previous, current) => {
             return {
                 x: (previous.x < current.x) ? previous.x : current.x,
                 y: (previous.y < current.y) ? previous.y : current.y,
             };
         });
+
+        if (lowestValues.x !== Infinity || lowestValues.y !== Infinity) {
+            return lowestValues;
+        } else {
+            debugger;
+        }
     }
 
     highestValues() {
-        return this.plotData.reduce((previous, current) => {
+        let highestValues = this.plotData.reduce((previous, current) => {
             return {
                 x: (previous.x > current.x) ? previous.x : current.x,
                 y: (previous.y > current.y) ? previous.y : current.y,
             };
         });
+
+        if (highestValues.x !== Infinity, highestValues.y !== Infinity) {
+            return highestValues;
+        } else {
+            debugger;
+        }
     }
 
     addPoint(index, plotpoint) {
@@ -116,29 +150,10 @@ export class Plot {
         return this;
     }
 
-    trimPlotQuantity(maxLength) {
-        this.plotData = this.plotData.slice(0, maxLength);
-
-        return this;
-    }
-
-    trimPlotToTime(seconds) {
-        const milliseconds = seconds * 1000;
-
-        let trimmedPlot = [],
-            startTime = null;
-
-        this.plotData.forEach((plot) => {
-            if (startTime === null) {
-                startTime = plot.x;
-            }
-
-            if (plot.x <= startTime + milliseconds) {
-                trimmedPlot.push(plot);
-            }
+    trimPlotTime(preZero = 7000, postZero = 10000) {
+        this.plotData = this.plotData.filter((datapoint) => {
+            return datapoint.x > -1 * preZero && datapoint.x < postZero;
         });
-
-        this.plotData = trimmedPlot;
 
         return this;
     }
@@ -169,5 +184,29 @@ export class Plot {
         });
 
         return zeroStartPlot.pop();
+    }
+
+    validityCheck() {
+        return true;
+    }
+
+    yMinMax() {
+        let min = null,
+            max = null;
+
+        this.plotData.forEach((datapoint) => {
+            if (datapoint.y < min || min === null) {
+                min = datapoint.y;
+            }
+
+            if (datapoint.y > max || max === null) {
+                max = datapoint.y;
+            }
+        });
+
+        return {
+            yMin: min,
+            yMax: max,
+        }
     }
 }
