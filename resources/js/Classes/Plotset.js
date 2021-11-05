@@ -7,6 +7,8 @@ import {Plot} from './Plot';
 
 export class Plotset {
     plotData;
+    preZeroTime = 7000;
+    postZeroTime = 10000;
 
     constructor(datasource) {
         this.datasource = datasource ?? null;
@@ -116,25 +118,23 @@ export class Plotset {
     }
 
     averagePlotFromExperimentalDataset() {
-        const interval = 40;
+        const interval = 40,
+            indexShift = 10000;
 
-        let latestRelativeTime,
-            bucketsPlot = [],
+        let bucketsPlot = [],
             averagePlot;
 
         this.filterDuplicateData();
-        // this.trimPlotsToTime(20); // ToDo: This needs to be moved later.
-        latestRelativeTime = this.latestRelativeTime();
 
         this.data().forEach((plot) => {
-            // ToDo: Pay attention here and resolve issues.
-            console.debug(plot.data()[0]);
+            let lowestX = this.preZeroTime * -1,
+                highestX = this.postZeroTime;
 
-            let highestX = plot.highestValues().x;
+            for (let t = lowestX; t <= highestX; t = t + interval) {
+                let i = t + indexShift;
 
-            for (let t = 0; t <= latestRelativeTime && t <= highestX; t = t + interval) {
-                if (bucketsPlot[t] === undefined) {
-                    bucketsPlot[t] = [];
+                if (bucketsPlot[i] === undefined) {
+                    bucketsPlot[i] = [];
                 }
 
                 let virtualPlot = plot.virtualYfromX(t)
@@ -142,7 +142,7 @@ export class Plotset {
                 if (isNaN(virtualPlot)) {
                     debugger;
                 } else {
-                    bucketsPlot[t].push(virtualPlot);
+                    bucketsPlot[i].push(virtualPlot);
                 }
             }
         });
@@ -150,12 +150,12 @@ export class Plotset {
         averagePlot = bucketsPlot.map((bucket, index) => {
             let bucketSum = bucket.reduce((p, c) => p + c);
             return {
-                x: index,
+                x: index - indexShift,
                 y: bucketSum / bucket.length,
             }
         });
 
-        console.debug(averagePlot);
+        console.debug({ averagePlot });
 
         return new Plot(averagePlot);
     }

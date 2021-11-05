@@ -1,4 +1,6 @@
-const scaleFactor = window.devicePixelRatio || 1;
+const scaleFactor = window.devicePixelRatio || 1,
+    preZeroTime = 7000,
+    postZeroTime = 10000;
 
 let internalState = {
     dataset: null,
@@ -33,10 +35,10 @@ function canvasSetup() {
 }
 
 function drawPlot(plot, hexColour = "#00ff00", yMinMax = null, opacity = 1) {
-    plot.trimPlotTime(7000, 10000);
+    plot.trimPlotTime(preZeroTime, postZeroTime);
 
-    const xPlMin = -7000,
-        xPlMax = 10000,
+    const xPlMin = -1 * preZeroTime,
+        xPlMax = postZeroTime,
         yPlMin = yMinMax?.yMin ?? plot.lowestValues().y,
         yPlMax = yMinMax?.yMax ?? plot.highestValues().y;
 
