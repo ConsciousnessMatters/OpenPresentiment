@@ -18,7 +18,7 @@ function dataLoaded(data) {
     window.globalDataset = globalDataset; // ToDo: What?
 
     let trials = globalDataset.experiment(2).trials();
-    let yMinMax = globalDataset.experiment(2).plotset().yMinMax();
+    let yMinMax = globalDataset.experiment(2).plotset().trimPlotTime().setStartingYToZero().yMinMax();
     let hexColour;
 
     trials.forEach((trial) => {
@@ -27,19 +27,8 @@ function dataLoaded(data) {
         } else {
             hexColour = '#00FF00';
         }
-        graph.drawPlot(trial.plot(), hexColour, yMinMax, 0.33);
+        graph.drawPlot(trial.plot().trimPlotTime().setStartingYToZero(), hexColour, yMinMax, 0.33);
     });
-
-    hexColour = '#00FF00';
-    let emotionalAverage = globalDataset.experiment(2).averagePlotDataForEmotionalImages();
-
-    // graph.drawPlot(emotionalAverage, hexColour, yMinMax);
-
-    hexColour = '#F1E8B8';
-    let peacefulAverage = globalDataset.experiment(2).averagePlotDataForPeacefulImages();
-
-    // graph.drawPlot(peacefulAverage, hexColour, yMinMax);
-
 
     let emotionalImages = (trial) => {
         return trial.image.type.name === 'Emotional';
@@ -52,17 +41,12 @@ function dataLoaded(data) {
     graph.drawAxis();
 
     hexColour = '#00FF00';
-    let emotionalAverage2 = globalDataset.experiment(2).plotset().filter(emotionalImages).filterDuplicateData().averagePlot();
-
-    window.emotionalAverage2 = emotionalAverage2;
-
-    graph.drawPlot(emotionalAverage2, hexColour, yMinMax);
-
-
+    let emotionalAverage = globalDataset.experiment(2).plotset().filter(emotionalImages).filterDuplicateData().trimPlotTime().setStartingYToZero().averagePlot();
+    graph.drawPlot(emotionalAverage, hexColour, yMinMax);
 
     hexColour = '#F1E8B8';
-    let peacefulAverage2 = globalDataset.experiment(2).plotset().filter(peacefulImages).filterDuplicateData().averagePlot();
-    graph.drawPlot(peacefulAverage2, hexColour, yMinMax);
+    let peacefulAverage = globalDataset.experiment(2).plotset().filter(peacefulImages).filterDuplicateData().trimPlotTime().setStartingYToZero().averagePlot();
+    graph.drawPlot(peacefulAverage, hexColour, yMinMax);
 }
 
 function dataLoadFailed() {

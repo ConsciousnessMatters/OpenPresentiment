@@ -1,6 +1,5 @@
 import {TrialDataset} from './TrialDataset';
 import {Plotset} from './Plotset';
-import {Plot} from './Plot';
 
 export class ExperimentalDataset {
     #data;
@@ -56,49 +55,5 @@ export class ExperimentalDataset {
             yMin: min,
             yMax: max,
         }
-    }
-
-    averagePlotDataForEmotionalImages() {
-        return this.averagePlotDataForFilter((trial) => {
-            return trial.image.type.name === 'Emotional';
-        });
-    }
-
-    averagePlotDataForPeacefulImages() {
-        return this.averagePlotDataForFilter((trial) => {
-            return trial.image.type.name === 'Peaceful';
-        });
-    }
-
-    // ToDo: Think about how to compensate for timing anomalies. We're just assuming correct timing to do this average.
-
-    averagePlotDataForFilter(filterFunction) {
-        let filteredTrials = this.#data.filter(filterFunction),
-            assumedTiming = [],
-            summedPlot = [],
-            averagePlot = new Plot();
-
-        assumedTiming = filteredTrials[0].plot().map((datapoint) => {
-            return datapoint.x;
-        });
-
-        filteredTrials.forEach((trial) => {
-            trial.plot().forEach((datapoint, index) => {
-                const summedY = summedPlot[index] ?? 0;
-
-                summedPlot[index] = summedY + datapoint.y;
-            });
-        });
-
-        summedPlot.forEach((summedValue, index) => {
-            if (assumedTiming[index] !== undefined) {
-                averagePlot.addPoint(index, {
-                    x: assumedTiming[index],
-                    y: summedValue / filteredTrials.length,
-                });
-            }
-        });
-
-        return averagePlot;
     }
 }

@@ -61,14 +61,6 @@ export class Plot {
         if (aboveX !== null && belowX !== null) {
             xScale = aboveX.x - belowX.x;
 
-            if (xScale === undefined) {
-                debugger;
-            }
-
-            // if (aboveX.x === 9311 && belowX.x === 9311) {
-            //     debugger;
-            // }
-
             xfloor = belowX.x;
             xVirtualPosition = x - xfloor;
             scaleProportion = (xScale === 0) ? 0 : xVirtualPosition / xScale;
@@ -113,11 +105,6 @@ export class Plot {
         } else {
             debugger;
         }
-    }
-
-    addPoint(index, plotpoint) {
-        this.plotData[index] = plotpoint;
-        return this;
     }
 
     startXFromZero() {
@@ -186,10 +173,6 @@ export class Plot {
         return zeroStartPlot.pop();
     }
 
-    validityCheck() {
-        return true;
-    }
-
     yMinMax() {
         let min = null,
             max = null;
@@ -208,5 +191,18 @@ export class Plot {
             yMin: min,
             yMax: max,
         }
+    }
+
+    setStartingYToZero() {
+        let startY = this.plotData[0].y ?? 0;
+
+        this.plotData = this.plotData.map((datapoint) => {
+            return {
+                x: datapoint.x,
+                y: datapoint.y - startY,
+            };
+        });
+
+        return this;
     }
 }

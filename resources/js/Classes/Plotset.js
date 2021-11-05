@@ -155,8 +155,6 @@ export class Plotset {
             }
         });
 
-        console.debug({ averagePlot });
-
         return new Plot(averagePlot);
     }
 
@@ -180,5 +178,21 @@ export class Plotset {
             yMin: min,
             yMax: max,
         }
+    }
+
+    setStartingYToZero() {
+        this.plotData = this.data().map((plot) => {
+            return plot.setStartingYToZero();
+        });
+
+        return this;
+    }
+
+    trimPlotTime() {
+        this.plotData = this.data().map((plot) => {
+            return plot.trimPlotTime();
+        });
+
+        return this;
     }
 }
