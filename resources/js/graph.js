@@ -134,7 +134,12 @@ function renderScaleX(yMinMax) {
             fontXOffset = 0 * scaleFactor,
             fontYOffset = -20 * scaleFactor;
 
-        internalState.CC.globalAlpha = 0.1;
+        if (calculatedInterval === 0) {
+            internalState.CC.globalAlpha = 0.4;
+        } else {
+            internalState.CC.globalAlpha = 0.1;
+        }
+
         internalState.CC.beginPath();
         internalState.CC.moveTo(plotToDraw.draw.xMin + scaledTimeValue, flipYValue(plotToDraw.draw.yMin));
         internalState.CC.lineTo(plotToDraw.draw.xMin + scaledTimeValue, flipYValue(plotToDraw.draw.yMax));
@@ -186,7 +191,12 @@ function renderScaleY(yMinMax) {
             fontXOffset = -8 * scaleFactor,
             fontYOffset = -4 * scaleFactor;
 
-        internalState.CC.globalAlpha = 0.1;
+        if (calculatedInterval === 0) {
+            internalState.CC.globalAlpha = 0.4;
+        } else {
+            internalState.CC.globalAlpha = 0.1;
+        }
+
         internalState.CC.beginPath();
         internalState.CC.moveTo(plotToDraw.draw.xMin, flipYValue(plotToDraw.draw.yMin + scaledMillivoltsValue));
         internalState.CC.lineTo(plotToDraw.draw.xMax, flipYValue(plotToDraw.draw.yMin + scaledMillivoltsValue));
