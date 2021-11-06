@@ -88,7 +88,7 @@ export class TrialDataset {
         const plotData = this.gsrData.map((datapoint) => {
             return {
                 x: datapoint.experimentalTime,
-                y: datapoint.microVolts,
+                y: (datapoint.microVolts / 1000),
             }
         });
 

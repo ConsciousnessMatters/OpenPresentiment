@@ -38,14 +38,20 @@ function plotToDrawAreaConverter(plot = null, yMinMax = null) {
     const daXMin = internalState.margins.xMin * scaleFactor,
         daXMax = internalState.CC.canvas.width - internalState.margins.xMax * scaleFactor,
         daYMin = internalState.margins.yMin * scaleFactor,
-        daYMax = internalState.CC.canvas.height - internalState.margins.yMax * scaleFactor;
+        daYMax = internalState.CC.canvas.height - internalState.margins.yMax * scaleFactor,
+        plXMin = (-1 * preZeroTime),
+        plXMax = (postZeroTime),
+        plYMin = yMinMax?.yMin ?? plot.lowestValues().y,
+        plYMax = yMinMax?.yMax ?? plot.highestValues().y;
 
     return {
         plot: {
-            xMin: (-1 * preZeroTime),
-            xMax: (postZeroTime),
-            yMin: yMinMax?.yMin ?? plot.lowestValues().y,
-            yMax: yMinMax?.yMax ?? plot.highestValues().y,
+            xMin: plXMin,
+            xMax: plXMax,
+            yMin: plYMin,
+            yMax: plYMax,
+            width: plXMax - plXMin,
+            height: plYMax - plYMin,
         },
         draw: {
             xMin: daXMin,
@@ -110,6 +116,7 @@ function drawLabels(yMinMax) {
 
 function drawGrid(yMinMax) {
     renderScaleX(yMinMax);
+    renderScaleY(yMinMax);
 
     return this;
 }
@@ -119,8 +126,7 @@ function renderScaleX(yMinMax) {
 
     const intervalX = 1000,
         timeMin = preZeroTime * -1,
-        timeMax = postZeroTime,
-        plotWidth = preZeroTime + postZeroTime;
+        timeMax = postZeroTime;
 
     for (let calculatedInterval = timeMin; calculatedInterval <= timeMax; calculatedInterval += intervalX) {
         let scaledTimeValue = scaleValue(calculatedInterval, timeMin, timeMax, plotToDraw.draw.width),
@@ -145,10 +151,75 @@ function renderScaleX(yMinMax) {
         internalState.CC.font = fontsize + 'px Open Sans';
         internalState.CC.fillStyle = "#dddddd";
         internalState.CC.textAlign = "center";
-        internalState.CC.fillText(parseInt(calculatedInterval / 1000), plotToDraw.draw.xMin + scaledTimeValue + fontXOffset, flipYValue((plotToDraw.draw.yMin / 1.2) + fontYOffset));
+        internalState.CC.fillText(parseInt(calculatedInterval / 1000),
+            plotToDraw.draw.xMin + scaledTimeValue + fontXOffset,
+            flipYValue((plotToDraw.draw.yMin / 1.2) + fontYOffset)
+        );
     }
 }
 
+function renderScaleY(yMinMax) {
+    const plotToDraw = plotToDrawAreaConverter(null, yMinMax),
+        scales = [100, 50, 10, 5, 1, 0.5, 0.1, 0.05, 0.01, 0.005, 0.001, 0.0005, 0.0001],
+        requiredDivisions = 4,
+        intervalY = scales.find((scale) => {
+            let one = scale * requiredDivisions;
+            let two = plotToDraw.plot.height;
+            let three = one <= two;
+
+
+            return scale * requiredDivisions <= plotToDraw.plot.height;
+        });
+
+    let firstInterval;
+
+    if (typeof intervalY === 'undefined') {
+        return;
+    }
+
+    firstInterval = Math.ceil(plotToDraw.plot.yMin / intervalY) * intervalY;
+
+    for (let calculatedInterval = firstInterval; calculatedInterval < plotToDraw.plot.height; calculatedInterval += intervalY) {
+
+        let scaledMillivoltsValue = scaleValue(calculatedInterval, plotToDraw.plot.yMin, plotToDraw.plot.yMax, plotToDraw.draw.height),
+            fontsize = 14 * scaleFactor,
+            fontXOffset = -8 * scaleFactor,
+            fontYOffset = -4 * scaleFactor;
+
+        internalState.CC.globalAlpha = 0.1;
+        internalState.CC.beginPath();
+        internalState.CC.moveTo(plotToDraw.draw.xMin, flipYValue(plotToDraw.draw.yMin + scaledMillivoltsValue));
+        internalState.CC.lineTo(plotToDraw.draw.xMax, flipYValue(plotToDraw.draw.yMin + scaledMillivoltsValue));
+        internalState.CC.strokeStyle = "#dddddd";
+        internalState.CC.stroke();
+        internalState.CC.globalAlpha = 1;
+
+        internalState.CC.beginPath();
+        internalState.CC.moveTo(plotToDraw.draw.xMin, flipYValue(plotToDraw.draw.yMin + scaledMillivoltsValue));
+        internalState.CC.lineTo(plotToDraw.draw.xMin / 1.2, flipYValue(plotToDraw.draw.yMin + scaledMillivoltsValue));
+        internalState.CC.strokeStyle = "#dddddd";
+        internalState.CC.stroke();
+
+        internalState.CC.font = fontsize + 'px Open Sans';
+        internalState.CC.fillStyle = "#dddddd";
+        internalState.CC.textAlign = "right";
+        internalState.CC.fillText(
+            formatNumberForYAxis(calculatedInterval, intervalY),
+            (plotToDraw.draw.xMin / 1.2) + fontXOffset,
+            flipYValue(plotToDraw.draw.yMin + scaledMillivoltsValue + fontYOffset)
+        );
+    }
+}
+
+function formatNumberForYAxis(number, intervalY) {
+    if (intervalY >= 1) {
+        return parseInt(number);
+    } else if (number == 0) {
+        return 0;
+    } else {
+        return number.toFixed(2);
+    }
+}
 
 function scaleValue(value, min, max, scale) {
     let valueOffset = value - min,
