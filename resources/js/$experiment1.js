@@ -23,7 +23,8 @@ let intervalTimer = null,
     navigationOveride = true,
     controlNumber = '',
     experimentId = '',
-    imageLoadEventHandlersRegistered = false;
+    imageLoadEventHandlersRegistered = false,
+    serialDataLoggingEngabled = true;
 
 function initiate() {
     setupPartNavigation();
@@ -156,7 +157,11 @@ function initiatePhase1() {
 
     logEvent(`P1-T${trials + 1}`);
 
-    $(document).on('SerialDataPoint.e5', logDataPoint);
+    if (! serialDataLoggingEngabled) {
+        $(document).on('SerialDataPoint.e5', logDataPoint);
+        serialDataLoggingEngabled = true;
+    }
+
     $('#phase-2, #end').addClass('hidden');
     $('#phase-1').removeClass('hidden');
     $('#phase-1 .trial-number').html(trials + 1);
