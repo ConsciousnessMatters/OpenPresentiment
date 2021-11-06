@@ -109,43 +109,43 @@ function drawLabels(yMinMax) {
 }
 
 function drawGrid(yMinMax) {
-    // renderScaleX(yMinMax);
+    renderScaleX(yMinMax);
 
     return this;
 }
 
 function renderScaleX(yMinMax) {
+    const plotToDraw = plotToDrawAreaConverter(null, yMinMax);
+
     const intervalX = 1000,
         timeMin = preZeroTime * -1,
         timeMax = postZeroTime,
-        plotWidth = preZeroTime + postZeroTime,
-        firstInterval = Math.ceil(timeMin / intervalX) * intervalX
-        xDaMin = internalState.margins.xMin * scaleFactor;
+        plotWidth = preZeroTime + postZeroTime;
 
-    for (let calculatedInterval = firstInterval; calculatedInterval < timeMax; calculatedInterval += intervalX) {
-        let scaledTimeValue = scaleValue(calculatedInterval, timeMin, timeMax, plotWidth),
+    for (let calculatedInterval = timeMin; calculatedInterval <= timeMax; calculatedInterval += intervalX) {
+        let scaledTimeValue = scaleValue(calculatedInterval, timeMin, timeMax, plotToDraw.draw.width),
             fontsize = 14 * scaleFactor,
             fontXOffset = 0 * scaleFactor,
-            fontYOffset = 20 * scaleFactor;
+            fontYOffset = -20 * scaleFactor;
 
         internalState.CC.globalAlpha = 0.1;
         internalState.CC.beginPath();
-        internalState.CC.moveTo(scaledTimeValue + axisSpaceX, 0);
-        internalState.CC.lineTo(scaledTimeValue + axisSpaceX, internalState.CC.canvas.height - axisSpaceY);
+        internalState.CC.moveTo(plotToDraw.draw.xMin + scaledTimeValue, flipYValue(plotToDraw.draw.yMin));
+        internalState.CC.lineTo(plotToDraw.draw.xMin + scaledTimeValue, flipYValue(plotToDraw.draw.yMax));
         internalState.CC.strokeStyle = "#dddddd";
         internalState.CC.stroke();
         internalState.CC.globalAlpha = 1;
 
         internalState.CC.beginPath();
-        internalState.CC.moveTo(scaledTimeValue + axisSpaceX, internalState.CC.canvas.height - axisSpaceY);
-        internalState.CC.lineTo(scaledTimeValue + axisSpaceX, internalState.CC.canvas.height - axisSpaceY / 1.2);
+        internalState.CC.moveTo(plotToDraw.draw.xMin + scaledTimeValue, flipYValue(plotToDraw.draw.yMin));
+        internalState.CC.lineTo(plotToDraw.draw.xMin + scaledTimeValue, flipYValue(plotToDraw.draw.yMin / 1.2));
         internalState.CC.strokeStyle = "#dddddd";
         internalState.CC.stroke();
 
         internalState.CC.font = fontsize + 'px Open Sans';
         internalState.CC.fillStyle = "#dddddd";
         internalState.CC.textAlign = "center";
-        internalState.CC.fillText(parseInt(calculatedInterval / 1000), scaledTimeValue + axisSpaceX + fontXOffset, (internalState.CC.canvas.height - axisSpaceY / 1.2) + fontYOffset);
+        internalState.CC.fillText(parseInt(calculatedInterval / 1000), plotToDraw.draw.xMin + scaledTimeValue + fontXOffset, flipYValue((plotToDraw.draw.yMin / 1.2) + fontYOffset));
     }
 }
 
