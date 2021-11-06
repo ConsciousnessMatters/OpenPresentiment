@@ -111,6 +111,37 @@ function drawAxis(yMinMax) {
 }
 
 function drawLabels(yMinMax) {
+    const plotToDraw = plotToDrawAreaConverter(null, yMinMax);
+
+    let fontsize = 16 * scaleFactor,
+        fontXOffset = 0 * scaleFactor,
+        fontYOffset = -20 * scaleFactor;
+
+    internalState.CC.font = fontsize + 'px Open Sans';
+    internalState.CC.fillStyle = "#dddddd";
+    internalState.CC.textAlign = "center";
+    internalState.CC.fillText(
+        'Experiment Time (seconds)',
+        (internalState.CC.canvas.width / 2) + fontXOffset,
+        flipYValue((plotToDraw.draw.yMin / 2) + fontYOffset)
+    );
+
+    fontsize = 14 * scaleFactor;
+    fontXOffset = 50 * scaleFactor;
+    fontYOffset = 385 * scaleFactor;
+
+    internalState.CC.translate(internalState.CC.canvas.width / 2, internalState.CC.canvas.height / 2);
+    internalState.CC.rotate(Math.PI / -2);
+    internalState.CC.translate(- (internalState.CC.canvas.width / 2), - (internalState.CC.canvas.height / 2));
+    internalState.CC.fillText(
+        'Skin Conductance (mv conductance change)',
+        (internalState.CC.canvas.width / 2) + fontXOffset,
+        flipYValue((plotToDraw.draw.yMax) + fontYOffset)
+    );
+    internalState.CC.translate(internalState.CC.canvas.width / 2, internalState.CC.canvas.height / 2);
+    internalState.CC.rotate(Math.PI / 2);
+    internalState.CC.translate(- (internalState.CC.canvas.width / 2), - (internalState.CC.canvas.height / 2));
+
     return this;
 }
 
