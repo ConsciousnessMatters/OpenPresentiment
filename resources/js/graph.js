@@ -34,28 +34,42 @@ function canvasSetup() {
     internalState.CC.canvas.height = internalState.CC.canvas.scrollHeight * scaleFactor;
 }
 
-function drawPlot(plot, hexColour = "#00ff00", yMinMax = null, opacity = 1) {
+function plotToDrawAreaConverter(plot = null, yMinMax = null) {
+    const daXMin = internalState.margins.xMin * scaleFactor,
+        daXMax = internalState.CC.canvas.width - internalState.margins.xMax * scaleFactor,
+        daYMin = internalState.margins.yMin * scaleFactor,
+        daYMax = internalState.CC.canvas.height - internalState.margins.yMax * scaleFactor;
+
+    return {
+        plot: {
+            xMin: (-1 * preZeroTime),
+            xMax: (postZeroTime),
+            yMin: yMinMax?.yMin ?? plot.lowestValues().y,
+            yMax: yMinMax?.yMax ?? plot.highestValues().y,
+        },
+        draw: {
+            xMin: daXMin,
+            xMax: daXMax,
+            yMin: daYMin,
+            yMax: daYMax,
+            width: daXMax - daXMin,
+            height: daYMax - daYMin,
+        }
+    }
+}
+
+function drawPlot(plot, yMinMax = null, opacity = 1) {
     plot.trimPlotTime(preZeroTime, postZeroTime);
 
-    const xPlMin = -1 * preZeroTime,
-        xPlMax = postZeroTime,
-        yPlMin = yMinMax?.yMin ?? plot.lowestValues().y,
-        yPlMax = yMinMax?.yMax ?? plot.highestValues().y;
-
-    const xDaMin = internalState.margins.xMin * scaleFactor,
-        xDaMax = internalState.CC.canvas.width - internalState.margins.xMax * scaleFactor,
-        yDaMin = internalState.margins.yMin * scaleFactor,
-        yDaMax = internalState.CC.canvas.height - internalState.margins.yMax * scaleFactor,
-        daWidth = xDaMax - xDaMin,
-        daHeight = yDaMax - yDaMin;
+    const plotToDraw = plotToDrawAreaConverter(plot, yMinMax);
 
     let origin = false;
 
     internalState.CC.beginPath();
 
     plot.forEach((plotpoint) => {
-        let floatingXValue = scaleValue(plotpoint.x, xPlMin, xPlMax, daWidth),
-            floatingYValue = scaleValue(plotpoint.y, yPlMin, yPlMax, daHeight);
+        let floatingXValue = scaleValue(plotpoint.x, plotToDraw.plot.xMin, plotToDraw.plot.xMax, plotToDraw.draw.width),
+            floatingYValue = scaleValue(plotpoint.y, plotToDraw.plot.yMin, plotToDraw.plot.yMax, plotToDraw.draw.height);
 
         let dataPointXValue = floatingXValue + (internalState.margins.xMin * scaleFactor),
             dataPointYValue = floatingYValue + (internalState.margins.yMin * scaleFactor);
@@ -68,7 +82,7 @@ function drawPlot(plot, hexColour = "#00ff00", yMinMax = null, opacity = 1) {
         }
     });
 
-    internalState.CC.strokeStyle = hexColour;
+    internalState.CC.strokeStyle = plot.colour();
     internalState.CC.lineWidth = 1 * scaleFactor;
     internalState.CC.globalAlpha = opacity;
     internalState.CC.stroke();
@@ -77,31 +91,64 @@ function drawPlot(plot, hexColour = "#00ff00", yMinMax = null, opacity = 1) {
     return this;
 }
 
-function drawAxis() {
-    const xMin = internalState.margins.xMin * scaleFactor,
-        yMin = internalState.margins.yMin * scaleFactor,
-        xMax = internalState.margins.xMax * scaleFactor,
-        yMax = internalState.margins.yMax * scaleFactor;
+function drawAxis(yMinMax) {
+    const plotToDraw = plotToDrawAreaConverter(null, yMinMax);
 
     internalState.CC.beginPath();
-    internalState.CC.moveTo(xMin, yMax);
-    internalState.CC.lineTo(xMin, internalState.CC.canvas.height - yMin);
-    internalState.CC.lineTo(internalState.CC.canvas.width - xMax, internalState.CC.canvas.height - yMin);
+    internalState.CC.moveTo(plotToDraw.draw.xMin, flipYValue(plotToDraw.draw.yMax));
+    internalState.CC.lineTo(plotToDraw.draw.xMin, flipYValue(plotToDraw.draw.yMin));
+    internalState.CC.lineTo(plotToDraw.draw.xMax, flipYValue(plotToDraw.draw.yMin));
     internalState.CC.strokeStyle = "#dddddd";
     internalState.CC.stroke();
 
     return this;
 }
 
-function drawLabels() {
-    debugger;
+function drawLabels(yMinMax) {
+    return this;
+}
+
+function drawGrid(yMinMax) {
+    // renderScaleX(yMinMax);
 
     return this;
 }
 
-function drawGrid() {
-    return this;
+function renderScaleX(yMinMax) {
+    const intervalX = 1000,
+        timeMin = preZeroTime * -1,
+        timeMax = postZeroTime,
+        plotWidth = preZeroTime + postZeroTime,
+        firstInterval = Math.ceil(timeMin / intervalX) * intervalX
+        xDaMin = internalState.margins.xMin * scaleFactor;
+
+    for (let calculatedInterval = firstInterval; calculatedInterval < timeMax; calculatedInterval += intervalX) {
+        let scaledTimeValue = scaleValue(calculatedInterval, timeMin, timeMax, plotWidth),
+            fontsize = 14 * scaleFactor,
+            fontXOffset = 0 * scaleFactor,
+            fontYOffset = 20 * scaleFactor;
+
+        internalState.CC.globalAlpha = 0.1;
+        internalState.CC.beginPath();
+        internalState.CC.moveTo(scaledTimeValue + axisSpaceX, 0);
+        internalState.CC.lineTo(scaledTimeValue + axisSpaceX, internalState.CC.canvas.height - axisSpaceY);
+        internalState.CC.strokeStyle = "#dddddd";
+        internalState.CC.stroke();
+        internalState.CC.globalAlpha = 1;
+
+        internalState.CC.beginPath();
+        internalState.CC.moveTo(scaledTimeValue + axisSpaceX, internalState.CC.canvas.height - axisSpaceY);
+        internalState.CC.lineTo(scaledTimeValue + axisSpaceX, internalState.CC.canvas.height - axisSpaceY / 1.2);
+        internalState.CC.strokeStyle = "#dddddd";
+        internalState.CC.stroke();
+
+        internalState.CC.font = fontsize + 'px Open Sans';
+        internalState.CC.fillStyle = "#dddddd";
+        internalState.CC.textAlign = "center";
+        internalState.CC.fillText(parseInt(calculatedInterval / 1000), scaledTimeValue + axisSpaceX + fontXOffset, (internalState.CC.canvas.height - axisSpaceY / 1.2) + fontYOffset);
+    }
 }
+
 
 function scaleValue(value, min, max, scale) {
     let valueOffset = value - min,
@@ -118,5 +165,7 @@ function flipYValue(yValue) {
 export const graph = {
     drawPlot,
     drawAxis,
+    drawLabels,
+    drawGrid,
     initiate,
 };

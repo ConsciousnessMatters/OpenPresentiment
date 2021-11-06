@@ -1,10 +1,12 @@
 export class Plot {
     plotData;
     eventData;
+    lineColour;
 
     constructor(plotData, eventData) {
         this.plotData = plotData ?? [];
         this.eventData = eventData ?? [];
+        this.lineColour = '#00FF00';
     }
 
     data() {
@@ -173,23 +175,27 @@ export class Plot {
         return zeroStartPlot.pop();
     }
 
-    yMinMax() {
-        let min = null,
-            max = null;
+    yMinMax(yMinMax = null) {
+        if (yMinMax === null) {
+            let min = null,
+                max = null;
 
-        this.plotData.forEach((datapoint) => {
-            if (datapoint.y < min || min === null) {
-                min = datapoint.y;
+            this.plotData.forEach((datapoint) => {
+                if (datapoint.y < min || min === null) {
+                    min = datapoint.y;
+                }
+
+                if (datapoint.y > max || max === null) {
+                    max = datapoint.y;
+                }
+            });
+
+            return {
+                yMin: min,
+                yMax: max,
             }
+        } else {
 
-            if (datapoint.y > max || max === null) {
-                max = datapoint.y;
-            }
-        });
-
-        return {
-            yMin: min,
-            yMax: max,
         }
     }
 
@@ -204,5 +210,13 @@ export class Plot {
         });
 
         return this;
+    }
+
+    colour(value = null) {
+        if (value === null) {
+            return this.lineColour;
+        } else {
+            this.lineColour = value;
+        }
     }
 }

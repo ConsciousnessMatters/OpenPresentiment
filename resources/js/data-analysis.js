@@ -22,12 +22,15 @@ function dataLoaded(data) {
     let hexColour;
 
     trials.forEach((trial) => {
+        let plot = trial.plot();
+
         if (trial.image.type.name === 'Peaceful') {
-            hexColour = '#F1E8B8';
+            plot.colour('#ff00ff');
         } else {
-            hexColour = '#00FF00';
+            plot.colour('#00FF00');
         }
-        graph.drawPlot(trial.plot().trimPlotTime().setStartingYToZero(), hexColour, yMinMax, 0.33);
+
+        graph.drawPlot(plot.trimPlotTime().setStartingYToZero(), yMinMax, 0.33);
     });
 
     let emotionalImages = (trial) => {
@@ -38,15 +41,17 @@ function dataLoaded(data) {
         return trial.image.type.name === 'Peaceful';
     };
 
-    graph.drawAxis();
+    graph.drawAxis(yMinMax);
+    graph.drawLabels(yMinMax);
+    graph.drawGrid(yMinMax);
 
-    hexColour = '#00FF00';
     let emotionalAverage = globalDataset.experiment(2).plotset().filter(emotionalImages).filterDuplicateData().trimPlotTime().setStartingYToZero().averagePlot();
-    graph.drawPlot(emotionalAverage, hexColour, yMinMax);
+    emotionalAverage.colour('#00FF00');
+    graph.drawPlot(emotionalAverage, yMinMax);
 
-    hexColour = '#F1E8B8';
     let peacefulAverage = globalDataset.experiment(2).plotset().filter(peacefulImages).filterDuplicateData().trimPlotTime().setStartingYToZero().averagePlot();
-    graph.drawPlot(peacefulAverage, hexColour, yMinMax);
+    peacefulAverage.colour('#ff00ff');
+    graph.drawPlot(peacefulAverage, yMinMax);
 }
 
 function dataLoadFailed() {
