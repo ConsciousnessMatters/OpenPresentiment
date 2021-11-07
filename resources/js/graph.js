@@ -8,7 +8,7 @@ let internalState = {
         xMin: 100,
         yMin: 100,
         xMax: 50,
-        yMax: 0,
+        yMax: 100,
     },
     axis: {
     },
@@ -32,6 +32,10 @@ function initiate(selector) {
 function canvasSetup() {
     internalState.CC.canvas.width = internalState.CC.canvas.scrollWidth * scaleFactor;
     internalState.CC.canvas.height = internalState.CC.canvas.scrollHeight * scaleFactor;
+}
+
+function clearCanvas() {
+    internalState.CC.clearRect(0, 0, internalState.CC.canvas.width, internalState.CC.canvas.height);
 }
 
 function plotToDrawAreaConverter(plot = null, yMinMax = null) {
@@ -130,17 +134,21 @@ function drawLabels(yMinMax) {
     fontXOffset = 50 * scaleFactor;
     fontYOffset = 385 * scaleFactor;
 
-    internalState.CC.translate(internalState.CC.canvas.width / 2, internalState.CC.canvas.height / 2);
     internalState.CC.rotate(Math.PI / -2);
-    internalState.CC.translate(- (internalState.CC.canvas.width / 2), - (internalState.CC.canvas.height / 2));
+    internalState.CC.font = fontsize + 'px Open Sans';
     internalState.CC.fillText(
         'Skin Conductance (mv conductance change)',
-        (internalState.CC.canvas.width / 2) + fontXOffset,
-        flipYValue((plotToDraw.draw.yMax) + fontYOffset)
+        (internalState.CC.canvas.width / 2),
+        flipYValue(internalState.CC.canvas.height / 2)
     );
-    internalState.CC.translate(internalState.CC.canvas.width / 2, internalState.CC.canvas.height / 2);
     internalState.CC.rotate(Math.PI / 2);
-    internalState.CC.translate(- (internalState.CC.canvas.width / 2), - (internalState.CC.canvas.height / 2));
+    // internalState.CC.translate(internalState.CC.canvas.width / 2, internalState.CC.canvas.height / 2);
+    // internalState.CC.translate(- (internalState.CC.canvas.width / 2) - fontXOffset, - (internalState.CC.canvas.height / 2) - fontYOffset);
+    //
+    //
+    //
+    //
+    // internalState.CC.translate(- (internalState.CC.canvas.width / 2) + fontXOffset, - (internalState.CC.canvas.height / 2));
 
     return this;
 }
@@ -199,11 +207,6 @@ function renderScaleY(yMinMax) {
         scales = [100, 50, 10, 5, 1, 0.5, 0.1, 0.05, 0.01, 0.005, 0.001, 0.0005, 0.0001],
         requiredDivisions = 4,
         intervalY = scales.find((scale) => {
-            let one = scale * requiredDivisions;
-            let two = plotToDraw.plot.height;
-            let three = one <= two;
-
-
             return scale * requiredDivisions <= plotToDraw.plot.height;
         });
 
@@ -228,27 +231,32 @@ function renderScaleY(yMinMax) {
             internalState.CC.globalAlpha = 0.1;
         }
 
-        internalState.CC.beginPath();
-        internalState.CC.moveTo(plotToDraw.draw.xMin, flipYValue(plotToDraw.draw.yMin + scaledMillivoltsValue));
-        internalState.CC.lineTo(plotToDraw.draw.xMax, flipYValue(plotToDraw.draw.yMin + scaledMillivoltsValue));
-        internalState.CC.strokeStyle = "#dddddd";
-        internalState.CC.stroke();
-        internalState.CC.globalAlpha = 1;
+        let y = plotToDraw.draw.yMin + scaledMillivoltsValue,
+            yMax = plotToDraw.draw.yMax;
 
-        internalState.CC.beginPath();
-        internalState.CC.moveTo(plotToDraw.draw.xMin, flipYValue(plotToDraw.draw.yMin + scaledMillivoltsValue));
-        internalState.CC.lineTo(plotToDraw.draw.xMin / 1.2, flipYValue(plotToDraw.draw.yMin + scaledMillivoltsValue));
-        internalState.CC.strokeStyle = "#dddddd";
-        internalState.CC.stroke();
+        if (y <= yMax) {
+            internalState.CC.beginPath();
+            internalState.CC.moveTo(plotToDraw.draw.xMin, flipYValue(plotToDraw.draw.yMin + scaledMillivoltsValue));
+            internalState.CC.lineTo(plotToDraw.draw.xMax, flipYValue(plotToDraw.draw.yMin + scaledMillivoltsValue));
+            internalState.CC.strokeStyle = "#dddddd";
+            internalState.CC.stroke();
+            internalState.CC.globalAlpha = 1;
 
-        internalState.CC.font = fontsize + 'px Open Sans';
-        internalState.CC.fillStyle = "#dddddd";
-        internalState.CC.textAlign = "right";
-        internalState.CC.fillText(
-            formatNumberForYAxis(calculatedInterval, intervalY),
-            (plotToDraw.draw.xMin / 1.2) + fontXOffset,
-            flipYValue(plotToDraw.draw.yMin + scaledMillivoltsValue + fontYOffset)
-        );
+            internalState.CC.beginPath();
+            internalState.CC.moveTo(plotToDraw.draw.xMin, flipYValue(plotToDraw.draw.yMin + scaledMillivoltsValue));
+            internalState.CC.lineTo(plotToDraw.draw.xMin / 1.2, flipYValue(plotToDraw.draw.yMin + scaledMillivoltsValue));
+            internalState.CC.strokeStyle = "#dddddd";
+            internalState.CC.stroke();
+
+            internalState.CC.font = fontsize + 'px Open Sans';
+            internalState.CC.fillStyle = "#dddddd";
+            internalState.CC.textAlign = "right";
+            internalState.CC.fillText(
+                formatNumberForYAxis(calculatedInterval, intervalY),
+                (plotToDraw.draw.xMin / 1.2) + fontXOffset,
+                flipYValue(plotToDraw.draw.yMin + scaledMillivoltsValue + fontYOffset)
+            );
+        }
     }
 }
 
@@ -280,4 +288,5 @@ export const graph = {
     drawLabels,
     drawGrid,
     initiate,
+    clearCanvas,
 };
