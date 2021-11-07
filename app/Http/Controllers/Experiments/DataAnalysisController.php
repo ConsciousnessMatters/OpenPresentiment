@@ -26,4 +26,22 @@ class DataAnalysisController extends Controller
             'experimentalData' => $experimentalData,
         ]);
     }
+
+    public function getExperiment($id)
+    {
+        $experimentalData = Experiment::with('trials.image.type')->where('id', $id)->get();
+
+        return response()->json([
+            'experimentalData' => $experimentalData,
+        ]);
+    }
+
+    public function getExperimentList()
+    {
+        $experimentList = Experiment::with('trials:id,experiment_id,image_id,control_number,event_data', 'trials.image.type')->get();
+
+        return response()->json([
+            'experimentList' => $experimentList,
+        ]);
+    }
 }

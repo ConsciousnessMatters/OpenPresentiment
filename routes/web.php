@@ -46,6 +46,8 @@ Route::prefix('mylab')->middleware(['auth','verified'])->name('mylab')->group(fu
 
         Route::get('/presentiment/1&2/data-analysis', [DataAnalysisController::class, 'show'])->name('.presentiment.1&2.dataAnalysis');
         Route::any('/presentiment/1&2/get-data', [DataAnalysisController::class, 'getData'])->name('.presentiment.1&2.getData');
+        Route::any('/presentiment/1&2/get-experiment/{id}', [DataAnalysisController::class, 'getExperiment'])->name('.presentiment.1&2.getExperiment');
+        Route::any('/presentiment/1&2/get-experiment-list', [DataAnalysisController::class, 'getExperimentList'])->name('.presentiment.1&2.getExperimentList');
     });
 });
 
