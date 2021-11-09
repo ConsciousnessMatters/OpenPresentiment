@@ -88,26 +88,4 @@ export class ExperimentalDataset {
     plotset() {
         return new Plotset(this);
     }
-
-    yMinMax() {
-        let min = null,
-            max = null;
-
-        this.trialData.forEach((trial) => {
-            const yMinMaxForTrial = trial.yMinMax();
-
-            if (yMinMaxForTrial.yMin < min || min === null) {
-                min = yMinMaxForTrial.yMin;
-            }
-
-            if (yMinMaxForTrial.yMax > max || max === null) {
-                max = yMinMaxForTrial.yMax;
-            }
-        });
-
-        return {
-            yMin: min,
-            yMax: max,
-        }
-    }
 }

@@ -44,7 +44,6 @@ function loadExperiment(event) {
 function glboalDatasetSkeletonLoaded(data) {
     internalState.globalDataset = new GlobalDataset(data);
     populateList();
-    // drawGraphs();
 }
 
 function experimentLoaded() {
