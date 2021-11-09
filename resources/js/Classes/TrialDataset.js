@@ -29,6 +29,7 @@ export class TrialDataset {
 
     updateData(trialData) {
         this.ingestGsrData(trialData);
+        this.addExperimentalTime();
 
         return this;
     }

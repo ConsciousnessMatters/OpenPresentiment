@@ -139,7 +139,7 @@ export class Plot {
         return this;
     }
 
-    trimPlotTime(preZero = 7000, postZero = 10000) {
+    trimPlotTime(preZero = 8000, postZero = 11000) {
         this.plotData = this.plotData.filter((datapoint) => {
             return datapoint.x > -1 * preZero && datapoint.x < postZero;
         });

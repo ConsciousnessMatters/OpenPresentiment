@@ -22,4 +22,10 @@ export class GlobalDataset {
             });
         }
     }
+
+    experimentsLoaded() {
+        return this.data.filter((experiment) => {
+            return experiment.loaded === true;
+        });
+    }
 }

@@ -66,55 +66,62 @@ function populateList() {
 }
 
 function drawGraphs() {
-    debugger;
+    let trials, yMinMax;
 
-    let trials = internalState.globalDataset.experiment(2).trials();
-    let yMinMax = internalState.globalDataset.experiment(2).plotset().trimPlotTime().setStartingYToZero().yMinMax();
+    internalState.globalDataset.experimentsLoaded().forEach((experiment) => {
+        trials = experiment.trials();
+        // yMinMax = experiment.plotset().trimPlotTime().setStartingYToZero().yMinMax();
 
-    graph.clearCanvas();
+        graph.clearCanvas();
 
-    trials.forEach((trial) => {
-        let plot = trial.plot();
+        trials.forEach((trial) => {
+            let plot = trial.plot();
 
-        if (trial.image.type.name === 'Peaceful') {
-            plot.colour('#ff00ff');
-        } else {
-            plot.colour('#00FF00');
-        }
+            if (trial.image.type.name === 'Peaceful') {
+                plot.colour('#ff00ff');
+            } else {
+                plot.colour('#00FF00');
+            }
 
-        graph.drawPlot(trial.plot().trimPlotTime().setStartingYToZero(), yMinMax, 0.33);
+            let a = plot.trimPlotTime();
+            let b = a.setStartingYToZero();
+
+            graph.drawPlot(b, yMinMax, 0.33);
+        });
     });
 
-    let emotionalImages = (trial) => trial.image.type.name === 'Emotional';
-    let peacefulImages = (trial) => trial.image.type.name === 'Peaceful';
-
-    graph.drawAxis(yMinMax);
-    graph.drawLabels(yMinMax);
-    graph.drawGrid(yMinMax);
-
-    let emotionalAverage = globalDataset.experiment(2)
-        .plotset()
-        .filter(emotionalImages)
-        .filterDuplicateData()
-        .trimPlotTime()
-        .setStartingYToZero()
-        .averagePlot();
-
-    emotionalAverage.colour('#00FF00');
-
-    graph.drawPlot(emotionalAverage, yMinMax);
-
-    let peacefulAverage = globalDataset.experiment(2)
-        .plotset()
-        .filter(peacefulImages)
-        .filterDuplicateData()
-        .trimPlotTime()
-        .setStartingYToZero()
-        .averagePlot();
-
-    peacefulAverage.colour('#ff00ff');
-
-    graph.drawPlot(peacefulAverage, yMinMax);
+    // graph.clearCanvas();
+    //
+    // let emotionalImages = (trial) => trial.image.type.name === 'Emotional';
+    // let peacefulImages = (trial) => trial.image.type.name === 'Peaceful';
+    //
+    // graph.drawAxis(yMinMax);
+    // graph.drawLabels(yMinMax);
+    // graph.drawGrid(yMinMax);
+    //
+    // let emotionalAverage = globalDataset.experiment(2)
+    //     .plotset()
+    //     .filter(emotionalImages)
+    //     .filterDuplicateData()
+    //     .trimPlotTime()
+    //     .setStartingYToZero()
+    //     .averagePlot();
+    //
+    // emotionalAverage.colour('#00FF00');
+    //
+    // graph.drawPlot(emotionalAverage, yMinMax);
+    //
+    // let peacefulAverage = globalDataset.experiment(2)
+    //     .plotset()
+    //     .filter(peacefulImages)
+    //     .filterDuplicateData()
+    //     .trimPlotTime()
+    //     .setStartingYToZero()
+    //     .averagePlot();
+    //
+    // peacefulAverage.colour('#ff00ff');
+    //
+    // graph.drawPlot(peacefulAverage, yMinMax);
 }
 
 function dataLoadFailed() {
