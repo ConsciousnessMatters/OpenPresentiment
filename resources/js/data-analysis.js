@@ -68,11 +68,11 @@ function populateList() {
 function drawGraphs() {
     let trials, yMinMax;
 
+    graph.clearCanvas();
+
     internalState.globalDataset.experimentsLoaded().forEach((experiment) => {
         trials = experiment.trials();
-        // yMinMax = experiment.plotset().trimPlotTime().setStartingYToZero().yMinMax();
-
-        graph.clearCanvas();
+        yMinMax = experiment.plotset().trimPlotTime().setStartingYToZero().yMinMax();
 
         trials.forEach((trial) => {
             let plot = trial.plot();
@@ -88,16 +88,17 @@ function drawGraphs() {
 
             graph.drawPlot(b, yMinMax, 0.33);
         });
+
+        graph.drawAxis(yMinMax);
+        graph.drawLabels(yMinMax);
+        graph.drawGrid(yMinMax);
     });
+
 
     // graph.clearCanvas();
     //
     // let emotionalImages = (trial) => trial.image.type.name === 'Emotional';
     // let peacefulImages = (trial) => trial.image.type.name === 'Peaceful';
-    //
-    // graph.drawAxis(yMinMax);
-    // graph.drawLabels(yMinMax);
-    // graph.drawGrid(yMinMax);
     //
     // let emotionalAverage = globalDataset.experiment(2)
     //     .plotset()
