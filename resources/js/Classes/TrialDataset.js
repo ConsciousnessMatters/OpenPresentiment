@@ -1,7 +1,7 @@
 import {Plot} from './Plot';
 
 export class TrialDataset {
-    constructor(trialData) {
+    constructor(trialData, experimentReference = null) {
         this.jsTimeField = 0;
         this.mcTimeField = 1;
         this.microvoltField = 2;
@@ -9,11 +9,28 @@ export class TrialDataset {
         this.trialContainingField = 1;
         this.image = trialData.image;
         this.id = trialData.id;
+        this.control_number = trialData.control_number;
+        this.created_at = trialData.control_number;
+        this.updated_at = trialData.control_number;
+        this.image = trialData.image;
         this.number = null;
+        this.gsrData = [];
+        this.eventData = [];
+        this.parentExperiment = experimentReference;
 
-        this.ingestGsrData(trialData);
         this.ingestEventData(trialData);
         this.addExperimentalTime();
+
+        if (trialData.gsr_data !== undefined) {
+            this.ingestGsrData(trialData);
+            this.addExperimentalTime();
+        }
+    }
+
+    updateData(trialData) {
+        this.ingestGsrData(trialData);
+
+        return this;
     }
 
     ingestGsrData(trialData) {

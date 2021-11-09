@@ -35,8 +35,23 @@ function ajaxForm(form, successCallback, failureCallback) {
     xhr.send(formData);
 }
 
+function ajaxGet(url, successCallback, failureCallback) {
+    let xhr = new XMLHttpRequest();
+
+    xhr.open("GET", url, true);
+    xhr.onreadystatechange = () => {
+        if (xhr.readyState === 4 && xhr.status === 200) {
+            successCallback(JSON.parse(xhr.responseText));
+        } else if (xhr.readyState === 4) {
+            failureCallback(JSON.parse(xhr.responseText));
+        }
+    };
+    xhr.send();
+}
+
 export const helpers = {
     initiate,
     addAtemporalEventListener,
     ajaxForm,
+    ajaxGet,
 };

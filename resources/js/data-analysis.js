@@ -1,11 +1,22 @@
 let internalState = {
-    dataset: null,
+    globalDataset: null,
 };
 
 function initiate() {
     loadData();
     graph.initiate('#results-plotter');
+    listeners();
     preload();
+}
+
+function loadData() {
+    const form = document.querySelector('form[name="ajax-list"]');
+
+    helpers.ajaxForm(form, glboalDatasetSkeletonLoaded, dataLoadFailed);
+}
+
+function listeners() {
+    helpers.addAtemporalEventListener('click', loadExperiment).querySelector('[data-load-experiment] button');
 }
 
 function preload() {
@@ -20,17 +31,45 @@ function preload() {
     graph.drawGrid(yMinMax);
 }
 
-function loadData() {
-    const form = document.querySelector('form[name="ajax"]');
+function loadExperiment(event) {
+    // ToDo: Handle request when globalDataset is not loaded.
 
-    helpers.ajaxForm(form, dataLoaded, dataLoadFailed);
+    let experimentId = parseInt(event.target.closest('[data-load-experiment]').getAttribute('data-load-experiment'), 10),
+        experiment = internalState.globalDataset.experiment(experimentId);
+
+    experiment.onload = experimentLoaded;
+    experiment.load();
 }
 
-function dataLoaded(data) {
-    const globalDataset = new GlobalDataset(data);
+function glboalDatasetSkeletonLoaded(data) {
+    internalState.globalDataset = new GlobalDataset(data);
+    populateList();
+    // drawGraphs();
+}
 
-    let trials = globalDataset.experiment(2).trials();
-    let yMinMax = globalDataset.experiment(2).plotset().trimPlotTime().setStartingYToZero().yMinMax();
+function experimentLoaded() {
+    drawGraphs();
+}
+
+function populateList() {
+    const experimentList = document.querySelector('ul.experiments'),
+        experimentListItemTemplate = document.querySelector('ul.experiments li.template-item');
+
+    internalState.globalDataset.experiments().forEach((experiment) => {
+        let newListItem = experimentListItemTemplate.cloneNode(true);
+
+        newListItem.classList.remove('template-item');
+        newListItem.querySelector('.experiment-number').innerHTML = experiment.id;
+        newListItem.setAttribute('data-load-experiment', experiment.id);
+        experimentList.append(newListItem);
+    });
+}
+
+function drawGraphs() {
+    debugger;
+
+    let trials = internalState.globalDataset.experiment(2).trials();
+    let yMinMax = internalState.globalDataset.experiment(2).plotset().trimPlotTime().setStartingYToZero().yMinMax();
 
     graph.clearCanvas();
 

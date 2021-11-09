@@ -133,6 +133,10 @@ body .full-screen-alert ul, body .full-screen-interaction ul {
   padding: 0;
 }
 
+.template-item {
+  display: none;
+}
+
 body.open-gsr {
   text-align: center;
   justify-content: start;
@@ -281,7 +285,7 @@ body.mylab main .option p:last-child {
 }
 body.mylab footer {
   padding: 40px 50px;
-  background-color: rgba(241, 232, 184, 0.2);
+  background-color: #94918388;
   /* rgba(0,0,0, 0.2); */
 }
 
@@ -406,5 +410,10 @@ body.mylab.data-analysis main canvas#results-plotter {
   width: 100vw;
   height: 100vh;
   position: fixed;
+  z-index: -1;
+}
+body.mylab.data-analysis .controls {
+  background: #11111188;
+  padding: 40px 50px;
 }
 

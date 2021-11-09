@@ -200,7 +200,7 @@ export class Plot {
     }
 
     setStartingYToZero() {
-        let startY = this.plotData[0].y ?? 0;
+        let startY = this.plotData[0] !== undefined ? this.plotData[0].y : 0;
 
         this.plotData = this.plotData.map((datapoint) => {
             return {

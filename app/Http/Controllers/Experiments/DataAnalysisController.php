@@ -41,7 +41,7 @@ class DataAnalysisController extends Controller
         $experimentList = Experiment::with('trials:id,experiment_id,image_id,control_number,event_data', 'trials.image.type')->get();
 
         return response()->json([
-            'experimentList' => $experimentList,
+            'experimentalData' => $experimentList,
         ]);
     }
 }
