@@ -71,7 +71,7 @@ function drawGraphs() {
 
     internalState.globalDataset.experimentsLoaded().forEach((experiment) => {
         trials = experiment.trials();
-        yMinMax = experiment.plotset().trimPlotTime().setStartingYToZero().yMinMax();
+        yMinMax = experiment.plotSet().trimPlotTime().setStartingYToZero().yMinMax();
 
         trials.forEach((trial) => {
             let plot = trial.plot();
@@ -100,7 +100,7 @@ function drawGraphs() {
     // let peacefulImages = (trial) => trial.image.type.name === 'Peaceful';
     //
     // let emotionalAverage = globalDataset.experiment(2)
-    //     .plotset()
+    //     .plotSet()
     //     .filter(emotionalImages)
     //     .filterDuplicateData()
     //     .trimPlotTime()
@@ -112,7 +112,7 @@ function drawGraphs() {
     // graph.drawPlot(emotionalAverage, yMinMax);
     //
     // let peacefulAverage = globalDataset.experiment(2)
-    //     .plotset()
+    //     .plotSet()
     //     .filter(peacefulImages)
     //     .filterDuplicateData()
     //     .trimPlotTime()

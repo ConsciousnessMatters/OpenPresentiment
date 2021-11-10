@@ -1,4 +1,5 @@
 import {ExperimentalDataset} from './ExperimentalDataset';
+import {Plotset} from "./Plotset";
 
 export class GlobalDataset {
     constructor(rawData) {
@@ -27,5 +28,25 @@ export class GlobalDataset {
         return this.experimentData.filter((experiment) => {
             return experiment.loaded === true;
         });
+    }
+
+    get data() {
+        return this.experimentData;
+    }
+
+    get flattenedData() {
+        let plots = [];
+
+        this.experimentData.forEach((experiment) => {
+            experiment.forEach((trial) => {
+                plots.push(trial.plot());
+            });
+        });
+
+        return plots;
+    }
+
+    plotSet() {
+        return new Plotset(this.flattenedData);
     }
 }
