@@ -10,74 +10,34 @@ export class Plotset {
     preZeroTime = 7000;
     postZeroTime = 10000;
 
-    constructor(datasource) {
-        this.datasource = datasource ?? null;
+    constructor(trialData) {
         this.filters = [];
-        this.plotData = false;
+        this.plotData = trialData.map((trial) => trial.plot());
     }
 
     get data() {
-        if (! this.plotData) {
-            this.actualiseData();
-        }
         return this.plotData;
     }
 
     forEach(callback, thisArg) {
-        return this.plotData.forEach(callback, thisArg);
+        return this.data.forEach(callback, thisArg);
     }
 
     reduce(callback, initialValue) {
         if (initialValue === undefined) {
-            return this.plotData.reduce(callback);
+            return this.data.reduce(callback);
         } else {
-            return this.plotData.reduce(callback, initialValue);
+            return this.data.reduce(callback, initialValue);
         }
     }
 
     map(callback, thisArg) {
-        return this.plotData.map(callback, thisArg);
+        return this.data.map(callback, thisArg);
     }
 
 
     filter(callback) {
-        this.filters.push(callback);
-        return this;
-    }
-
-    actualiseData() {
-        const sourceData = this.datasource.data,
-            filteredData = this.actualiseFilter(sourceData),
-            flattenedData = this.flattenData(filteredData);
-
-        this.plotData = flattenedData;
-    }
-
-    actualiseFilter(sourceData) {
-        if (this.filters.length > 0) {
-            return sourceData.filter((dataItems) => {
-                return this.filters.every((filter) => {
-                    return filter(dataItems);
-                });
-            });
-        } else {
-            return sourceData;
-        }
-    }
-
-    flattenData(dataItems) {
-        return dataItems.map((dataItem) => {
-            return dataItem.plot();
-        });
-    }
-
-    averagePlot() {
-        if (this.datasource instanceof ExperimentalDataset) {
-            return this.averagePlotFromExperimentalDataset();
-        } else {
-            console.error('Unfamiliar datasource provided.');
-        }
-
+        this.plotData = this.data = this.data.filter(callback);
         return this;
     }
 
@@ -117,7 +77,7 @@ export class Plotset {
         });
     }
 
-    averagePlotFromExperimentalDataset() {
+    averagePlot() {
         const interval = 40,
             indexShift = 10000;
 

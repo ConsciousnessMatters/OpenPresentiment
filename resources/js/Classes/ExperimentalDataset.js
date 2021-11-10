@@ -78,6 +78,6 @@ export class ExperimentalDataset {
     }
 
     plotset() {
-        return new Plotset(this);
+        return new Plotset(this.data);
     }
 }
