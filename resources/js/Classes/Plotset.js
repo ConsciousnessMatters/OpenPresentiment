@@ -16,7 +16,7 @@ export class Plotset {
         this.plotData = false;
     }
 
-    data() {
+    get data() {
         if (! this.plotData) {
             this.actualiseData();
         }
@@ -46,7 +46,7 @@ export class Plotset {
     }
 
     actualiseData() {
-        const sourceData = this.datasource.data(),
+        const sourceData = this.datasource.data,
             filteredData = this.actualiseFilter(sourceData),
             flattenedData = this.flattenData(filteredData);
 
@@ -82,7 +82,7 @@ export class Plotset {
     }
 
     startXFromZero() {
-        this.plotData = this.data().map((plot) => {
+        this.plotData = this.data.map((plot) => {
             return plot.startXFromZero();
         });
 
@@ -90,7 +90,7 @@ export class Plotset {
     }
 
     filterDuplicateData() {
-        this.plotData = this.data().map((plot) => {
+        this.plotData = this.data.map((plot) => {
             return plot.filterDuplicateData();
         });
 
@@ -100,7 +100,7 @@ export class Plotset {
     averageTimingInterval() {
         // ToDo: Consider allowing different timing on different experiments via common denominators.
 
-        const timingValues = this.data().map((plot) => {
+        const timingValues = this.data.map((plot) => {
             return plot.averageTimingInterval();
         });
 
@@ -108,7 +108,7 @@ export class Plotset {
     }
 
     latestRelativeTime() {
-        const latestRelativeTimes = this.data().map((plot) => {
+        const latestRelativeTimes = this.data.map((plot) => {
             return plot.latestRelativeTime();
         });
 
@@ -126,7 +126,7 @@ export class Plotset {
 
         this.filterDuplicateData();
 
-        this.data().forEach((plot) => {
+        this.data.forEach((plot) => {
             let lowestX = this.preZeroTime * -1,
                 highestX = this.postZeroTime;
 
@@ -162,7 +162,7 @@ export class Plotset {
         let min = null,
             max = null;
 
-        this.data().forEach((plot) => {
+        this.data.forEach((plot) => {
             const yMinMaxes = plot.yMinMax();
 
             if (yMinMaxes.yMin < min || min === null) {
@@ -181,7 +181,7 @@ export class Plotset {
     }
 
     setStartingYToZero() {
-        this.plotData = this.data().map((plot) => {
+        this.plotData = this.data.map((plot) => {
             return plot.setStartingYToZero();
         });
 
@@ -189,7 +189,7 @@ export class Plotset {
     }
 
     trimPlotTime() {
-        this.plotData = this.data().map((plot) => {
+        this.plotData = this.data.map((plot) => {
             return plot.trimPlotTime();
         });
 

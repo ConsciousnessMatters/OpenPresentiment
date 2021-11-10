@@ -22,16 +22,8 @@ export class ExperimentalDataset {
         let trialIdsPresent = [];
 
         this.trialData.forEach((trial) => {
-            if (trial === undefined) {
-                debugger;
-            }
-
             trialIdsPresent.push(trial.id);
         });
-
-        if (trials === undefined) {
-            debugger;
-        }
 
         this.trialData = trials.map((trialData) => {
             if (trialIdsPresent.includes(trialData.id)) {
@@ -65,7 +57,7 @@ export class ExperimentalDataset {
         debugger;
     }
 
-    data() {
+    get data() {
         return this.trialData;
     }
 

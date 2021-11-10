@@ -9,7 +9,7 @@ export class Plot {
         this.lineColour = '#00FF00';
     }
 
-    data() {
+    get data() {
         return this.plotData;
     }
 
