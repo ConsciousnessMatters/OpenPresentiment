@@ -67,19 +67,15 @@ function populateList() {
 }
 
 function drawGraphs() {
-    let trials, yMinMax;
+    let plots, yMinMax;
 
     graph.clearCanvas();
 
-    let testYMinMax = internalState.globalDataSet.experiments().reduceToLoaded().plotSet().yMinMax();
+    plots = internalState.globalDataSet.experiments().reduceToLoaded().plotSet().trimPlotTime().setStartingYToZero();
+    yMinMax = plots.yMinMax();
 
-    debugger;
-
-    internalState.globalDataSet.experimentsLoaded().forEach((experiment) => {
-        trials = experiment.trials();
-        yMinMax = experiment.plotSet().trimPlotTime().setStartingYToZero().yMinMax();
-
-        trials.forEach((trial) => {
+    internalState.globalDataSet.experiments().reduceToLoaded().forEach((experiment) => {
+        experiment.trials().forEach((trial) => {
             let plot = trial.plot();
 
             if (trial.image.type.name === 'Peaceful') {
@@ -88,17 +84,15 @@ function drawGraphs() {
                 plot.colour('#00FF00');
             }
 
-            let a = plot.trimPlotTime();
-            let b = a.setStartingYToZero();
+            plot.trimPlotTime().setStartingYToZero();
 
-            graph.drawPlot(b, yMinMax, 0.33);
+            graph.drawPlot(plot, yMinMax, 0.33);
         });
-
-        graph.drawAxis(yMinMax);
-        graph.drawLabels(yMinMax);
-        graph.drawGrid(yMinMax);
     });
 
+    graph.drawAxis(yMinMax);
+    graph.drawLabels(yMinMax);
+    graph.drawGrid(yMinMax);
 
     // graph.clearCanvas();
     //

@@ -6,6 +6,9 @@ export class PlotSet {
     postZeroTime = 10000;
 
     constructor(plotsArray) {
+        if (! plotsArray.every((plot) => plot instanceof Plot)) {
+            throw new Error('PlotSet constructor array must only consist of Plot objects.');
+        }
         this.plotData = plotsArray;
     }
 

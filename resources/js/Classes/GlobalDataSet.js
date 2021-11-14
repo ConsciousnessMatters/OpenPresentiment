@@ -1,37 +1,25 @@
 import {Experiment} from './Experiment';
-import {PlotSet} from "./PlotSet";
 import {ExperimentsSet} from "./ExperimentsSet";
+import {DataSet} from "./DataSet";
 
-export class GlobalDataSet {
+export class GlobalDataSet extends DataSet {
     constructor(jsonDataFromServer) {
+        super();
         this.privateData = jsonDataFromServer.experimentalData.map((experimentData) => {
             return new Experiment(experimentData, this);
         });
     }
 
     experiment(id) {
-        return this.privateData.filter((experiment) => {
-            return experiment.id === id;
-        })[0];
+        return ExperimentsSet.experiment(this.data, id);
     }
 
     experiments(idArray = null) {
-        if (idArray === null) {
-            return new ExperimentsSet(this.privateData);
-        } else {
-            return new ExperimentsSet(
-                this.privateData.filter((experiment) => {
-                    return idArray.includes(experiment.id);
-                })
-            );
-        }
+        return ExperimentsSet.experiments(this.data, idArray);
     }
 
-    experimentsLoaded() {
-        return new ExperimentsSet(this.privateData.filter((experiment) => {
-                return experiment.loaded === true;
-            })
-        );
+    reduceToLoaded() {
+        return ExperimentsSet.reduceToLoaded(this.data);
     }
 
     get data() {
@@ -39,16 +27,6 @@ export class GlobalDataSet {
     }
 
     plotSet() {
-        const plots = [];
-
-        this.privateData.forEach((experiment) => {
-            experiment.trials().forEach((trial) => {
-                plots.push(trial.plot());
-            });
-
-            return experiment.loaded === true;
-        });
-
-        return new PlotSet(plots);
+        return ExperimentsSet.plotSet(this.data);
     }
 }

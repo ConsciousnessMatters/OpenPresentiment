@@ -2,36 +2,48 @@ import {DataSet} from "./DataSet";
 import {PlotSet} from "./PlotSet";
 
 export class ExperimentsSet extends DataSet {
-    experiment(id) {
-        return this.privateData.filter((experiment) => {
+    static experiment(experimentsArray, id) {
+        return experimentsArray.filter((experiment) => {
             return experiment.id === id;
         })[0];
     }
 
-    experiments(idArray = null) {
+    experiment(id) {
+        return ExperimentsSet.experiment(this.privateData, id);
+    }
+
+    static experiments(experimentsArray, idArray = null) {
         if (idArray === null) {
-            return new ExperimentsSet(this.privateData);
+            return new ExperimentsSet(experimentsArray);
         } else {
             return new ExperimentsSet(
-                this.privateData.filter((experiment) => {
+                experimentsArray.filter((experiment) => {
                     return idArray.includes(experiment.id);
                 })
             );
         }
     }
 
-    reduceToLoaded() {
+    experiments(idArray = null) {
+        return ExperimentsSet.experiments(this.privateData, idArray);
+    }
+
+    static reduceToLoaded(experimentsArray) {
         return new ExperimentsSet(
-            this.privateData.filter((experiment) => {
+            experimentsArray.filter((experiment) => {
                 return experiment.loaded === true;
             })
         );
     }
 
-    plotSet() {
+    reduceToLoaded() {
+        return ExperimentsSet.reduceToLoaded(this.privateData);
+    }
+
+    static plotSet(experimentsArray) {
         const plotSetData = [];
 
-        this.privateData.forEach((experiment) => {
+        experimentsArray.forEach((experiment) => {
             experiment.trials().forEach((trial) => {
                 plotSetData.push(trial.plot());
             });
@@ -40,5 +52,9 @@ export class ExperimentsSet extends DataSet {
         });
 
         return new PlotSet(plotSetData);
+    }
+
+    plotSet() {
+        return ExperimentsSet.plotSet(this.privateData);
     }
 }
