@@ -57,10 +57,15 @@ function populateList() {
         experimentListItemTemplate = document.querySelector('ul.experiments li.template-item');
 
     internalState.globalDataSet.experiments().forEach((experiment) => {
-        let newListItem = experimentListItemTemplate.cloneNode(true);
+        let newListItem = experimentListItemTemplate.cloneNode(true),
+            experimentTime = new Date(experiment.started_at);
 
         newListItem.classList.remove('template-item');
         newListItem.querySelector('.experiment-number').innerHTML = experiment.id;
+        newListItem.querySelector('.subject-number').innerHTML = experiment.subject_user_id;
+        newListItem.querySelector('.subject-name').innerHTML = experiment.subject_user.name;
+        newListItem.querySelector('.subject-email').innerHTML = experiment.subject_user.email;
+        newListItem.querySelector('.experiment-date-time').innerHTML = experimentTime.toString();
         newListItem.setAttribute('data-load-experiment', experiment.id);
         experimentList.append(newListItem);
     });

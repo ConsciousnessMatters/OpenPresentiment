@@ -412,8 +412,43 @@ body.mylab.data-analysis main canvas#results-plotter {
   position: fixed;
   z-index: -1;
 }
-body.mylab.data-analysis .controls {
+body.mylab.data-analysis section.controls {
   background: #11111188;
   padding: 40px 50px;
+}
+body.mylab.data-analysis .experiment-listing {
+  width: 940px;
+}
+body.mylab.data-analysis .experiment-listing ul.experiments {
+  padding: 0;
+}
+body.mylab.data-analysis .experiment-listing ul.experiments > li:not(.template-item) {
+  background: #11111188;
+  display: flex;
+  padding: 20px 25px;
+  margin-bottom: 20px;
+}
+body.mylab.data-analysis .experiment-listing ul.experiments > li:not(.template-item):last-child {
+  margin-bottom: 0;
+}
+body.mylab.data-analysis .experiment-listing ul.experiments > li:not(.template-item) .data {
+  min-width: 600px;
+}
+body.mylab.data-analysis .experiment-listing ul.experiments > li:not(.template-item) .controls {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
+body.mylab.data-analysis .experiment-listing ul.experiments > li:not(.template-item) .controls button {
+  margin-bottom: 9px;
+}
+body.mylab.data-analysis .experiment-listing ul.experiments > li:not(.template-item) .controls button:last-child {
+  margin-bottom: 0;
+}
+body.mylab.data-analysis .experiment-listing ul.experiments ul {
+  padding-left: 18px;
+}
+body.mylab.data-analysis .experiment-listing ul.experiments h4 {
+  margin-top: 0;
 }
 

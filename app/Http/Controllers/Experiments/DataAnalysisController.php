@@ -29,7 +29,7 @@ class DataAnalysisController extends Controller
 
     public function getExperiment($id)
     {
-        $experimentalData = Experiment::with('trials.image.type')->where('id', $id)->get();
+        $experimentalData = Experiment::with('trials.image.type', 'subjectUser')->where('id', $id)->get();
 
         return response()->json([
             'experimentalData' => $experimentalData,
@@ -38,7 +38,7 @@ class DataAnalysisController extends Controller
 
     public function getExperimentList()
     {
-        $experimentList = Experiment::with('trials:id,experiment_id,image_id,control_number,event_data', 'trials.image.type')->get();
+        $experimentList = Experiment::with('trials:id,experiment_id,image_id,control_number,event_data', 'trials.image.type', 'subjectUser')->get();
 
         return response()->json([
             'experimentalData' => $experimentList,

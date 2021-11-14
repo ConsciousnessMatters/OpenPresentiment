@@ -9,6 +9,7 @@ export class Experiment {
         this.id = experimentData.id;
         this.op_type_number = experimentData.op_type_number;
         this.subject_user_id = experimentData.subject_user_id;
+        this.subject_user = experimentData.subject_user;
         this.subject_agreement = experimentData.subject_agreement;
         this.created_at = experimentData.created_at;
         this.updated_at = experimentData.updated_at;
@@ -16,6 +17,7 @@ export class Experiment {
         this.loaded = false; // ToDo: set ths depending on whether it's actually loaded or not.
         this.onload = () => {};
         this.ingestTrialData(experimentData.trials);
+        this.started_at = this.trials()[0].eventData[0].jsTime;
     }
 
     ingestTrialData(trials) {
