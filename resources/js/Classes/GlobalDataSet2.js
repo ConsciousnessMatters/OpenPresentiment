@@ -3,8 +3,8 @@ import {PlotSet} from "./PlotSet";
 import {ExperimentsSet} from "./ExperimentsSet";
 
 export class GlobalDataSet {
-    constructor(rawData) {
-        this.privateData = rawData.experimentalData.map((experimentData) => {
+    constructor(jsonDataFromServer) {
+        this.privateData = jsonDataFromServer.experimentalData.map((experimentData) => {
             return new Experiment(experimentData, this);
         });
     }
@@ -38,19 +38,17 @@ export class GlobalDataSet {
         return this.privateData;
     }
 
-    get flattenedData() {
-        let plots = [];
+    plotSet() {
+        const plots = [];
 
         this.privateData.forEach((experiment) => {
-            experiment.forEach((trial) => {
+            experiment.trials().forEach((trial) => {
                 plots.push(trial.plot());
             });
+
+            return experiment.loaded === true;
         });
 
-        return plots;
-    }
-
-    plotSet() {
-        return new PlotSet(this.flattenedData);
+        return new PlotSet(plots);
     }
 }

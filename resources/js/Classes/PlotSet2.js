@@ -5,9 +5,8 @@ export class PlotSet {
     preZeroTime = 7000;
     postZeroTime = 10000;
 
-    constructor(trialData) {
-        this.filters = [];
-        this.plotData = trialData.map((trial) => trial.plot());
+    constructor(plotsArray) {
+        this.plotData = plotsArray;
     }
 
     get data() {
