@@ -33,7 +33,7 @@ export class ExperimentsSet extends DataSet {
 
         this.privateData.forEach((experiment) => {
             experiment.trials().forEach((trial) => {
-                plotSetData.push(trial.plot);
+                plotSetData.push(trial.plot());
             });
 
             return experiment.loaded === true;

@@ -78,6 +78,6 @@ export class Experiment {
     }
 
     plotSet() {
-        return new PlotSet(this.data);
+        return new PlotSet(this.data.map((trial) => trial.plot()));
     }
 }
