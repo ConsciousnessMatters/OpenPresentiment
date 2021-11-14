@@ -104,6 +104,9 @@ function drawPlot(plot, yMinMax = null, opacity = 1) {
 function drawAxis(yMinMax) {
     const plotToDraw = plotToDrawAreaConverter(null, yMinMax);
 
+    // ToDo: This is a bit of a bodge fix, we should find out what left the global alpha set badly. Occurs after removing all experiments.
+    internalState.CC.globalAlpha = 1;
+
     internalState.CC.beginPath();
     internalState.CC.moveTo(plotToDraw.draw.xMin, flipYValue(plotToDraw.draw.yMax));
     internalState.CC.lineTo(plotToDraw.draw.xMin, flipYValue(plotToDraw.draw.yMin));

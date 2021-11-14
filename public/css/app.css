@@ -401,6 +401,7 @@ body.mylab.data-analysis nav {
   position: Fixed;
   width: 100vw;
   box-sizing: border-box;
+  z-index: 0;
 }
 body.mylab.data-analysis main {
   padding: 0;
@@ -414,7 +415,11 @@ body.mylab.data-analysis main canvas#results-plotter {
 }
 body.mylab.data-analysis section.controls {
   background: #11111188;
+  -webkit-backdrop-filter: blur(4px);
+          backdrop-filter: blur(4px);
   padding: 40px 50px;
+  position: relative;
+  z-index: 1;
 }
 body.mylab.data-analysis .experiment-listing {
   width: 940px;
@@ -450,5 +455,9 @@ body.mylab.data-analysis .experiment-listing ul.experiments ul {
 }
 body.mylab.data-analysis .experiment-listing ul.experiments h4 {
   margin-top: 0;
+}
+body.mylab.data-analysis footer {
+  -webkit-backdrop-filter: blur(4px);
+          backdrop-filter: blur(4px);
 }
 

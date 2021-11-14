@@ -6,6 +6,7 @@ nav {
   position: Fixed;
   width: 100vw;
   box-sizing: border-box;
+  z-index: 0;
 }
 
 main {
@@ -22,7 +23,10 @@ main {
 
 section.controls {
   background: #11111188;
+  backdrop-filter: blur(4px);
   padding: 40px 50px;
+  position: relative;
+  z-index: 1;
 }
 
 .experiment-listing {
@@ -70,3 +74,6 @@ section.controls {
   }
 }
 
+footer {
+  backdrop-filter: blur(4px);
+}

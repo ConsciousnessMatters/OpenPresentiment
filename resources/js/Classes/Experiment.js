@@ -36,22 +36,33 @@ export class Experiment {
         });
     }
 
-    load() {
+    load(callback) {
         helpers.ajaxGet(`/mylab/experiment/presentiment/1&2/get-experiment/${this.id}`, (data) => {
 
-            this.dataLoaded(data);
+            this.dataLoaded(data, callback);
         }, this.dataLoadFailed);
     }
 
-    dataLoaded(data) {
+    unload() {
+        this.trialData.forEach((trial) => {
+            trial.gsrData = [];
+        });
+        this.loaded = false;
+    }
+
+    dataLoaded(data, callback) {
         let experimentData = data.experimentalData.filter((experiment) => experiment.id === this.id),
             trials = experimentData[0].trials;
 
         this.ingestTrialData(trials);
         this.loaded = true;
 
+        if (typeof callback === 'function') {
+            callback(data);
+        }
+
         if (typeof this.onload === 'function') {
-            this.onload();
+            this.onload(data);
         }
     }
 

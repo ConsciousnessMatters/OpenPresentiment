@@ -1,5 +1,11 @@
 import {GlobalDataSet} from "./Classes/GlobalDataSet";
 
+const
+    experimentListItemIdAttribute = 'data-experiment-id',
+    experimentListItemSelector = `[${experimentListItemIdAttribute}]`,
+    loadExperimentButtonSelector = '[data-load-experiment] button.load',
+    clearExperimentButtonSelector = '[data-load-experiment] button.remove';
+
 let internalState = {
     globalDataSet: null,
 };
@@ -8,7 +14,7 @@ function initiate() {
     loadData();
     graph.initiate('#results-plotter');
     listeners();
-    preload();
+    drawEmtpyGraph();
 }
 
 function loadData() {
@@ -18,10 +24,11 @@ function loadData() {
 }
 
 function listeners() {
-    helpers.addAtemporalEventListener('click', loadExperiment).querySelector('[data-load-experiment] button');
+    helpers.addAtemporalEventListener('click', loadExperiment).querySelector(loadExperimentButtonSelector);
+    helpers.addAtemporalEventListener('click', clearExperiment).querySelector(clearExperimentButtonSelector);
 }
 
-function preload() {
+function drawEmtpyGraph() {
     const yMinMax = {
         yMin: -100,
         yMax: 100,
@@ -36,11 +43,40 @@ function preload() {
 function loadExperiment(event) {
     // ToDo: Handle request when globalDataSet is not loaded.
 
-    let experimentId = parseInt(event.target.closest('[data-load-experiment]').getAttribute('data-load-experiment'), 10),
+    const experimentListItem = event.target.closest(experimentListItemSelector),
+        loadExperimentButton = experimentListItem.querySelector(loadExperimentButtonSelector),
+        clearExperimentButton = experimentListItem.querySelector(clearExperimentButtonSelector),
+        experimentId = parseInt(experimentListItem.getAttribute(experimentListItemIdAttribute), 10),
         experiment = internalState.globalDataSet.experiment(experimentId);
 
+    if (loadExperimentButton.hasAttribute('disabled')) {
+        return;
+    }
+
+    loadExperimentButton.classList.add('loading');
+    loadExperimentButton.setAttribute('disabled', null);
+
     experiment.onload = experimentLoaded;
-    experiment.load();
+    experiment.load((data) => {
+        loadExperimentButton.classList.remove('loading');
+        loadExperimentButton.classList.add('hidden');
+        loadExperimentButton.removeAttribute('disabled');
+        clearExperimentButton.classList.remove('hidden');
+    });
+}
+
+function clearExperiment(event) {
+    const experimentListItem = event.target.closest(experimentListItemSelector),
+        loadExperimentButton = experimentListItem.querySelector(loadExperimentButtonSelector),
+        clearExperimentButton = experimentListItem.querySelector(clearExperimentButtonSelector),
+        experimentId = parseInt(experimentListItem.getAttribute(experimentListItemIdAttribute), 10),
+        experiment = internalState.globalDataSet.experiment(experimentId);
+
+    experiment.unload();
+    loadExperimentButton.classList.remove('hidden');
+    clearExperimentButton.classList.add('hidden');
+
+    drawGraphs();
 }
 
 function glboalDataSetSkeletonLoaded(data) {
@@ -61,6 +97,7 @@ function populateList() {
             experimentTime = new Date(experiment.started_at);
 
         newListItem.classList.remove('template-item');
+        newListItem.setAttribute('data-experiment-id', experiment.id);
         newListItem.querySelector('.experiment-number').innerHTML = experiment.id;
         newListItem.querySelector('.subject-number').innerHTML = experiment.subject_user_id;
         newListItem.querySelector('.subject-name').innerHTML = experiment.subject_user.name;
@@ -72,7 +109,8 @@ function populateList() {
 }
 
 function drawGraphs() {
-    let plots, yMinMax;
+    let plots, yMinMax,
+        plotDrawn = false;
 
     graph.clearCanvas();
 
@@ -92,12 +130,17 @@ function drawGraphs() {
             plot.trimPlotTime().setStartingYToZero();
 
             graph.drawPlot(plot, yMinMax, 0.33);
+            plotDrawn = true;
         });
     });
 
-    graph.drawAxis(yMinMax);
-    graph.drawLabels(yMinMax);
-    graph.drawGrid(yMinMax);
+    if (! plotDrawn) {
+        drawEmtpyGraph();
+    } else {
+        graph.drawAxis(yMinMax);
+        graph.drawLabels(yMinMax);
+        graph.drawGrid(yMinMax);
+    }
 
     // graph.clearCanvas();
     //
