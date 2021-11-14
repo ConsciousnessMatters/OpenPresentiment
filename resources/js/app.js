@@ -5,13 +5,13 @@ import {fullScreenAlerts} from './$full-screen-alerts';
 import {experiment1} from './$experiment1';
 import {dataAnalysis} from './data-analysis';
 import {serialDataService} from './serial-data-service';
-import {GlobalDataset} from './Classes/GlobalDataset';
+import {GlobalDataSet} from './Classes/GlobalDataSet';
 import {graph} from './graph';
 import {graphLive} from './graph-live';
 import {setup} from './setup';
 
 helpers.initiate();
-window.GlobalDataset = GlobalDataset;
+window.GlobalDataSet = GlobalDataSet;
 window.helpers = helpers;
 window.graph = graph;
 

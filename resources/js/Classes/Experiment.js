@@ -1,7 +1,7 @@
-import {TrialDataset} from './TrialDataset';
-import {Plotset} from './Plotset';
+import {Trial} from './Trial';
+import {PlotSet} from './PlotSet';
 
-export class ExperimentalDataset {
+export class Experiment {
     trialData;
 
     constructor(experimentData, gloabalDatasetRefference) {
@@ -12,7 +12,7 @@ export class ExperimentalDataset {
         this.subject_agreement = experimentData.subject_agreement;
         this.created_at = experimentData.created_at;
         this.updated_at = experimentData.updated_at;
-        this.parentGlobalDataset = gloabalDatasetRefference;
+        this.parentGlobalDataSet = gloabalDatasetRefference;
         this.loaded = false; // ToDo: set ths depending on whether it's actually loaded or not.
         this.onload = () => {};
         this.ingestTrialData(experimentData.trials);
@@ -29,7 +29,7 @@ export class ExperimentalDataset {
             if (trialIdsPresent.includes(trialData.id)) {
                 return this.trial(trialData.id).updateData(trialData);
             } else {
-                return new TrialDataset(trialData, this);
+                return new Trial(trialData, this);
             }
         });
     }
@@ -78,6 +78,6 @@ export class ExperimentalDataset {
     }
 
     plotSet() {
-        return new Plotset(this.data);
+        return new PlotSet(this.data);
     }
 }

@@ -1,5 +1,7 @@
+import {GlobalDataSet} from "./Classes/GlobalDataSet";
+
 let internalState = {
-    globalDataset: null,
+    globalDataSet: null,
 };
 
 function initiate() {
@@ -12,7 +14,7 @@ function initiate() {
 function loadData() {
     const form = document.querySelector('form[name="ajax-list"]');
 
-    helpers.ajaxForm(form, glboalDatasetSkeletonLoaded, dataLoadFailed);
+    helpers.ajaxForm(form, glboalDataSetSkeletonLoaded, dataLoadFailed);
 }
 
 function listeners() {
@@ -32,17 +34,17 @@ function preload() {
 }
 
 function loadExperiment(event) {
-    // ToDo: Handle request when globalDataset is not loaded.
+    // ToDo: Handle request when globalDataSet is not loaded.
 
     let experimentId = parseInt(event.target.closest('[data-load-experiment]').getAttribute('data-load-experiment'), 10),
-        experiment = internalState.globalDataset.experiment(experimentId);
+        experiment = internalState.globalDataSet.experiment(experimentId);
 
     experiment.onload = experimentLoaded;
     experiment.load();
 }
 
-function glboalDatasetSkeletonLoaded(data) {
-    internalState.globalDataset = new GlobalDataset(data);
+function glboalDataSetSkeletonLoaded(data) {
+    internalState.globalDataSet = new GlobalDataSet(data);
     populateList();
 }
 
@@ -54,7 +56,7 @@ function populateList() {
     const experimentList = document.querySelector('ul.experiments'),
         experimentListItemTemplate = document.querySelector('ul.experiments li.template-item');
 
-    internalState.globalDataset.experiments().forEach((experiment) => {
+    internalState.globalDataSet.experiments().forEach((experiment) => {
         let newListItem = experimentListItemTemplate.cloneNode(true);
 
         newListItem.classList.remove('template-item');
@@ -69,7 +71,11 @@ function drawGraphs() {
 
     graph.clearCanvas();
 
-    internalState.globalDataset.experimentsLoaded().forEach((experiment) => {
+    let testYMinMax = internalState.globalDataSet.experiments().reduceToLoaded().plotSet().yMinMax();
+
+    debugger;
+
+    internalState.globalDataSet.experimentsLoaded().forEach((experiment) => {
         trials = experiment.trials();
         yMinMax = experiment.plotSet().trimPlotTime().setStartingYToZero().yMinMax();
 
@@ -99,7 +105,7 @@ function drawGraphs() {
     // let emotionalImages = (trial) => trial.image.type.name === 'Emotional';
     // let peacefulImages = (trial) => trial.image.type.name === 'Peaceful';
     //
-    // let emotionalAverage = globalDataset.experiment(2)
+    // let emotionalAverage = globalDataSet.experiment(2)
     //     .plotSet()
     //     .filter(emotionalImages)
     //     .filterDuplicateData()
@@ -111,7 +117,7 @@ function drawGraphs() {
     //
     // graph.drawPlot(emotionalAverage, yMinMax);
     //
-    // let peacefulAverage = globalDataset.experiment(2)
+    // let peacefulAverage = globalDataSet.experiment(2)
     //     .plotSet()
     //     .filter(peacefulImages)
     //     .filterDuplicateData()

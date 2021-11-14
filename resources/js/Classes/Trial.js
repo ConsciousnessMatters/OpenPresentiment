@@ -1,6 +1,6 @@
 import {Plot} from './Plot';
 
-export class TrialDataset {
+export class Trial {
     constructor(trialData, experimentReference = null) {
         this.jsTimeField = 0;
         this.mcTimeField = 1;
