@@ -1,5 +1,5 @@
 const trialTimeSetting = -7000,
-    totalTrials = 2,
+    totalTrials = 20,
     timerFontsize = '128px',
     scaleFactor = window.devicePixelRatio || 1,
     canvasSelector = 'canvas#experimental-core';
@@ -151,8 +151,8 @@ function initiatePhase1() {
     $buttonBeginPhase2.off('click.e4', "**");
     $buttonBeginPhase2.on('click.e4', initiatePhase2);
 
-    if (window.graph !== undefined) {
-        window.graph.stop();
+    if (window.graphLive !== undefined) {
+        window.graphLive.stop();
     }
 
     logEvent(`P1-T${trials + 1}`);
@@ -336,8 +336,8 @@ function endTrial() {
             $('.experiment-structure .part-5').click();
         });
 
-        if (window.graph !== undefined) {
-            window.graph.resume();
+        if (window.graphLive !== undefined) {
+            window.graphLive.resume();
         }
 
         experimentId = '';

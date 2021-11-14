@@ -115,6 +115,8 @@ function drawAxis(yMinMax) {
 }
 
 function drawLabels(yMinMax) {
+    // ToDo: finish this function and clean up.
+
     const plotToDraw = plotToDrawAreaConverter(null, yMinMax);
 
     let fontsize = 16 * scaleFactor,
