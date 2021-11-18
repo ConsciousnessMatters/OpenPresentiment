@@ -126,10 +126,10 @@ function drawGraphs() {
 
     graph.clearCanvas();
 
-    plots = internalState.globalDataSet.experiments().reduceToActive().plotSet().trimPlotTime().setStartingYToZero();
+    plots = internalState.globalDataSet.experiments().reduceToActiveTrials().plotSet().trimPlotTime().setStartingYToZero();
     yMinMax = plots.yMinMax();
 
-    internalState.globalDataSet.experiments().reduceToActive().forEach((experiment) => {
+    internalState.globalDataSet.experiments().reduceToActiveTrials().forEach((experiment) => {
         experiment.trials().forEach((trial) => {
             let plot = trial.plot();
 

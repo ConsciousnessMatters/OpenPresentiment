@@ -43,12 +43,12 @@ export class ExperimentsSet extends DataSet {
     static reduceToActive(experimentsArray) {
         return new ExperimentsSet(
             experimentsArray.filter((experiment) => {
-                return experiment.active === true;
+                return experiment.trialsActive === true;
             })
         );
     }
 
-    reduceToActive() {
+    reduceToActiveTrials() {
         return ExperimentsSet.reduceToActive(this.privateData);
     }
 

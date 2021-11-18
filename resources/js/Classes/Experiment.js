@@ -14,7 +14,7 @@ export class Experiment {
         this.created_at = experimentData.created_at;
         this.updated_at = experimentData.updated_at;
         this.parentGlobalDataSet = gloabalDatasetRefference;
-        this.active = false;
+        this.trialsActive = false;
         this.loaded = false; // ToDo: set ths depending on whether it's actually loaded or not.
         this.onload = () => {};
         this.ingestTrialData(experimentData.trials);
@@ -39,7 +39,7 @@ export class Experiment {
 
     load(callback) {
         if (this.loaded) {
-            this.active = true;
+            this.trialsActive = true;
             this.dataLoaded([], callback);
         } else {
             helpers.ajaxGet(`/mylab/experiment/presentiment/1&2/get-experiment/${this.id}`, (data) => {
@@ -54,11 +54,11 @@ export class Experiment {
             trial.gsrData = [];
         });
         this.loaded = false;
-        this.active = false;
+        this.trialsActive = false;
     }
 
     deactivate() {
-        this.active = false;
+        this.trialsActive = false;
     }
 
     dataLoaded(data, callback) {
@@ -69,7 +69,7 @@ export class Experiment {
             this.ingestTrialData(trials);
             this.loaded = true;
         }
-        this.active = true;
+        this.trialsActive = true;
 
         if (typeof callback === 'function') {
             callback(data);
