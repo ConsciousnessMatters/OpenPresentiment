@@ -4,7 +4,9 @@ const
     experimentListItemIdAttribute = 'data-experiment-id',
     experimentListItemSelector = `[${experimentListItemIdAttribute}]`,
     loadExperimentButtonSelector = '[data-load-experiment] button.load',
-    clearExperimentButtonSelector = '[data-load-experiment] button.remove';
+    clearExperimentButtonSelector = '[data-load-experiment] button.remove',
+    showAveragesButtonSelector = '[data-load-experiment] button.show-averages',
+    clearAveragesButtonSelector = '[data-load-experiment] button.remove-averages';
 
 let internalState = {
     globalDataSet: null,
@@ -26,6 +28,8 @@ function loadData() {
 function listeners() {
     helpers.addAtemporalEventListener('click', loadExperiment).querySelector(loadExperimentButtonSelector);
     helpers.addAtemporalEventListener('click', clearExperiment).querySelector(clearExperimentButtonSelector);
+    helpers.addAtemporalEventListener('click', showAverages).querySelector(showAveragesButtonSelector);
+    helpers.addAtemporalEventListener('click', clearAverages).querySelector(clearAveragesButtonSelector);
 }
 
 function drawEmtpyGraph() {
@@ -72,11 +76,19 @@ function clearExperiment(event) {
         experimentId = parseInt(experimentListItem.getAttribute(experimentListItemIdAttribute), 10),
         experiment = internalState.globalDataSet.experiment(experimentId);
 
-    experiment.unload();
+    experiment.deactivate();
     loadExperimentButton.classList.remove('hidden');
     clearExperimentButton.classList.add('hidden');
 
     drawGraphs();
+}
+
+function showAverages() {
+
+}
+
+function clearAverages() {
+
 }
 
 function glboalDataSetSkeletonLoaded(data) {
@@ -114,10 +126,10 @@ function drawGraphs() {
 
     graph.clearCanvas();
 
-    plots = internalState.globalDataSet.experiments().reduceToLoaded().plotSet().trimPlotTime().setStartingYToZero();
+    plots = internalState.globalDataSet.experiments().reduceToActive().plotSet().trimPlotTime().setStartingYToZero();
     yMinMax = plots.yMinMax();
 
-    internalState.globalDataSet.experiments().reduceToLoaded().forEach((experiment) => {
+    internalState.globalDataSet.experiments().reduceToActive().forEach((experiment) => {
         experiment.trials().forEach((trial) => {
             let plot = trial.plot();
 

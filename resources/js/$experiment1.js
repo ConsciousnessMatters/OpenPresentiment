@@ -1,5 +1,6 @@
 const trialTimeSetting = -7000,
-    totalTrials = 20,
+    totalTrialsRegular = 20,
+    totalTrialsControl = 10,
     timerFontsize = '128px',
     scaleFactor = window.devicePixelRatio || 1,
     canvasSelector = 'canvas#experimental-core';
@@ -19,7 +20,8 @@ let intervalTimer = null,
     chosenImageId = null,
     subjectUserId = null,
     subjectAgreement = null,
-    controlMode = false,
+    controlMode,
+    totalTrials,
     navigationOveride = true,
     controlNumber = '',
     experimentId = '',
@@ -30,6 +32,9 @@ function initiate() {
     setupPartNavigation();
     setupFormInteractions();
     setupGsrTrigger();
+
+    controlMode = document.body.classList.contains('experiment-2');
+    totalTrials = controlMode ? totalTrialsControl : totalTrialsRegular;
 }
 
 function setupPartNavigation() {
@@ -151,6 +156,8 @@ function initiatePhase1() {
     $buttonBeginPhase2.off('click.e4', "**");
     $buttonBeginPhase2.on('click.e4', initiatePhase2);
 
+    document.addEventListener('keyup', ifSpaceInitiatePhase2);
+
     if (window.graphLive !== undefined) {
         window.graphLive.stop();
     }
@@ -166,6 +173,13 @@ function initiatePhase1() {
     $('#phase-1').removeClass('hidden');
     $('#phase-1 .trial-number').html(trials + 1);
     $('#phase-1 .trial-totals').html(totalTrials);
+}
+
+function ifSpaceInitiatePhase2(event) {
+    if (event.code === 'Space') {
+        document.removeEventListener('keyup', ifSpaceInitiatePhase2);
+        initiatePhase2();
+    }
 }
 
 function logEvent(event) {

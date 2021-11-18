@@ -1,3 +1,6 @@
+$dark-translucent-background: #11111188;
+$footer-translucent-background: #94918388;
+
 & {
   background-attachment: fixed;
 }
@@ -22,21 +25,24 @@ main {
 }
 
 section.controls {
-  background: #11111188;
-  backdrop-filter: blur(4px);
-  padding: 40px 50px;
+  background: $dark-translucent-background;
   position: relative;
   z-index: 1;
 }
 
 .experiment-listing {
   width: 940px;
+  max-height: calc(100vh - 118px);
+  box-sizing: border-box;
+  overflow-y: scroll;
+  margin: 0 50px;
+  padding: 40px 0 142px;
 
   ul.experiments {
     padding: 0;
 
     > li:not(.template-item) {
-      background: #11111188;
+      background: $dark-translucent-background;
       display: flex;
       padding: 20px 25px;
       margin-bottom: 20px;
@@ -53,6 +59,7 @@ section.controls {
         display: flex;
         flex-direction: column;
         width: 100%;
+        justify-content: end;
 
         button {
           margin-bottom: 9px;
@@ -75,5 +82,12 @@ section.controls {
 }
 
 footer {
-  backdrop-filter: blur(4px);
+  $footer-height: 102px;
+  position: relative;
+  z-index: 2;
+  margin-top: -$footer-height;
+  backdrop-filter: blur(12px);
+  background-color: transparent;
+  background-image: linear-gradient($footer-translucent-background, $footer-translucent-background),
+                    linear-gradient($dark-translucent-background, $dark-translucent-background);
 }

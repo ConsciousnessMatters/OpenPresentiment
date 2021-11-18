@@ -9,19 +9,9 @@ use App\Models\User;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\View\View;
 
 abstract class ExperimentPresentimentController extends ExperimentController
 {
-    public function show(): View
-    {
-        return view('mylab.experiments.presentiment.1', [
-            'bodyClass' => 'mylab experiment experiment-1',
-            'user'      => $user = Auth::user(),
-        ]);
-    }
-
     public function getImages()
     {
         $emotionalImageRelativePath = Image::whereHas('type', function (Builder $query) {

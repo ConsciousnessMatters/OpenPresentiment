@@ -40,6 +40,18 @@ export class ExperimentsSet extends DataSet {
         return ExperimentsSet.reduceToLoaded(this.privateData);
     }
 
+    static reduceToActive(experimentsArray) {
+        return new ExperimentsSet(
+            experimentsArray.filter((experiment) => {
+                return experiment.active === true;
+            })
+        );
+    }
+
+    reduceToActive() {
+        return ExperimentsSet.reduceToActive(this.privateData);
+    }
+
     static plotSet(experimentsArray) {
         const plotSetData = [];
 
