@@ -3,8 +3,8 @@ import {GlobalDataSet} from "./Classes/GlobalDataSet";
 const
     experimentListItemIdAttribute = 'data-experiment-id',
     experimentListItemSelector = `[${experimentListItemIdAttribute}]`,
-    loadExperimentButtonSelector = '[data-load-experiment] button.load',
-    clearExperimentButtonSelector = '[data-load-experiment] button.remove',
+    loadButtonSelector = '[data-load-experiment] button.load',
+    clearButtonSelector = '[data-load-experiment] button.remove',
     showAveragesButtonSelector = '[data-load-experiment] button.show-averages',
     clearAveragesButtonSelector = '[data-load-experiment] button.remove-averages';
 
@@ -26,8 +26,8 @@ function loadData() {
 }
 
 function listeners() {
-    helpers.addAtemporalEventListener('click', loadExperiment).querySelector(loadExperimentButtonSelector);
-    helpers.addAtemporalEventListener('click', clearExperiment).querySelector(clearExperimentButtonSelector);
+    helpers.addAtemporalEventListener('click', loadExperiment).querySelector(loadButtonSelector);
+    helpers.addAtemporalEventListener('click', clearExperiment).querySelector(clearButtonSelector);
     helpers.addAtemporalEventListener('click', showAverages).querySelector(showAveragesButtonSelector);
     helpers.addAtemporalEventListener('click', clearAverages).querySelector(clearAveragesButtonSelector);
 }
@@ -44,51 +44,55 @@ function drawEmtpyGraph() {
     graph.drawGrid(yMinMax);
 }
 
+function getExperimentFromEvent(event) {
+    const listItem = event.target.closest(experimentListItemSelector),
+        loadButton = listItem.querySelector(loadButtonSelector),
+        clearButton = listItem.querySelector(clearButtonSelector),
+        showAveragesButton = listItem.querySelector(showAveragesButtonSelector),
+        clearAveragesButton = listItem.querySelector(clearAveragesButtonSelector),
+        id = parseInt(listItem.getAttribute(experimentListItemIdAttribute), 10),
+        experiment = internalState.globalDataSet.experiment(id);
+
+    return { loadButton, clearButton, showAveragesButton, clearAveragesButton, id, experiment };
+}
+
 function loadExperiment(event) {
     // ToDo: Handle request when globalDataSet is not loaded.
 
-    const experimentListItem = event.target.closest(experimentListItemSelector),
-        loadExperimentButton = experimentListItem.querySelector(loadExperimentButtonSelector),
-        clearExperimentButton = experimentListItem.querySelector(clearExperimentButtonSelector),
-        experimentId = parseInt(experimentListItem.getAttribute(experimentListItemIdAttribute), 10),
-        experiment = internalState.globalDataSet.experiment(experimentId);
+    const { loadButton, clearButton, showAveragesButton, clearAveragesButton, id, experiment } = getExperimentFromEvent(event);
 
-    if (loadExperimentButton.hasAttribute('disabled')) {
+    if (loadButton.hasAttribute('disabled')) {
         return;
     }
 
-    loadExperimentButton.classList.add('loading');
-    loadExperimentButton.setAttribute('disabled', null);
+    loadButton.classList.add('loading');
+    loadButton.setAttribute('disabled', null);
 
     experiment.onload = experimentLoaded;
     experiment.load((data) => {
-        loadExperimentButton.classList.remove('loading');
-        loadExperimentButton.classList.add('hidden');
-        loadExperimentButton.removeAttribute('disabled');
-        clearExperimentButton.classList.remove('hidden');
+        loadButton.classList.remove('loading');
+        loadButton.classList.add('hidden');
+        loadButton.removeAttribute('disabled');
+        clearButton.classList.remove('hidden');
     });
 }
 
 function clearExperiment(event) {
-    const experimentListItem = event.target.closest(experimentListItemSelector),
-        loadExperimentButton = experimentListItem.querySelector(loadExperimentButtonSelector),
-        clearExperimentButton = experimentListItem.querySelector(clearExperimentButtonSelector),
-        experimentId = parseInt(experimentListItem.getAttribute(experimentListItemIdAttribute), 10),
-        experiment = internalState.globalDataSet.experiment(experimentId);
+    const { loadButton, clearButton,  showAveragesButton, clearAveragesButton, id, experiment } = getExperimentFromEvent(event);
 
     experiment.deactivate();
-    loadExperimentButton.classList.remove('hidden');
-    clearExperimentButton.classList.add('hidden');
+    loadButton.classList.remove('hidden');
+    clearButton.classList.add('hidden');
 
     drawGraphs();
 }
 
 function showAverages() {
-
+    const { loadButton, clearButton,  showAveragesButton, clearAveragesButton, id, experiment } = getExperimentFromEvent(event);
 }
 
 function clearAverages() {
-
+    const { loadButton, clearButton,  showAveragesButton, clearAveragesButton, id, experiment } = getExperimentFromEvent(event);
 }
 
 function glboalDataSetSkeletonLoaded(data) {
