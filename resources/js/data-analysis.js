@@ -3,9 +3,9 @@ import {GlobalDataSet} from "./Classes/GlobalDataSet";
 const
     experimentListItemIdAttribute = 'data-experiment-id',
     experimentListItemSelector = `[${experimentListItemIdAttribute}]`,
-    loadButtonSelector = '[data-load-experiment] button.load',
-    clearButtonSelector = '[data-load-experiment] button.remove',
-    showAveragesButtonSelector = '[data-load-experiment] button.show-averages',
+    showTrialsButtonSelector = '[data-load-experiment] button.show-trials',
+    clearTrialsButtonSelector = '[data-load-experiment] button.remove-trials',
+    loadAveragesButtonSelector = '[data-load-experiment] button.show-averages',
     clearAveragesButtonSelector = '[data-load-experiment] button.remove-averages';
 
 let internalState = {
@@ -26,9 +26,9 @@ function loadData() {
 }
 
 function listeners() {
-    helpers.addAtemporalEventListener('click', loadExperiment).querySelector(loadButtonSelector);
-    helpers.addAtemporalEventListener('click', clearExperiment).querySelector(clearButtonSelector);
-    helpers.addAtemporalEventListener('click', showAverages).querySelector(showAveragesButtonSelector);
+    helpers.addAtemporalEventListener('click', showTrials).querySelector(showTrialsButtonSelector);
+    helpers.addAtemporalEventListener('click', clearTrials).querySelector(clearTrialsButtonSelector);
+    helpers.addAtemporalEventListener('click', showAverages).querySelector(loadAveragesButtonSelector);
     helpers.addAtemporalEventListener('click', clearAverages).querySelector(clearAveragesButtonSelector);
 }
 
@@ -46,53 +46,81 @@ function drawEmtpyGraph() {
 
 function getExperimentFromEvent(event) {
     const listItem = event.target.closest(experimentListItemSelector),
-        loadButton = listItem.querySelector(loadButtonSelector),
-        clearButton = listItem.querySelector(clearButtonSelector),
-        showAveragesButton = listItem.querySelector(showAveragesButtonSelector),
+        showTrialsButton = listItem.querySelector(showTrialsButtonSelector),
+        clearTrialsButton = listItem.querySelector(clearTrialsButtonSelector),
+        showAveragesButton = listItem.querySelector(loadAveragesButtonSelector),
         clearAveragesButton = listItem.querySelector(clearAveragesButtonSelector),
         id = parseInt(listItem.getAttribute(experimentListItemIdAttribute), 10),
         experiment = internalState.globalDataSet.experiment(id);
 
-    return { loadButton, clearButton, showAveragesButton, clearAveragesButton, id, experiment };
+    return { showTrialsButton, clearTrialsButton, showAveragesButton, clearAveragesButton, id, experiment };
 }
 
-function loadExperiment(event) {
+function buttonTogglesShowing(showButton, clearButton) {
+    showButton.classList.remove('loading');
+    showButton.classList.add('hidden');
+    showButton.removeAttribute('disabled');
+    clearButton.classList.remove('hidden');
+}
+
+function showTrials(event) {
     // ToDo: Handle request when globalDataSet is not loaded.
 
-    const { loadButton, clearButton, showAveragesButton, clearAveragesButton, id, experiment } = getExperimentFromEvent(event);
+    const { showTrialsButton, clearTrialsButton, experiment } = getExperimentFromEvent(event);
 
-    if (loadButton.hasAttribute('disabled')) {
+    if (showTrialsButton.hasAttribute('disabled')) {
         return;
     }
 
-    loadButton.classList.add('loading');
-    loadButton.setAttribute('disabled', null);
+    showTrialsButton.classList.add('loading');
+    showTrialsButton.setAttribute('disabled', null);
 
-    experiment.onload = experimentLoaded;
-    experiment.load((data) => {
-        loadButton.classList.remove('loading');
-        loadButton.classList.add('hidden');
-        loadButton.removeAttribute('disabled');
-        clearButton.classList.remove('hidden');
-    });
+    experiment.onload = (data) => {
+        buttonTogglesShowing(showTrialsButton, clearTrialsButton);
+        experiment.activateTrials();
+        experimentLoaded(data);
+    }
+    experiment.load();
 }
 
-function clearExperiment(event) {
-    const { loadButton, clearButton,  showAveragesButton, clearAveragesButton, id, experiment } = getExperimentFromEvent(event);
+function clearTrials(event) {
+    const { showTrialsButton, clearTrialsButton, experiment } = getExperimentFromEvent(event);
 
-    experiment.deactivate();
-    loadButton.classList.remove('hidden');
-    clearButton.classList.add('hidden');
+    experiment.deactivateTrials();
+    showTrialsButton.classList.remove('hidden');
+    clearTrialsButton.classList.add('hidden');
 
     drawGraphs();
 }
 
 function showAverages() {
-    const { loadButton, clearButton,  showAveragesButton, clearAveragesButton, id, experiment } = getExperimentFromEvent(event);
+    // ToDo: Handle request when globalDataSet is not loaded.
+
+    const { showAveragesButton, clearAveragesButton, experiment } = getExperimentFromEvent(event);
+
+    if (showAveragesButton.hasAttribute('disabled')) {
+        return;
+    }
+
+    showAveragesButton.classList.add('loading');
+    showAveragesButton.setAttribute('disabled', null);
+
+    experiment.onload = (data) => {
+        buttonTogglesShowing(showAveragesButton, clearAveragesButton);
+        experiment.activateAverage();
+        experimentLoaded(data);
+    }
+    experiment.load();
 }
 
 function clearAverages() {
-    const { loadButton, clearButton,  showAveragesButton, clearAveragesButton, id, experiment } = getExperimentFromEvent(event);
+    const { showAveragesButton, clearAveragesButton, experiment } = getExperimentFromEvent(event);
+
+    experiment.deactivateAverage();
+    showAveragesButton.classList.remove('hidden');
+    clearAveragesButton.classList.add('hidden');
+
+    drawGraphs();
 }
 
 function glboalDataSetSkeletonLoaded(data) {
@@ -125,27 +153,35 @@ function populateList() {
 }
 
 function drawGraphs() {
-    let plots, yMinMax,
+    let plots, averagePlots, yMinMax,
         plotDrawn = false;
 
     graph.clearCanvas();
 
     plots = internalState.globalDataSet.experiments().reduceToActiveTrials().plotSet().trimPlotTime().setStartingYToZero();
+    averagePlots = internalState.globalDataSet.experiments().reduceToActiveAverages().averagePlotSet().trimPlotTime().setStartingYToZero();
     yMinMax = plots.yMinMax();
 
     internalState.globalDataSet.experiments().reduceToActiveTrials().forEach((experiment) => {
-        experiment.trials().forEach((trial) => {
-            let plot = trial.plot();
+        experiment.setPeacefulPlotColour('#ff00ff');
+        experiment.setEmotionalPlotColour('#00FF00');
 
-            if (trial.image.type.name === 'Peaceful') {
-                plot.colour('#ff00ff');
-            } else {
-                plot.colour('#00FF00');
-            }
-
+        experiment.plotSet().forEach((plot) => {
             plot.trimPlotTime().setStartingYToZero();
 
             graph.drawPlot(plot, yMinMax, 0.33);
+            plotDrawn = true;
+        });
+    });
+
+    internalState.globalDataSet.experiments().reduceToActiveAverages().forEach((experiment) => {
+        experiment.setPeacefulPlotColour('#ff00ff');
+        experiment.setEmotionalPlotColour('#00FF00');
+
+        experiment.averagePlotSet().forEach((averagePlot) => {
+            averagePlot.trimPlotTime().setStartingYToZero();
+
+            graph.drawPlot(averagePlot, yMinMax, 0.33);
             plotDrawn = true;
         });
     });

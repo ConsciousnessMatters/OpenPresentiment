@@ -40,7 +40,7 @@ export class ExperimentsSet extends DataSet {
         return ExperimentsSet.reduceToLoaded(this.privateData);
     }
 
-    static reduceToActive(experimentsArray) {
+    static reduceToActiveTrials(experimentsArray) {
         return new ExperimentsSet(
             experimentsArray.filter((experiment) => {
                 return experiment.trialsActive === true;
@@ -49,7 +49,19 @@ export class ExperimentsSet extends DataSet {
     }
 
     reduceToActiveTrials() {
-        return ExperimentsSet.reduceToActive(this.privateData);
+        return ExperimentsSet.reduceToActiveTrials(this.privateData);
+    }
+
+    static reduceToActiveAverages(experimentsArray) {
+        return new ExperimentsSet(
+            experimentsArray.filter((experiment) => {
+                return experiment.averageActive === true;
+            })
+        );
+    }
+
+    reduceToActiveAverages() {
+        return ExperimentsSet.reduceToActiveAverages(this.privateData);
     }
 
     static plotSet(experimentsArray) {
@@ -59,8 +71,6 @@ export class ExperimentsSet extends DataSet {
             experiment.trials().forEach((trial) => {
                 plotSetData.push(trial.plot());
             });
-
-            return experiment.loaded === true;
         });
 
         return new PlotSet(plotSetData);
@@ -68,5 +78,19 @@ export class ExperimentsSet extends DataSet {
 
     plotSet() {
         return ExperimentsSet.plotSet(this.privateData);
+    }
+
+    static averagePlotSet(experimentsArray) {
+        const plotSetData = [];
+
+        experimentsArray.forEach((experiment) => {
+            plotSetData.push(experiment.averagePlot());
+        });
+
+        return new PlotSet(plotSetData);
+    }
+
+    averagePlotSet() {
+        return ExperimentsSet.averagePlotSet(this.privateData);
     }
 }

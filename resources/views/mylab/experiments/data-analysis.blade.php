@@ -26,8 +26,8 @@
                         </ul>
                     </div>
                     <div class="controls">
-                        <button class="load">Load Data To Graph</button>
-                        <button class="remove hidden">Remove Data From Graph</button>
+                        <button class="show-trials">Show Trials On Graph</button>
+                        <button class="remove-trials hidden">Remove Trials From Graph</button>
                         <button class="show-averages">Show Averages On Graph</button>
                         <button class="remove-averages hidden">Remove Averages From Graph</button>
                     </div>
