@@ -49,9 +49,32 @@ function ajaxGet(url, successCallback, failureCallback) {
     xhr.send();
 }
 
+function twoDimensionalMinMx(objectArray, propertyX, propertyY) {
+    let propertyData = [propertyX, propertyY],
+        min = {}, max = {};
+
+    objectArray.forEach((object) => {
+        propertyData.forEach((property) => {
+            if (min[property] === undefined || object[property] < min[property]) {
+                min[property] = object[property];
+            }
+
+            if (max[property] === undefined || object[property] > max[property]) {
+                max[property] = object[property];
+            }
+        });
+    });
+
+    return {
+        min,
+        max
+    }
+}
+
 export const helpers = {
     initiate,
     addAtemporalEventListener,
     ajaxForm,
     ajaxGet,
+    twoDimensionalMinMx,
 };

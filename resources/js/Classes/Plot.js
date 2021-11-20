@@ -158,27 +158,12 @@ export class Plot {
         return zeroStartPlot.pop();
     }
 
-    yMinMax(yMinMax = null) {
-        if (yMinMax === null) {
-            let min = null,
-                max = null;
+    yMinMax() {
+        const minMax = helpers.twoDimensionalMinMx(this.plotData, 'x', 'y');
 
-            this.plotData.forEach((datapoint) => {
-                if (datapoint.y < min || min === null) {
-                    min = datapoint.y;
-                }
-
-                if (datapoint.y > max || max === null) {
-                    max = datapoint.y;
-                }
-            });
-
-            return {
-                yMin: min,
-                yMax: max,
-            }
-        } else {
-
+        return {
+            yMin: minMax.min.y,
+            yMax: minMax.max.y,
         }
     }
 
