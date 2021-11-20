@@ -202,7 +202,6 @@ function drawGraphs() {
     // let emotionalAverage = globalDataSet.experiment(2)
     //     .plotSet()
     //     .filter(emotionalImages)
-    //     .filterDuplicateData()
     //     .trimPlotTime()
     //     .setStartingYToZero()
     //     .averagePlot();
@@ -214,7 +213,6 @@ function drawGraphs() {
     // let peacefulAverage = globalDataSet.experiment(2)
     //     .plotSet()
     //     .filter(peacefulImages)
-    //     .filterDuplicateData()
     //     .trimPlotTime()
     //     .setStartingYToZero()
     //     .averagePlot();

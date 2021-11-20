@@ -46,14 +46,6 @@ export class PlotSet {
         return this;
     }
 
-    filterDuplicateData() {
-        this.plotData = this.data.map((plot) => {
-            return plot.filterDuplicateData();
-        });
-
-        return this;
-    }
-
     averageTimingInterval() {
         // ToDo: Consider allowing different timing on different experiments via common denominators.
 
@@ -80,8 +72,6 @@ export class PlotSet {
 
         let bucketsPlot = [],
             averagePlot;
-
-        this.filterDuplicateData();
 
         this.data.forEach((plot) => {
             let lowestX = this.preZeroTime * -1,

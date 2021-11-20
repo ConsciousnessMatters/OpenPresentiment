@@ -122,23 +122,6 @@ export class Plot {
         return this;
     }
 
-    filterDuplicateData() {
-        let uKeys = [];
-
-        this.plotData = this.plotData.filter((datapoint) => {
-            const uKey = `x_${datapoint.x} y_${datapoint.y}`,
-                uKeyNew = ! uKeys.includes(uKey);
-
-            if (uKeyNew) {
-                uKeys.push(uKey);
-            }
-
-            return uKeyNew;
-        });
-
-        return this;
-    }
-
     trimPlotTime(preZero = 7000, postZero = 10000) {
         this.plotData = this.plotData.filter((datapoint) => {
             return datapoint.x > -1 * preZero && datapoint.x < postZero;

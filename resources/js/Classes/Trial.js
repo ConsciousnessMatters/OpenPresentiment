@@ -22,14 +22,14 @@ export class Trial {
         this.addExperimentalTime();
 
         if (trialData.gsr_data !== undefined) {
-            this.ingestGsrData(trialData);
-            this.addExperimentalTime();
+            this.updateData(trialData);
         }
     }
 
     updateData(trialData) {
         this.ingestGsrData(trialData);
         this.addExperimentalTime();
+        this.removeDuplicatedGsrDatapoints();
 
         return this;
     }
@@ -89,6 +89,23 @@ export class Trial {
                 ...datapoint,
                 experimentalTime: datapoint.jsTime - timeZero
             };
+        });
+
+        return this;
+    }
+
+    removeDuplicatedGsrDatapoints() {
+        const uKeys = [];
+
+        this.gsrData = this.gsrData.filter((datapoint) => {
+            const uKey = `x_${datapoint.experimentalTime} y_${datapoint.microVolts}`,
+                uKeyNew = ! uKeys.includes(uKey);
+
+            if (uKeyNew) {
+                uKeys.push(uKey);
+            }
+
+            return uKeyNew;
         });
 
         return this;

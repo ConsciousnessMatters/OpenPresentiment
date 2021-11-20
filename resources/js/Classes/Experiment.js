@@ -45,14 +45,18 @@ export class Experiment {
     calculateAverageData() {
         const interval = 10;
 
+
+
         // Work out and exclusively use lowest common denominator timespan
         // Get copy of resampled trials for LCD timespan
         // Produce average from resample trials
 
+
+
+
+
         let bucketsPlot = [],
             averagePlot;
-
-        this.filterDuplicateData();
 
         this.data.forEach((plot) => {
             let lowestX = this.preZeroTime * -1,
