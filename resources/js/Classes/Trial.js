@@ -14,6 +14,7 @@ export class Trial {
         this.updated_at = trialData.control_number;
         this.image = trialData.image;
         this.number = null;
+        this.active = true;
         this.gsrData = [];
         this.eventData = [];
         this.parentExperiment = experimentReference;

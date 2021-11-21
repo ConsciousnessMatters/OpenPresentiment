@@ -30,6 +30,13 @@ function listeners() {
     helpers.addAtemporalEventListener('click', clearTrials).querySelector(clearTrialsButtonSelector);
     helpers.addAtemporalEventListener('click', showAverages).querySelector(loadAveragesButtonSelector);
     helpers.addAtemporalEventListener('click', clearAverages).querySelector(clearAveragesButtonSelector);
+    document.querySelector('.experiment-listing').addEventListener('mouseenter', () => {
+        document.body.classList.add('scroll-lock');
+    });
+    document.querySelector('.experiment-listing').addEventListener('mouseleave', () => {
+        document.body.classList.remove('scroll-lock');
+    });
+    document.body.addEventListener('scroll', scrollHandler);
 }
 
 function drawEmtpyGraph() {
@@ -220,6 +227,10 @@ function drawGraphs() {
     // peacefulAverage.colour('#ff00ff');
     //
     // graph.drawPlot(peacefulAverage, yMinMax);
+}
+
+function scrollHandler(event) {
+    debugger;
 }
 
 function dataLoadFailed() {

@@ -31,12 +31,29 @@ section.controls {
 }
 
 .experiment-listing {
-  width: 940px;
+  width: 980px;
   max-height: calc(100vh - 118px);
   box-sizing: border-box;
   overflow-y: scroll;
   margin: 0 50px;
-  padding: 40px 0 142px;
+  padding: 40px 40px 142px 0;
+
+  //scrollbar-width: thin;
+  //scrollbar-color: black transparent;
+  //
+  //&::-webkit-scrollbar {
+  //  width: 8px;
+  //}
+  //
+  //&::-webkit-scrollbar-track {
+  //  padding: 200px 0;
+  //  background: transparent;
+  //}
+  //
+  //&::-webkit-scrollbar-thumb {
+  //  background-color: black;
+  //  border-radius: 20px;
+  //}
 
   ul.experiments {
     padding: 0;

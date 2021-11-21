@@ -1,13 +1,15 @@
 import {Trial} from './Trial';
 import {PlotSet} from './PlotSet';
 import {Plot} from "./Plot";
+import {DataSet} from "./DataSet";
 
-export class Experiment {
+export class Experiment extends DataSet {
     trialData;
 
-    constructor(experimentData, gloabalDatasetRefference) {
+    constructor(experimentData, gloabalDatasetReference) {
+        super();
         this.trialData = [];
-        this.averageData = [];
+        this.averageData = { peaceful: [], emotional: [] };
         this.id = experimentData.id;
         this.op_type_number = experimentData.op_type_number;
         this.subject_user_id = experimentData.subject_user_id;
@@ -15,7 +17,7 @@ export class Experiment {
         this.subject_agreement = experimentData.subject_agreement;
         this.created_at = experimentData.created_at;
         this.updated_at = experimentData.updated_at;
-        this.parentGlobalDataSet = gloabalDatasetRefference;
+        this.parentGlobalDataSet = gloabalDatasetReference;
         this.trialsActive = false;
         this.averageActive = false;
         this.loaded = false; // ToDo: set ths depending on whether it's actually loaded or not.
@@ -43,51 +45,22 @@ export class Experiment {
     }
 
     calculateAverageData() {
-        const interval = 10;
+        // ToDo: MVP1: Finish off function, dependencies and test. TrialSets!!!
+        // TrialSets need completion first before continuing. This means pointers in this file that use static
+        // methods in the TrialSet because an Experiment is basically a TrialSet with extra bits.
 
+        const millisecondsInterval = 10,
+            minMax = this.resolveLowestCommonDenominatorTrialRange();
 
+        this.averageData.peaceful = this.reduceToPeaceful().averageData(minMax, millisecondsInterval);
+        this.averageData.emotional = this.reduceToEmotional().averageData(minMax, millisecondsInterval);
+    }
 
-        // Work out and exclusively use lowest common denominator timespan
-        // Get copy of resampled trials for LCD timespan
-        // Produce average from resample trials
+    resolveLowestCommonDenominatorTrialRange() {
+        // ToDo: MVP1: Write this!
 
-
-
-
-
-        let bucketsPlot = [],
-            averagePlot;
-
-        this.data.forEach((plot) => {
-            let lowestX = this.preZeroTime * -1,
-                highestX = this.postZeroTime;
-
-            for (let t = lowestX; t <= highestX; t = t + interval) {
-                let i = t + indexShift;
-
-                if (bucketsPlot[i] === undefined) {
-                    bucketsPlot[i] = [];
-                }
-
-                let virtualPlot = plot.virtualYfromX(t)
-
-                if (isNaN(virtualPlot)) {
-                    debugger;
-                } else {
-                    bucketsPlot[i].push(virtualPlot);
-                }
-            }
-        });
-
-        averagePlot = bucketsPlot.map((bucket, index) => {
-            let bucketSum = bucket.reduce((p, c) => p + c);
-            return {
-                x: index - indexShift,
-                y: bucketSum / bucket.length,
-            }
-        });
-
-        return new Plot(averagePlot);
+        return {
+        }
     }
 
     load(callback) {
@@ -141,7 +114,7 @@ export class Experiment {
     }
 
     activateAverage() {
-        if (this.averageData.length === 0) {
+        if (this.averageData.peaceful.length === 0 && this.averageData.emotional.length === 0) {
             this.calculateAverageData();
         }
         this.averageActive = true;
@@ -169,6 +142,14 @@ export class Experiment {
                 return idArray.includes(trial.id);
             });
         }
+    }
+
+    reduceToPeaceful() {
+        // ToDo: MVP1: Write this!
+    }
+
+    reduceToEmotional() {
+        // ToDo: MVP1: Write this!
     }
 
     setPeacefulPlotColour(colour) {
@@ -199,6 +180,6 @@ export class Experiment {
     }
 
     averagePlotSet() {
-
+        return new PlotSet([this.averageData.peaceful, this.averageData.emotional]);
     }
 }

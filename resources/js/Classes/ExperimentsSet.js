@@ -84,7 +84,7 @@ export class ExperimentsSet extends DataSet {
         const plotSetData = [];
 
         experimentsArray.forEach((experiment) => {
-            plotSetData.push(experiment.averagePlot());
+            plotSetData.push(experiment.averagePlotSet());
         });
 
         return new PlotSet(plotSetData);
