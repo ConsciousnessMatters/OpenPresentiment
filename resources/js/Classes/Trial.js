@@ -130,7 +130,8 @@ export class Trial {
         if (hitActual.length === 1) {
             return hitActual[0].microVolts;
         } else if (hitActual.length > 1) {
-            throw new Error('Duplicate data detected.');
+            console.error('Duplicate data detected.');
+            return hitActual[0].microVolts;
         }
 
         const previousNeighbour = this.previousDatapoint(experimentalTime),
