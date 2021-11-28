@@ -71,10 +71,45 @@ function twoDimensionalMinMx(objectArray, propertyX, propertyY) {
     }
 }
 
+function roundUpToInterval(value, interval) {
+    return Math.ceil(value / interval) * interval;
+}
+
+function roundDownToInterval(value, interval) {
+    return Math.floor(value / interval) * interval;
+}
+
+function getVirtualYFromX({x1, y1, x2, y2, xV}) {
+    if (x1 === xV) {
+        debugger;
+        return y1;
+    }
+
+    if (x2 === xV) {
+        debugger;
+        return y2;
+    }
+
+    const xScale = x2 - x1,
+        xVScale = xV - x1,
+        scalingFactor = xVScale / xScale,
+        yScale = y2 - y1,
+        yVScale = yScale * scalingFactor;
+
+    if (isNaN(yVScale + y1)) {
+        debugger;
+    }
+
+    return yVScale + y1;
+}
+
 export const helpers = {
     initiate,
     addAtemporalEventListener,
     ajaxForm,
     ajaxGet,
     twoDimensionalMinMx,
+    roundUpToInterval,
+    roundDownToInterval,
+    getVirtualYFromX,
 };

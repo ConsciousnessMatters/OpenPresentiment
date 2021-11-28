@@ -13,6 +13,10 @@ export class Plot {
         return this.plotData;
     }
 
+    get hasData() {
+        return this.plotData.length > 0;
+    }
+
     index(index, setValue = null) {
         if (setValue === null) {
             return this.plotData[index];
@@ -44,7 +48,7 @@ export class Plot {
     virtualYfromX(x) {
         let belowX = null,
             aboveX = null,
-            xScale, xfloor, xVirtualPosition, scaleProportion, yScale, yfloor, yVirtualPosition, y;
+            xScale, xFloor, xVirtualPosition, scaleProportion, yScale, yFloor, yVirtualPosition, y;
 
         this.plotData.forEach((datapoint) => {
             if (belowX === null) {
@@ -63,13 +67,13 @@ export class Plot {
         if (aboveX !== null && belowX !== null) {
             xScale = aboveX.x - belowX.x;
 
-            xfloor = belowX.x;
-            xVirtualPosition = x - xfloor;
+            xFloor = belowX.x;
+            xVirtualPosition = x - xFloor;
             scaleProportion = (xScale === 0) ? 0 : xVirtualPosition / xScale;
             yScale = aboveX.y - belowX.y;
-            yfloor = belowX.y;
+            yFloor = belowX.y;
             yVirtualPosition = yScale * scaleProportion;
-            y = yfloor + yVirtualPosition;
+            y = yFloor + yVirtualPosition;
 
             if (y === Infinity) {
                 debugger;
@@ -80,7 +84,7 @@ export class Plot {
     }
 
     lowestValues() {
-        let lowestValues =  this.plotData.reduce((previous, current) => {
+        let lowestValues = this.plotData.reduce((previous, current) => {
             return {
                 x: (previous.x < current.x) ? previous.x : current.x,
                 y: (previous.y < current.y) ? previous.y : current.y,

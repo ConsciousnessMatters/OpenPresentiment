@@ -1,73 +1,62 @@
-import {DataSet} from "./DataSet";
 import {PlotSet} from "./PlotSet";
 
-export class ExperimentsSet extends DataSet {
-    static experiment(experimentsArray, id) {
-        return experimentsArray.filter((experiment) => {
+export class ExperimentsSet {
+    constructor(experimentsArray = null) {
+        if (experimentsArray !== null) {
+            this.privateData = experimentsArray;
+        }
+    }
+
+    forEach(callback, thisArg) {
+        return this.privateData.forEach(callback, thisArg);
+    }
+
+    experiment(id) {
+        return this.privateData.filter((experiment) => {
             return experiment.id === id;
         })[0];
     }
 
-    experiment(id) {
-        return ExperimentsSet.experiment(this.privateData, id);
-    }
-
-    static experiments(experimentsArray, idArray = null) {
+    experiments(idArray = null) {
         if (idArray === null) {
-            return new ExperimentsSet(experimentsArray);
+            return new ExperimentsSet(this.privateData);
         } else {
             return new ExperimentsSet(
-                experimentsArray.filter((experiment) => {
+                this.privateData.filter((experiment) => {
                     return idArray.includes(experiment.id);
                 })
             );
         }
     }
 
-    experiments(idArray = null) {
-        return ExperimentsSet.experiments(this.privateData, idArray);
-    }
-
-    static reduceToLoaded(experimentsArray) {
+    reduceToLoaded() {
         return new ExperimentsSet(
-            experimentsArray.filter((experiment) => {
+            this.privateData.filter((experiment) => {
                 return experiment.loaded === true;
             })
         );
     }
 
-    reduceToLoaded() {
-        return ExperimentsSet.reduceToLoaded(this.privateData);
-    }
-
-    static reduceToActiveTrials(experimentsArray) {
+    reduceToActiveTrials() {
         return new ExperimentsSet(
-            experimentsArray.filter((experiment) => {
+            this.privateData.filter((experiment) => {
                 return experiment.trialsActive === true;
             })
         );
     }
 
-    reduceToActiveTrials() {
-        return ExperimentsSet.reduceToActiveTrials(this.privateData);
-    }
-
-    static reduceToActiveAverages(experimentsArray) {
+    reduceToActiveAverages() {
         return new ExperimentsSet(
-            experimentsArray.filter((experiment) => {
+            this.privateData.filter((experiment) => {
                 return experiment.averageActive === true;
             })
         );
     }
 
-    reduceToActiveAverages() {
-        return ExperimentsSet.reduceToActiveAverages(this.privateData);
-    }
-
-    static plotSet(experimentsArray) {
+    plotSet() {
         const plotSetData = [];
 
-        experimentsArray.forEach((experiment) => {
+        this.privateData.forEach((experiment) => {
             experiment.trials().forEach((trial) => {
                 plotSetData.push(trial.plot());
             });
@@ -76,21 +65,13 @@ export class ExperimentsSet extends DataSet {
         return new PlotSet(plotSetData);
     }
 
-    plotSet() {
-        return ExperimentsSet.plotSet(this.privateData);
-    }
-
-    static averagePlotSet(experimentsArray) {
+    averagePlotSet() {
         const plotSetData = [];
 
-        experimentsArray.forEach((experiment) => {
-            plotSetData.push(experiment.averagePlotSet());
+        this.privateData.forEach((experiment) => {
+            plotSetData.push(...experiment.averagePlotSet().data);
         });
 
         return new PlotSet(plotSetData);
-    }
-
-    averagePlotSet() {
-        return ExperimentsSet.averagePlotSet(this.privateData);
     }
 }

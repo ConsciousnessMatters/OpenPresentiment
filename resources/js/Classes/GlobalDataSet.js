@@ -1,8 +1,7 @@
 import {Experiment} from './Experiment';
 import {ExperimentsSet} from "./ExperimentsSet";
-import {DataSet} from "./DataSet";
 
-export class GlobalDataSet extends DataSet {
+export class GlobalDataSet extends ExperimentsSet {
     constructor(jsonDataFromServer) {
         super();
         this.privateData = jsonDataFromServer.experimentalData.map((experimentData) => {
@@ -10,23 +9,7 @@ export class GlobalDataSet extends DataSet {
         });
     }
 
-    experiment(id) {
-        return ExperimentsSet.experiment(this.data, id);
-    }
-
-    experiments(idArray = null) {
-        return ExperimentsSet.experiments(this.data, idArray);
-    }
-
-    reduceToLoaded() {
-        return ExperimentsSet.reduceToLoaded(this.data);
-    }
-
     get data() {
         return this.privateData;
-    }
-
-    plotSet() {
-        return ExperimentsSet.plotSet(this.data);
     }
 }

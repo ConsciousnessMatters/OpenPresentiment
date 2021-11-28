@@ -120,14 +120,67 @@ export class Trial {
         return isNaN(lineElement) ? lineElement : number;
     }
 
-    plot() {
-        const plotData = this.gsrData.map((datapoint) => {
-            return {
-                x: datapoint.experimentalTime,
-                y: (datapoint.microVolts / 1000),
+    minMaxData() {
+        return helpers.twoDimensionalMinMx(this.gsrData, 'experimentalTime', 'microVolts');
+    }
+
+    virtualMicroVoltsAtExperimentalTime(experimentalTime) {
+        const hitActual = this.gsrData.filter((datapoint) => datapoint.experimentalTime === experimentalTime);
+
+        if (hitActual.length === 1) {
+            return hitActual[0].microVolts;
+        } else if (hitActual.length > 1) {
+            throw new Error('Duplicate data detected.');
+        }
+
+        const previousNeighbour = this.previousDatapoint(experimentalTime),
+            nextNeighbour = this.nextDatapoint(experimentalTime);
+
+        return helpers.getVirtualYFromX({
+            x1: previousNeighbour.experimentalTime,
+            y1: previousNeighbour.microVolts,
+            x2: nextNeighbour.experimentalTime,
+            y2: nextNeighbour.microVolts,
+            xV: experimentalTime,
+        });
+    }
+
+    previousDatapoint(experimentalTime) {
+        let closestMatch = null;
+
+        this.gsrData.forEach((datapoint) => {
+            const datapointBeforeTime = datapoint.experimentalTime < experimentalTime;
+
+            if (datapointBeforeTime && (closestMatch === null || datapoint.experimentalTime > closestMatch.experimentalTime)) {
+                closestMatch = datapoint;
             }
         });
 
-        return new Plot(plotData, this.eventData);
+        return closestMatch;
+    }
+
+    nextDatapoint(experimentalTime) {
+        let closestMatch = null;
+
+        this.gsrData.forEach((datapoint) => {
+            const datapointAfterTime = datapoint.experimentalTime > experimentalTime;
+
+            if (datapointAfterTime && (closestMatch === null || datapoint.experimentalTime < closestMatch.experimentalTime)) {
+                closestMatch = datapoint;
+            }
+        });
+
+        return closestMatch;
+    }
+
+    plot() {
+        return new Plot(this.gsrData.map(Trial.trialDataToPlotData), this.eventData);
+    }
+
+    static trialDataToPlotData(datapoint) {
+        return {
+            x: datapoint.experimentalTime,
+            y: (datapoint.microVolts / 1000),
+        }
     }
 }

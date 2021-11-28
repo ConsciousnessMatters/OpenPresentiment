@@ -448,12 +448,12 @@ body.mylab.data-analysis .experiment-listing ul.experiments > li:not(.template-i
   display: flex;
   flex-direction: column;
   width: 100%;
-  justify-content: end;
+  justify-content: center;
 }
 body.mylab.data-analysis .experiment-listing ul.experiments > li:not(.template-item) .controls button {
   margin-bottom: 9px;
 }
-body.mylab.data-analysis .experiment-listing ul.experiments > li:not(.template-item) .controls button:last-child {
+body.mylab.data-analysis .experiment-listing ul.experiments > li:not(.template-item) .controls button:nth-child(3), body.mylab.data-analysis .experiment-listing ul.experiments > li:not(.template-item) .controls button:nth-child(4) {
   margin-bottom: 0;
 }
 body.mylab.data-analysis .experiment-listing ul.experiments ul {

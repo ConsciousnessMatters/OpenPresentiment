@@ -1,15 +1,11 @@
 import {Trial} from './Trial';
+import {TrialSet} from './TrialSet';
 import {PlotSet} from './PlotSet';
-import {Plot} from "./Plot";
-import {DataSet} from "./DataSet";
+import {Plot} from './Plot';
 
-export class Experiment extends DataSet {
-    trialData;
-
+export class Experiment extends TrialSet {
     constructor(experimentData, gloabalDatasetReference) {
         super();
-        this.trialData = [];
-        this.averageData = { peaceful: [], emotional: [] };
         this.id = experimentData.id;
         this.op_type_number = experimentData.op_type_number;
         this.subject_user_id = experimentData.subject_user_id;
@@ -50,16 +46,23 @@ export class Experiment extends DataSet {
         // methods in the TrialSet because an Experiment is basically a TrialSet with extra bits.
 
         const millisecondsInterval = 10,
-            minMax = this.resolveLowestCommonDenominatorTrialRange();
+            minMax = this.resolveLowestCommonDenominatorTrialTimes();
 
-        this.averageData.peaceful = this.reduceToPeaceful().averageData(minMax, millisecondsInterval);
-        this.averageData.emotional = this.reduceToEmotional().averageData(minMax, millisecondsInterval);
+        this.averageData.peaceful = this.reduceToPeaceful().calculateAverageData(minMax, millisecondsInterval) ?? [];
+        this.averageData.emotional = this.reduceToEmotional().calculateAverageData(minMax, millisecondsInterval) ?? [];
     }
 
-    resolveLowestCommonDenominatorTrialRange() {
-        // ToDo: MVP1: Write this!
+    resolveLowestCommonDenominatorTrialTimes() {
+        const minMaxData = this.trialData.map((trial) => {
+            return trial.minMaxData();
+        });
+
+        const minimums = minMaxData.map((minMax) => minMax.min.experimentalTime),
+            maximums = minMaxData.map((minMax) => minMax.max.experimentalTime);
 
         return {
+            highestMin: Math.max(...minimums),
+            lowestMax: Math.min(...maximums),
         }
     }
 
@@ -128,30 +131,6 @@ export class Experiment extends DataSet {
         return this.trialData;
     }
 
-    trial(id) {
-        return this.trialData.filter((trial) => {
-            return trial.id === id;
-        })[0];
-    }
-
-    trials(idArray = null) {
-        if (idArray === null) {
-            return this.trialData;
-        } else {
-            return this.trialData.filter((trial) => {
-                return idArray.includes(trial.id);
-            });
-        }
-    }
-
-    reduceToPeaceful() {
-        // ToDo: MVP1: Write this!
-    }
-
-    reduceToEmotional() {
-        // ToDo: MVP1: Write this!
-    }
-
     setPeacefulPlotColour(colour) {
         this.peacefulPlotColour = colour;
     }
@@ -180,6 +159,21 @@ export class Experiment extends DataSet {
     }
 
     averagePlotSet() {
-        return new PlotSet([this.averageData.peaceful, this.averageData.emotional]);
+        const peacefulPlot = new Plot(this.averageData.peaceful.map(Trial.trialDataToPlotData)),
+            emotionalPlot = new Plot(this.averageData.emotional.map(Trial.trialDataToPlotData)),
+            plots = [];
+
+        peacefulPlot.colour(this.peacefulPlotColour);
+        emotionalPlot.colour(this.emotionalPlotColour);
+
+        if (peacefulPlot.hasData) {
+            plots.push(peacefulPlot);
+        }
+
+        if (emotionalPlot.hasData) {
+            plots.push(emotionalPlot);
+        }
+
+        return new PlotSet(plots);
     }
 }
