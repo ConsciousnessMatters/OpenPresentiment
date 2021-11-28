@@ -163,6 +163,10 @@ export class Plot {
     }
 
     yMinMax() {
+        if (this.plotData.length === 0) {
+            return false;
+        }
+
         const minMax = helpers.twoDimensionalMinMx(this.plotData, 'x', 'y');
 
         return {

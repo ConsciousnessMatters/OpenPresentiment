@@ -1,4 +1,5 @@
 import {GlobalDataSet} from "./Classes/GlobalDataSet";
+import {PlotSet} from "./Classes/PlotSet";
 
 const
     experimentListItemIdAttribute = 'data-experiment-id',
@@ -167,7 +168,8 @@ function drawGraphs() {
 
     plots = internalState.globalDataSet.experiments().reduceToActiveTrials().plotSet().trimPlotTime().setStartingYToZero();
     averagePlots = internalState.globalDataSet.experiments().reduceToActiveAverages().averagePlotSet().trimPlotTime().setStartingYToZero();
-    yMinMax = plots.yMinMax();
+
+    yMinMax = PlotSet.yMinMax([plots.yMinMax(), averagePlots.yMinMax()]);
 
     internalState.globalDataSet.experiments().reduceToActiveTrials().forEach((experiment) => {
         experiment.setPeacefulPlotColour('#ff00ff');
@@ -188,7 +190,7 @@ function drawGraphs() {
         experiment.averagePlotSet().forEach((averagePlot) => {
             averagePlot.trimPlotTime().setStartingYToZero();
 
-            graph.drawPlot(averagePlot, yMinMax, 0.33);
+            graph.drawPlot(averagePlot, yMinMax, 1);
             plotDrawn = true;
         });
     });

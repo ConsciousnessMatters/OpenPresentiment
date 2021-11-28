@@ -106,17 +106,24 @@ export class PlotSet {
     }
 
     yMinMax() {
+        const plotMinMaxes = this.data.map((plot) => plot.yMinMax())
+
+        return PlotSet.yMinMax(plotMinMaxes);
+    }
+
+    static yMinMax(plotMinMaxes) {
+        // ToDo: There were issues using rest parameters here e.g. yMinMax(...plotMinMaxes), could do with investigation.
+
         let min = null,
             max = null;
 
-        this.data.forEach((plot) => {
-            const yMinMaxes = plot.yMinMax();
+        plotMinMaxes.forEach((yMinMaxes) => {
 
-            if (yMinMaxes.yMin < min || min === null) {
+            if (yMinMaxes && yMinMaxes.yMin < min || min === null) {
                 min = yMinMaxes.yMin;
             }
 
-            if (yMinMaxes.yMax > max || max === null) {
+            if (yMinMaxes && yMinMaxes.yMax > max || max === null) {
                 max = yMinMaxes.yMax;
             }
         });

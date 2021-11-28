@@ -68,7 +68,6 @@ export class Experiment extends TrialSet {
 
     load(callback) {
         if (this.loaded) {
-            this.trialsActive = true;
             this.dataLoaded(false, callback);
         } else {
             helpers.ajaxGet(`/mylab/experiment/presentiment/1&2/get-experiment/${this.id}`, (data) => {
