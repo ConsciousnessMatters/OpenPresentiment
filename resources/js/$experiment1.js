@@ -265,6 +265,17 @@ function getImagePairUrls() {
 }
 
 function loadImagePair(response) {
+    /*
+     * ToDo: Implement better image load.
+     *
+     * 1. Implement canvas compatible web worker.
+     * 2. Establish postMessaging.
+     * 3. Get worker to load images.
+     * 4. getImageData() on those canvases.
+     * 5. At crunchtime, putImgeDate() on to main canvas.
+     * 6. Check to see if that helps.
+     */
+
     let returnData = JSON.parse(response);
 
     emotionalImage = new Image();
