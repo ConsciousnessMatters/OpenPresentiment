@@ -16,6 +16,7 @@ export class Experiment extends TrialSet {
         this.parentGlobalDataSet = gloabalDatasetReference;
         this.trialsActive = false;
         this.averageActive = false;
+        this.timeJitterActive = false;
         this.loaded = false; // ToDo: set ths depending on whether it's actually loaded or not.
         this.onload = () => {};
         this.ingestTrialData(experimentData.trials);
@@ -126,6 +127,14 @@ export class Experiment extends TrialSet {
         this.averageActive = false;
     }
 
+    activateTimeJitter() {
+        this.timeJitterActive = true;
+    }
+
+    deactivateTimeJitter() {
+        this.timeJitterActive = false;
+    }
+
     get data() {
         return this.trialData;
     }
@@ -174,5 +183,24 @@ export class Experiment extends TrialSet {
         }
 
         return new PlotSet(plots);
+    }
+
+    timeJitterPlotSet() {
+        return new PlotSet(this.data.map((trial) => {
+            const plot = trial.timeJitterPlot();
+
+            switch (trial.image.type.name) {
+                case 'Peaceful':
+                    plot.colour(this.peacefulPlotColour);
+                    break;
+                case 'Emotional':
+                    plot.colour(this.emotionalPlotColour);
+                    break;
+                default:
+                    debugger;
+            }
+
+            return plot;
+        }));
     }
 }

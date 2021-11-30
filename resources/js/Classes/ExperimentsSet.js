@@ -53,6 +53,14 @@ export class ExperimentsSet {
         );
     }
 
+    reduceToActiveTimeJitter() {
+        return new ExperimentsSet(
+            this.privateData.filter((experiment) => {
+                return experiment.timeJitterActive === true;
+            })
+        );
+    }
+
     plotSet() {
         const plotSetData = [];
 
@@ -70,6 +78,16 @@ export class ExperimentsSet {
 
         this.privateData.forEach((experiment) => {
             plotSetData.push(...experiment.averagePlotSet().data);
+        });
+
+        return new PlotSet(plotSetData);
+    }
+
+    timeJitterPlotSet() {
+        const plotSetData = [];
+
+        this.privateData.forEach((experiment) => {
+            plotSetData.push(...experiment.timeJitterPlotSet().data);
         });
 
         return new PlotSet(plotSetData);

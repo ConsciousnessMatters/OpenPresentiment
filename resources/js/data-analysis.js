@@ -7,7 +7,9 @@ const
     showTrialsButtonSelector = '[data-load-experiment] button.show-trials',
     clearTrialsButtonSelector = '[data-load-experiment] button.remove-trials',
     loadAveragesButtonSelector = '[data-load-experiment] button.show-averages',
-    clearAveragesButtonSelector = '[data-load-experiment] button.remove-averages';
+    clearAveragesButtonSelector = '[data-load-experiment] button.remove-averages',
+    loadTimeHJitterButtonSelector = '[data-load-experiment] button.show-time-jitter',
+    clearTimeHJitterButtonSelector = '[data-load-experiment] button.remove-time-jitter';
 
 let internalState = {
     globalDataSet: null,
@@ -31,6 +33,8 @@ function listeners() {
     helpers.addAtemporalEventListener('click', clearTrials).querySelector(clearTrialsButtonSelector);
     helpers.addAtemporalEventListener('click', showAverages).querySelector(loadAveragesButtonSelector);
     helpers.addAtemporalEventListener('click', clearAverages).querySelector(clearAveragesButtonSelector);
+    helpers.addAtemporalEventListener('click', showTimeJitter).querySelector(loadTimeHJitterButtonSelector);
+    helpers.addAtemporalEventListener('click', clearTimeJitter).querySelector(clearTimeHJitterButtonSelector);
     document.querySelector('.experiment-listing').addEventListener('mouseenter', () => {
         document.body.classList.add('scroll-lock');
     });
@@ -58,10 +62,15 @@ function getExperimentFromEvent(event) {
         clearTrialsButton = listItem.querySelector(clearTrialsButtonSelector),
         showAveragesButton = listItem.querySelector(loadAveragesButtonSelector),
         clearAveragesButton = listItem.querySelector(clearAveragesButtonSelector),
+        showTimeJitterButton = listItem.querySelector(loadTimeHJitterButtonSelector),
+        clearTimeJitterButton = listItem.querySelector(clearTimeHJitterButtonSelector),
         id = parseInt(listItem.getAttribute(experimentListItemIdAttribute), 10),
         experiment = internalState.globalDataSet.experiment(id);
 
-    return { showTrialsButton, clearTrialsButton, showAveragesButton, clearAveragesButton, id, experiment };
+    return {
+        showTrialsButton, clearTrialsButton, showAveragesButton, clearAveragesButton, showTimeJitterButton,
+        clearTimeJitterButton, id, experiment
+    };
 }
 
 function buttonTogglesShowing(showButton, clearButton) {
@@ -131,6 +140,39 @@ function clearAverages() {
     drawGraphs();
 }
 
+function showTimeJitter() {
+    // ToDo: Handle request when globalDataSet is not loaded.
+    // ToDo: Code getting a bit wet, needs to be more DRY.
+
+    const { showTimeJitterButton, clearTimeJitterButton, experiment } = getExperimentFromEvent(event);
+
+    if (showTimeJitterButton.hasAttribute('disabled')) {
+        return;
+    }
+
+    showTimeJitterButton.classList.add('loading');
+    showTimeJitterButton.setAttribute('disabled', null);
+
+    experiment.onload = (data) => {
+        buttonTogglesShowing(showTimeJitterButton, clearTimeJitterButton);
+        experiment.activateTimeJitter();
+        experimentLoaded(data);
+    }
+    experiment.load();
+}
+
+function clearTimeJitter() {
+    // ToDo: Code getting a bit wet, needs to be more DRY.
+
+    const { showTimeJitterButton, clearTimeJitterButton, experiment } = getExperimentFromEvent(event);
+
+    experiment.deactivateTimeJitter();
+    showTimeJitterButton.classList.remove('hidden');
+    clearTimeJitterButton.classList.add('hidden');
+
+    drawGraphs();
+}
+
 function glboalDataSetSkeletonLoaded(data) {
     internalState.globalDataSet = new GlobalDataSet(data);
     populateList();
@@ -161,15 +203,16 @@ function populateList() {
 }
 
 function drawGraphs() {
-    let plots, averagePlots, yMinMax,
+    let plots, averagePlots, timeJitterPlots, yMinMax,
         plotDrawn = false;
 
     graph.clearCanvas();
 
     plots = internalState.globalDataSet.experiments().reduceToActiveTrials().plotSet().trimPlotTime().setStartingYToZero();
     averagePlots = internalState.globalDataSet.experiments().reduceToActiveAverages().averagePlotSet().trimPlotTime().setStartingYToZero();
+    timeJitterPlots = internalState.globalDataSet.experiments().reduceToActiveTimeJitter().timeJitterPlotSet().trimPlotTime().setStartingYToZero();
 
-    yMinMax = PlotSet.yMinMax([plots.yMinMax(), averagePlots.yMinMax()]);
+    yMinMax = PlotSet.yMinMax([plots.yMinMax(), averagePlots.yMinMax(), timeJitterPlots.yMinMax()]);
 
     internalState.globalDataSet.experiments().reduceToActiveTrials().forEach((experiment) => {
         experiment.setPeacefulPlotColour('#ff00ff');
@@ -191,6 +234,18 @@ function drawGraphs() {
             averagePlot.trimPlotTime().setStartingYToZero();
 
             graph.drawPlot(averagePlot, yMinMax, 1);
+            plotDrawn = true;
+        });
+    });
+
+    internalState.globalDataSet.experiments().reduceToActiveTimeJitter().forEach((experiment) => {
+        experiment.setPeacefulPlotColour('#FFFF00');
+        experiment.setEmotionalPlotColour('#FFFF00');
+
+        experiment.timeJitterPlotSet().forEach((timeJitterPlot) => {
+            timeJitterPlot.trimPlotTime().setStartingYToZero();
+
+            graph.drawPlot(timeJitterPlot, yMinMax, 1);
             plotDrawn = true;
         });
     });

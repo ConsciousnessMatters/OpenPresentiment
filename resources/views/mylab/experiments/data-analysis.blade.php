@@ -30,6 +30,8 @@
                         <button class="remove-trials hidden">Remove Trials From Graph</button>
                         <button class="show-averages">Show Averages On Graph</button>
                         <button class="remove-averages hidden">Remove Averages From Graph</button>
+                        <button class="show-time-jitter">Show Time Jitter On Graph</button>
+                        <button class="remove-time-jitter hidden">Remove Time Jitter From Graph</button>
                     </div>
                 </li>
             </ul>

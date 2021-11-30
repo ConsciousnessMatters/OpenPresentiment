@@ -30,6 +30,7 @@ export class Trial {
     updateData(trialData) {
         this.ingestGsrData(trialData);
         this.addExperimentalTime();
+        this.addTimingDriftAnalysisData();
         this.removeDuplicatedGsrDatapoints();
 
         return this;
@@ -72,27 +73,46 @@ export class Trial {
     }
 
     addExperimentalTime() {
-        this.gsrData = this.gsrData.map((datapoint) => {
-            let timeZeroEvent = this.eventData.filter((event) => event.part == 3)[0],
-                timeZero = timeZeroEvent.jsTime;
+        const firstDataPoint = this.gsrData[0] ?? null;
 
-            return {
-                ...datapoint,
-                experimentalTime: datapoint.jsTime - timeZero
-            };
-        });
+        if (firstDataPoint) {
+            const timeZeroEvent = this.eventData.filter((event) => event.part == 3)[0],
+                timeZero = timeZeroEvent.jsTime,
+                mcJsOffset = firstDataPoint.jsTime - firstDataPoint.mcTime;
 
-        this.eventData = this.eventData.map((datapoint) => {
-            let timeZeroEvent = this.eventData.filter((event) => event.part == 3)[0],
-                timeZero = timeZeroEvent.jsTime;
+            this.gsrData = this.gsrData.map((datapoint) => {
+                return {
+                    ...datapoint,
+                    experimentalTime: datapoint.mcTime + mcJsOffset - timeZero
+                };
+            });
 
-            return {
-                ...datapoint,
-                experimentalTime: datapoint.jsTime - timeZero
-            };
-        });
+            this.eventData = this.eventData.map((datapoint) => {
+                return {
+                    ...datapoint,
+                    experimentalTime: datapoint.jsTime - timeZero
+                };
+            });
+        }
 
         return this;
+    }
+
+    addTimingDriftAnalysisData() {
+        const firstDataPoint = this.gsrData[0] ?? null;
+
+        const timeZeroEvent = this.eventData.filter((event) => event.part == 3)[0],
+            timeZero = timeZeroEvent.jsTime,
+            mcJsOffset = firstDataPoint.jsTime - firstDataPoint.mcTime;
+
+        this.gsrData = this.gsrData.map((datapoint) => {
+            const virtualMcTime = datapoint.mcTime + mcJsOffset;
+
+            return {
+                ...datapoint,
+                jsTimingDrift: virtualMcTime - datapoint.jsTime,
+            };
+        });
     }
 
     removeDuplicatedGsrDatapoints() {
@@ -178,10 +198,21 @@ export class Trial {
         return new Plot(this.gsrData.map(Trial.trialDataToPlotData), this.eventData);
     }
 
+    timeJitterPlot() {
+        return new Plot(this.gsrData.map(Trial.trialDataToTimeJitterPlotData), this.eventData);
+    }
+
     static trialDataToPlotData(datapoint) {
         return {
             x: datapoint.experimentalTime,
             y: (datapoint.microVolts / 1000),
+        }
+    }
+
+    static trialDataToTimeJitterPlotData(datapoint) {
+        return {
+            x: datapoint.experimentalTime,
+            y: datapoint.jsTimingDrift,
         }
     }
 }

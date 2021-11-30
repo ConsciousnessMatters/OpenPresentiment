@@ -81,7 +81,7 @@ section.controls {
         button {
           margin-bottom: 9px;
 
-          &:nth-child(3), &:nth-child(4) {
+          &:nth-last-child(2), &:nth-last-child(1) {
             margin-bottom: 0;
           }
         }

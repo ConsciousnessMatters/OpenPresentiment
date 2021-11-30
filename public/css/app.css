@@ -453,7 +453,7 @@ body.mylab.data-analysis .experiment-listing ul.experiments > li:not(.template-i
 body.mylab.data-analysis .experiment-listing ul.experiments > li:not(.template-item) .controls button {
   margin-bottom: 9px;
 }
-body.mylab.data-analysis .experiment-listing ul.experiments > li:not(.template-item) .controls button:nth-child(3), body.mylab.data-analysis .experiment-listing ul.experiments > li:not(.template-item) .controls button:nth-child(4) {
+body.mylab.data-analysis .experiment-listing ul.experiments > li:not(.template-item) .controls button:nth-last-child(2), body.mylab.data-analysis .experiment-listing ul.experiments > li:not(.template-item) .controls button:nth-last-child(1) {
   margin-bottom: 0;
 }
 body.mylab.data-analysis .experiment-listing ul.experiments ul {
