@@ -1,7 +1,7 @@
 <x-guest-layout bodyClass="{{ $bodyClass }}">
     <header>
         <h1>Open<em>Presentiment</em></h1>
-        <div class="version">0.9 alpha</div>
+        <div class="version">0.10 alpha</div>
     </header>
     <div class="options">
         @auth
