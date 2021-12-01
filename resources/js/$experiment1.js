@@ -3,7 +3,8 @@ const trialTimeSetting = -7000,
     totalTrialsControl = 10,
     timerFontsize = '128px',
     scaleFactor = window.devicePixelRatio || 1,
-    canvasSelector = 'canvas#experimental-core';
+    canvasSelector = 'canvas#experimental-core',
+    canvasWorker = new Worker('/js/offscreen-canvas-worker.js');
 
 let intervalTimer = null,
     trialTime,
@@ -12,20 +13,17 @@ let intervalTimer = null,
     gsrData = [],
     eventData = [],
     setupTrialTriggered = false,
-    emotionalImage,
-    peacefulImage,
     emotionalImageId,
     peacefulImageId,
-    eCC,
+    eNCC,
     chosenImageId = null,
     subjectUserId = null,
     subjectAgreement = null,
     controlMode,
     totalTrials,
-    navigationOveride = true,
+    navigationOverride = true,
     controlNumber = '',
     experimentId = '',
-    imageLoadEventHandlersRegistered = false,
     serialDataLoggingTriggered = false;
 
 function initiate() {
@@ -46,7 +44,7 @@ function setupPartNavigation() {
     $experimentPartMap.on('click.e6', function() {
         const $mainParent = $(this).parents('main');
 
-        if ((! $(this).hasClass('not-yet')) || navigationOveride) {
+        if ((! $(this).hasClass('not-yet')) || navigationOverride) {
             $mainParent.removeClass(availableParts.join(' '));
             availableParts.forEach((availablePart) => {
                 if ($(this).hasClass(availablePart)) {
@@ -264,41 +262,24 @@ function getImagePairUrls() {
     xhr.send();
 }
 
-function loadImagePair(response) {
-    /*
-     * ToDo: Implement better image load.
-     *
-     * 1. Implement canvas compatible web worker.
-     * 2. Establish postMessaging.
-     * 3. Get worker to load images.
-     * 4. getImageData() on those canvases.
-     * 5. At crunchtime, putImgeDate() on to main canvas.
-     * 6. Check to see if that helps.
-     */
-
-    let returnData = JSON.parse(response);
-
-    emotionalImage = new Image();
-    peacefulImage = new Image();
-    emotionalImage.src = returnData.emotionalImageUrl;
-    peacefulImage.src = returnData.peacefulImageUrl;
-    emotionalImageId = returnData.emotionalImageId;
-    peacefulImageId = returnData.peacefulImageId;
-    if (! imageLoadEventHandlersRegistered) {
-        emotionalImage.onload = () => {
-            preDrawImageOnCanvas(emotionalImage)
-            console.debug('Loaded emotional image');
-        };
-        peacefulImage.onload = () => {
-            preDrawImageOnCanvas(peacefulImage)
-            console.debug('Loaded peaceful image');
-        };
-        imageLoadEventHandlersRegistered = true;
-    }
-}
-
 function setupCanvas() {
-    eCC = document.querySelector(canvasSelector).getContext('2d');
+    // ToDo: Looks interesting as to how we dynamically resize the offscreen canvas, but not strictly MVP I don't think.
+
+    eNCC = document.querySelector(canvasSelector).getContext('2d');
+
+    const offScreenCanvasOne = new OffscreenCanvas(eNCC.canvas.scrollWidth * scaleFactor, eNCC.canvas.scrollHeight * scaleFactor),
+        offScreenCanvasTwo = new OffscreenCanvas(eNCC.canvas.scrollWidth * scaleFactor, eNCC.canvas.scrollHeight * scaleFactor);
+
+    canvasWorker.postMessage(
+        { instruction: 'initialise', canvasOne: offScreenCanvasOne, canvasTwo: offScreenCanvasTwo },
+        [offScreenCanvasOne, offScreenCanvasTwo]
+    );
+    canvasWorker.addEventListener('message', function(event) {
+        if (event.data.instruction === 'render') {
+            eNCC.drawImage(event.data.bitmap, 0, 0);
+        }
+    });
+
     window.addEventListener('resize', () => {
         resizeCanvas();
     });
@@ -306,8 +287,23 @@ function setupCanvas() {
 }
 
 function resizeCanvas() {
-    eCC.canvas.width = eCC.canvas.scrollWidth * scaleFactor;
-    eCC.canvas.height = eCC.canvas.scrollHeight * scaleFactor;
+    eNCC.canvas.width = eNCC.canvas.scrollWidth * scaleFactor;
+    eNCC.canvas.height = eNCC.canvas.scrollHeight * scaleFactor;
+}
+
+function loadImagePair(response) {
+    let returnData = JSON.parse(response);
+
+    emotionalImageId = returnData.emotionalImageId;
+    peacefulImageId = returnData.peacefulImageId;
+
+    canvasWorker.postMessage(
+        {
+            instruction: 'loadImages',
+            emotionalImageURL: returnData.emotionalImageUrl,
+            peacefulImageURL: returnData.peacefulImageUrl,
+        }
+    );
 }
 
 function stepPhase2() {
@@ -320,10 +316,10 @@ function initiatePhase3() {
     logEvent(`P3-T${trials + 1}`);
 
     if (theRandomDecision == 0) {
-        drawImageOnCanvas(peacefulImage);
+        canvasWorker.postMessage({ instruction: 'sendPeacefulImage' });
         chosenImageId = peacefulImageId;
     } else if (theRandomDecision == 1) {
-        drawImageOnCanvas(emotionalImage);
+        canvasWorker.postMessage({ instruction: 'sendEmotionalImage' });
         chosenImageId = emotionalImageId;
     }
 }
@@ -433,49 +429,11 @@ function drawTimerOnCanvas() {
     const currentTime = (trialTime / 1000).toFixed(1),
         sign = currentTime >= 0 ? '+' : '';
 
-    eCC.clearRect(0, 0, eCC.canvas.width, eCC.canvas.height);
-    eCC.font = `200 ${timerFontsize} "Open Sans"`;
-    eCC.fillStyle = "#ffffff";
-    eCC.textAlign = "center";
-    eCC.fillText(`T${sign}${currentTime}`, eCC.canvas.width / 2, eCC.canvas.height / 2);
-}
-
-function preDrawImageOnCanvas(image) {
-    eCC.globalAlpha = 0.01;
-    eCC.drawImage(image, 0, 0, 0.1, 0.1);
-    eCC.globalAlpha = 1;
-}
-
-function drawImageOnCanvas(image) {
-    const originalWidth = image.naturalWidth,
-        originalHeight = image.naturalHeight,
-        imageWidthIfCanvasHeight = originalWidth * (eCC.canvas.height / originalHeight),
-        imageHeightIfCanvasWidth = originalHeight * (eCC.canvas.width / originalWidth),
-        constrainWidth = imageWidthIfCanvasHeight > eCC.canvas.width,
-        calculatedWidth = constrainWidth ? eCC.canvas.width : imageWidthIfCanvasHeight,
-        calculatedHeight = constrainWidth ? imageHeightIfCanvasWidth : eCC.canvas.height,
-        imageLocationX = (eCC.canvas.width / 2) - (calculatedWidth / 2),
-        imageLocationY = (eCC.canvas.height / 2) - (calculatedHeight / 2);
-
-    logEvent(`BeforeImageDraw-T${trials + 1}`);
-
-    eCC.clearRect(0, 0, eCC.canvas.width, eCC.canvas.height);
-    eCC.drawImage(image, imageLocationX, imageLocationY, calculatedWidth, calculatedHeight);
-
-    if (controlMode) {
-        const red = Math.floor(Math.random() * 256),
-            green = Math.floor(Math.random() * 256),
-            blue = Math.floor(Math.random() * 256),
-            redChannel = ((red + 1) * 65536) -1,
-            greenChannel = ((green + 1) * 256) -1,
-            blueChannel = ((blue + 1) * 1) - 1;
-
-        controlNumber = redChannel + greenChannel + blueChannel;
-        eCC.fillStyle = `rgb(${red}, ${green}, ${blue})`;
-        eCC.fillRect(0.1, 0, eCC.canvas.width, eCC.canvas.height);
-    }
-
-    logEvent(`AfterImageDraw-T${trials + 1}`);
+    eNCC.clearRect(0, 0, eNCC.canvas.width, eNCC.canvas.height);
+    eNCC.font = `200 ${timerFontsize} "Open Sans"`;
+    eNCC.fillStyle = "#ffffff";
+    eNCC.textAlign = "center";
+    eNCC.fillText(`T${sign}${currentTime}`, eNCC.canvas.width / 2, eNCC.canvas.height / 2);
 }
 
 export const experiment1 = {

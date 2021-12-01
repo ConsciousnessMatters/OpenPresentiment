@@ -2,7 +2,7 @@
     <div class="ident">
         <div>
             <span>Open<em>Presentiment</em></span>
-            <span class="version">0.10 alpha</span>
+            <span class="version">0.11 alpha</span>
         </div>
     </div>
 
