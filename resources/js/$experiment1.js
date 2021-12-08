@@ -271,12 +271,14 @@ function setupCanvas() {
         offScreenCanvasTwo = new OffscreenCanvas(eNCC.canvas.scrollWidth * scaleFactor, eNCC.canvas.scrollHeight * scaleFactor);
 
     canvasWorker.postMessage(
-        { instruction: 'initialise', canvasOne: offScreenCanvasOne, canvasTwo: offScreenCanvasTwo },
+        { instruction: 'initialise', controlMode: controlMode, canvasOne: offScreenCanvasOne, canvasTwo: offScreenCanvasTwo },
         [offScreenCanvasOne, offScreenCanvasTwo]
     );
     canvasWorker.addEventListener('message', function(event) {
         if (event.data.instruction === 'render') {
             eNCC.drawImage(event.data.bitmap, 0, 0);
+        } else if (event.data.instruction === 'controlNumber') {
+            controlNumber = event.data.controlNumber;
         }
     });
 

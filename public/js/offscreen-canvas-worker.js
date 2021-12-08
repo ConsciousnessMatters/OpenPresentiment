@@ -3,11 +3,13 @@ let canvasEmotional,
     contextEmotional,
     contextPeaceful,
     emotionalImage,
-    peacefulImage;
+    peacefulImage,
+    controlMode;
 
 self.onmessage = function(event) {
     switch (event.data.instruction) {
         case 'initialise':
+            controlMode = event.data.controlMode;
             initialise(event);
             break;
         case 'loadImages':
@@ -58,4 +60,17 @@ function drawImageOnCanvas(image, context) {
 
     context.clearRect(0, 0, context.canvas.width, context.canvas.height);
     context.drawImage(image, imageLocationX, imageLocationY, calculatedWidth, calculatedHeight);
+
+    if (controlMode) {
+        const red = Math.floor(Math.random() * 256),
+            green = Math.floor(Math.random() * 256),
+            blue = Math.floor(Math.random() * 256),
+            redChannel = ((red + 1) * 65536) -1,
+            greenChannel = ((green + 1) * 256) -1,
+            blueChannel = ((blue + 1) * 1) - 1;
+
+        self.postMessage({ instruction: 'controlNumber', controlNumber: (redChannel + greenChannel + blueChannel) });
+        context.fillStyle = `rgb(${red}, ${green}, ${blue})`;
+        context.fillRect(0.1, 0, context.canvas.width, context.canvas.height);
+    }
 }
